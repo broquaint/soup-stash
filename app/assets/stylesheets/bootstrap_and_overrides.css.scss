@@ -1,0 +1,9 @@
+// http://railsapps.github.com/rails-default-application-layout.html
+// CSS Styling with Twitter Bootstrap (Sass)
+
+// Set the correct sprite paths
+$iconSpritePath: image-path('glyphicons-halflings.png');
+$iconWhiteSpritePath: image-path('glyphicons-halflings-white.png');
+@import "bootstrap";
+body { padding-top: 60px; }
+@import "bootstrap-responsive";
