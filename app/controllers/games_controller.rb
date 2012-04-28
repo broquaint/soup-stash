@@ -1,3 +1,5 @@
+require 'coroner'
+
 class GamesController < ApplicationController
   # GET /games
   # GET /games.json
@@ -40,7 +42,10 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = current_user.games.new(params[:game])
+    # TODO Check it looks like a morgue and not random/malicious junk etc
+    morgue_io = params[:game][:morgue]
+    
+    @game = current_user.games.new(Coroner.new(morgue_io.read).parse)
 
     respond_to do |format|
       if @game.save
