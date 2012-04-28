@@ -1,0 +1,85 @@
+<h1>Listing games</h1>
+
+<table>
+  <tr>
+    <th>Game</th>
+    <th>User</th>
+    <th>Start time</th>
+    <th>Score</th>
+    <th>Race</th>
+    <th>Char class</th>
+    <th>Version</th>
+    <th>Lv</th>
+    <th>Character</th>
+    <th>Xl</th>
+    <th>Skill</th>
+    <th>Sk lev</th>
+    <th>Title</th>
+    <th>Place</th>
+    <th>Branch</th>
+    <th>Lvl</th>
+    <th>Ltyp</th>
+    <th>Hp</th>
+    <th>Maxhp</th>
+    <th>Maxmaxhp</th>
+    <th>Str</th>
+    <th>Int</th>
+    <th>Dex</th>
+    <th>God</th>
+    <th>Duration</th>
+    <th>Turn</th>
+    <th>Runes</th>
+    <th>Killertype</th>
+    <th>Killer</th>
+    <th>Damage</th>
+    <th>Piety</th>
+    <th>End time</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @games.each do |game| %>
+  <tr>
+    <td><%= game.game %></td>
+    <td><%= game.user %></td>
+    <td><%= game.start_time %></td>
+    <td><%= game.score %></td>
+    <td><%= game.race %></td>
+    <td><%= game.char_class %></td>
+    <td><%= game.version %></td>
+    <td><%= game.lv %></td>
+    <td><%= game.character %></td>
+    <td><%= game.xl %></td>
+    <td><%= game.skill %></td>
+    <td><%= game.sk_lev %></td>
+    <td><%= game.title %></td>
+    <td><%= game.place %></td>
+    <td><%= game.branch %></td>
+    <td><%= game.lvl %></td>
+    <td><%= game.ltyp %></td>
+    <td><%= game.hp %></td>
+    <td><%= game.maxhp %></td>
+    <td><%= game.maxmaxhp %></td>
+    <td><%= game.str %></td>
+    <td><%= game.int %></td>
+    <td><%= game.dex %></td>
+    <td><%= game.god %></td>
+    <td><%= game.duration %></td>
+    <td><%= game.turn %></td>
+    <td><%= game.runes %></td>
+    <td><%= game.killertype %></td>
+    <td><%= game.killer %></td>
+    <td><%= game.damage %></td>
+    <td><%= game.piety %></td>
+    <td><%= game.end_time %></td>
+    <td><%= link_to 'Show', game %></td>
+    <td><%= link_to 'Edit', edit_game_path(game) %></td>
+    <td><%= link_to 'Destroy', game, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Game', new_game_path %>

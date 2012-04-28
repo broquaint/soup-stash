@@ -1,2 +1,15 @@
 <h1>Users</h1>
 <p>User: <%= @user.name %></p>
+
+<div id='players'>
+  <% if @user.players %>
+    <ul>
+      <% for p in @user.players %>
+        <li><%= link_to "#{p.name}: #{p.game}", player_path(p) %>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if @user == current_user %>
+    <%= link_to 'Add a player.', new_player_path %>
+  <% end %>
+</div>

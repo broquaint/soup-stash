@@ -1,4 +1,14 @@
 SoupStash::Application.routes.draw do
+  resources :games
+
+  resources :players do
+    resources :games
+  end
+  #  namespace :user do resources :players end
+#  namespace :user do
+#    resources :player
+#  end
+
   get "users/show"
 
   root :to => "home#index"
