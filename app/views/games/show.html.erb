@@ -7,7 +7,7 @@
 
 <p>
   <b>User:</b>
-  <%= @game.user %>
+  <%= link_to @game.user.name, @game.user %>
 </p>
 
 <p>
@@ -36,8 +36,8 @@
 </p>
 
 <p>
-  <b>Lv:</b>
-  <%= @game.lv %>
+  <b>Level:</b>
+  <%= @game.level %>
 </p>
 
 <p>

@@ -9,7 +9,7 @@
     <th>Race</th>
     <th>Background</th>
     <th>Version</th>
-    <th>Lv</th>
+    <th>Level</th>
     <th>Character</th>
     <th>Xl</th>
     <th>Skill</th>
@@ -34,21 +34,18 @@
     <th>Damage</th>
     <th>Piety</th>
     <th>End time</th>
-    <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
 <% @games.each do |game| %>
   <tr>
     <td><%= game.game %></td>
-    <td><%= game.user %></td>
+    <td><%= link_to game.user.name, game.user %></td>
     <td><%= game.start_time %></td>
     <td><%= game.score %></td>
     <td><%= game.race %></td>
     <td><%= game.background %></td>
     <td><%= game.version %></td>
-    <td><%= game.lv %></td>
+    <td><%= game.level %></td>
     <td><%= game.character %></td>
     <td><%= game.xl %></td>
     <td><%= game.skill %></td>
@@ -73,9 +70,6 @@
     <td><%= game.damage %></td>
     <td><%= game.piety %></td>
     <td><%= game.end_time %></td>
-    <td><%= link_to 'Show', game %></td>
-    <td><%= link_to 'Edit', edit_game_path(game) %></td>
-    <td><%= link_to 'Destroy', game, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
 </table>
