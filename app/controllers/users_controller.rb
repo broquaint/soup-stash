@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  # Don't really want this for show
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => [:show]
 
   def show
     @user = User.find(params[:id])
