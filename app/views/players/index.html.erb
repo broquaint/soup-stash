@@ -14,14 +14,14 @@
   <tr>
     <td><%= player.game %></td>
     <td><%= player.name %></td>
-    <td><%= player.embedded_in %></td>
-    <td><%= link_to 'Show', player %></td>
-    <td><%= link_to 'Edit', edit_player_path(player) %></td>
-    <td><%= link_to 'Destroy', player, confirm: 'Are you sure?', method: :delete %></td>
+
+    <td><%= link_to 'Show', [@user, player] %></td>
+    <td><%= link_to 'Edit', edit_user_player_path(@user, player) %></td>
+    <td><%= link_to 'Destroy', [@user,player], confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Player', new_player_path %>
+<%= link_to 'New Player', new_user_player_path(@user, @player) %>

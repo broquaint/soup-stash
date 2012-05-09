@@ -1,4 +1,5 @@
-<%= form_for(@player) do |f| %>
+<%# XXX Be explicit because I renamed controller (I guess?) %>
+<%= form_for(@player, :url => { :action => 'create' }) do |f| %>
   <% if @player.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@player.errors.count, "error") %> prohibited this player from being saved:</h2>

@@ -1,20 +1,14 @@
 SoupStash::Application.routes.draw do
-  resources :games
-
-  resources :players do
-    resources :games
-  end
-  #  namespace :user do resources :players end
-#  namespace :user do
-#    resources :player
-#  end
-
   get "users/show"
-
   root :to => "home#index"
 
   devise_for :users
-  resources :users, :only => :show
+
+  resources :users do
+    resources :players
+  end
+
+  resources :games
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

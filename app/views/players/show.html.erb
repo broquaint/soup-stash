@@ -11,5 +11,8 @@
 </p>
 
 <p><%= link_to 'Add game', new_game_path %></p>
-<%= link_to 'Edit', edit_player_path(@player) %> |
-<%= link_to 'Back', players_path %>
+<% if @user == current_user %><%= link_to 'Edit',
+                                  edit_user_player_path(@user,
+                                                        @player)
+                                  %> |<% end %>
+<%= link_to 'Back', user_players_path %>

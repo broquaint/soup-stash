@@ -4,7 +4,8 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.all
+    @user    = User.find(params[:user_id])
+    @players = @user.players
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +16,9 @@ class PlayersController < ApplicationController
   # GET /players/1
   # GET /players/1.json
   def show
-    @player = current_user.players.find(params[:id])
+    @user   = User.find(params[:user_id])
+    @player = @user.players.find(params[:id])
+    @games  = Game.where({:user_id=>@user.id})
 
     respond_to do |format|
       format.html # show.html.erb
@@ -45,9 +48,11 @@ class PlayersController < ApplicationController
     @player = current_user.players.new(params[:player])
 
     respond_to do |format|
+      # XXX Where/Why does rails consider @player == player_path?
+      url = user_players_path(params[:user_id])
       if @player.save
-        format.html { redirect_to @player, notice: 'Player was successfully created.' }
-        format.json { render json: @player, status: :created, location: @player }
+        format.html { redirect_to url, notice: 'Player was successfully created.' }
+        format.json { render json: @player, status: :created, location: url }
       else
         format.html { render action: "new" }
         format.json { render json: @player.errors, status: :unprocessable_entity }
