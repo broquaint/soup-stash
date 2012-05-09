@@ -1,6 +1,6 @@
 class Coroner
   def initialize(morgue="")
-    # XXX Assume a string for now
+    # XXX Assume a string for now, should enforce it too perhaps ...
     @morgue = morgue
   end
   
@@ -14,7 +14,8 @@ class Coroner
 
     return ::Morgue.new(autopsy)
   end
-  
+
+  # TODO - Name split sections to obviate need for repeated scans
   def make_sections(m)
     m.split(/\n{2,}/)
   end
@@ -45,7 +46,9 @@ class Coroner
   def find_version(sections)
     return match_one sections, / Dungeon Crawl Stone Soup version (\S+)/
   end
+
   def find_score_char_title_level(sections)
+    # 178 Snwcln the Vexing (level 3
     _, match = find_section sections, /\A
        (?<score>\d+)    \s
        (?<character>.*) \s
@@ -53,7 +56,7 @@ class Coroner
        (?<title>.*)     \s
        \(level \s (?<level>\d+)
     /x;
-    return {} unless match
+    return {} if match.nil?
     return {
       :score     => match[:score].to_i,
       :character => match[:character],
@@ -63,85 +66,125 @@ class Coroner
   end
 
   def find_race_class_turns_duration(sections)
-    @race_re       = CrawlCombos.race_as_re       unless @race_re
-    @background_re = CrawlCombos.background_as_re unless @background_re
-    _, match = find_section sections, /\A
-       (?:.*\sthe\s.*)\s
-       \( (?<race>#{@race_re}) \s (?<background>#{@background_re}) \) \s+
+    # Oh for lazy build attributes ...
+    @rbc_re = CrawlCombos.race_background_combo_re unless @rbc_re
+
+    # Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02
+    # fleugma the Thaumaturge (SEEE)  Turns: 14495, Time: 01:06:50
+    _, match = find_section sections, /
+       \( #{@rbc_re} \) \s+
        Turns: \s (?<turns>[\d.]+), \s
        Time:  \s (?<duration>[\d:]+)
     /x
-    return {} unless match
+
+    return {:nomatch => 1} if match.nil?
+
+    begin
+      # Umm, WTF - http://pastie.org/3886124
+      race, background = match[:combo] ? CrawlCombos.abbr2combo(match[:combo]) : [match[:race], match[:background]]
+    # Sometimes I see "Can't cast Symbol to Integer" which doesn't make sense if we didn't get match.
+    rescue TypeError
+      raise Excepion, "match = #{match}"
+    end
+
+    return {} unless race && background
+
     return {
-      :race       => match[:race],
-      :background => match[:background],
+      :race       => race,
+      :background => background,
       :turns      => match[:turns].to_f,
       :duration   => match[:duration],
     }
   end
 
-  # Hand scraped from the 0.9.1 char roll screens.
+  # Hand scraped from the 0.9.1 char roll screens + new 0.10 bits.
+  # This is just some static data with helper static methods.
   module CrawlCombos
-    RACE = [
-              "Centaur",
-              "Deep Dwarf",
-              "Deep Elf",
-              "Demigod",
-              "Demonspawn",
-              "Draconian",
-              "Felid",
-              "Ghoul",
-              "Halfling",
-              "High Elf",
-              "Hill Orc",
-              "Human",
-              "Kenku",
-              "Kobold",
-              "Merfolk",
-              "Minotaur",
-              "Mountain Dwarf",
-              "Mummy",
-              "Naga",
-              "Ogre",
-              "Sludge Elf",
-              "Spriggan",
-              "Troll",
-              "Vampire",
-             ];
-    BACKGROUND = [
-                    "Abyssal Knight",
-                    "Air Elementalist",
-                    "Artificer",
-                    "Assassin",
-                    "Berserker",
-                    "Chaos Knight",
-                    "Conjurer",
-                    "Death Knight",
-                    "Earth Elementalist",
-                    "Enchanter",
-                    "Fighter",
-                    "Fire Elementalist",
-                    "Gladiator",
-                    "Healer",
-                    "Hunter",
-                    "Ice Elementalist",
-                    "Monk",
-                    "Necromancer",
-                    "Priest",
-                    "Skald",
-                    "Stalker",
-                    "Summoner",
-                    "Transmuter",
-                    "Venom Mage",
-                    "Wanderer",
-                    "Warper",
-                    "Wizard",
-                   ];
+    RACE = {
+      'Ce' => 'Centaur',
+      'DE' => 'Deep Dwarf',
+      'DD' => 'Deep Elf',
+      'Dg' => 'Demigod',
+      'Ds' => 'Demonspawn',
+      'Dr' => 'Draconian',
+      'Fe' => 'Felid',
+      'Gh' => 'Ghoul',
+      'Ha' => 'Halfling',
+      'HE' => 'High Elf',
+      'HO' => 'Hill Orc',
+      'Hu' => 'Human',
+      'Ke' => 'Kenku',
+      'Ko' => 'Kobold',
+      'Mf' => 'Merfolk',
+      'Mi' => 'Minotaur',
+      'MD' => 'Mountain Dwarf',
+      'Mu' => 'Mummy',
+      'Na' => 'Naga',
+      'Op' => 'Octopode',
+      'Og' => 'Ogre',
+      'SE' => 'Sludge Elf',
+      'Sp' => 'Spriggan',
+      'Te' => 'Tengu',
+      'Tr' => 'Troll',
+      'Vp' => 'Vampire',
+    };
+    BACKGROUND = {
+      'AK' => 'Abyssal Knight',
+      'AE' => 'Air Elementalist',
+      'Ar' => 'Artificer',
+      'As' => 'Assassin',
+      'AM' => 'Arcane Marksman',
+      'Be' => 'Berserker',
+      'CK' => 'Chaos Knight',
+      'Cj' => 'Conjurer',
+      'DK' => 'Death Knight',
+      'EE' => 'Earth Elementalist',
+      'En' => 'Enchanter',
+      'Fi' => 'Fighter',
+      'FE' => 'Fire Elementalist',
+      'Gl' => 'Gladiator',
+      'He' => 'Healer',
+      'Hu' => 'Hunter',
+      'IE' => 'Ice Elementalist',
+      'Mo' => 'Monk',
+      'Ne' => 'Necromancer',
+      'Pr' => 'Priest',
+      'Sk' => 'Skald',
+      'St' => 'Stalker',
+      'Su' => 'Summoner',
+      'Tm' => 'Transmuter',
+      'VM' => 'Venom Mage',
+      'Wn' => 'Wanderer',
+      'Wa' => 'Warper',
+      'Wz' => 'Wizard',
+    };
     def CrawlCombos.race_as_re
-      Regexp.new('(?:' + CrawlCombos::RACE.join('|') + ')')
+      Regexp.new('(?:' + RACE.values.join('|') + ')')
     end
     def CrawlCombos.background_as_re
-      Regexp.new('(?:' + CrawlCombos::BACKGROUND.join('|') + ')')
+      Regexp.new('(?:' + BACKGROUND.values.join('|') + ')')
+    end
+    def CrawlCombos.abbr_race_as_re
+      Regexp.new('(?:' + RACE.keys.join('|') + ')')      
+    end
+    def CrawlCombos.abbr_background_as_re
+      Regexp.new('(?:' + BACKGROUND.keys.join('|') + ')')
+    end
+    def CrawlCombos.abbr_combo_re
+      Regexp.new( abbr_race_as_re.to_s + abbr_background_as_re.to_s )
+    end
+    def CrawlCombos.race_background_combo_re
+      /# Race Background e.g High Elf Earth Elementalist
+       (?: (?<race>#{race_as_re}) [ ] (?<background>#{background_as_re}) )
+       # Abbreviated combo e.g HEEE
+       | (?<combo>#{abbr_combo_re})
+      /x
+    end
+    def CrawlCombos.abbr2combo(abbr)
+      race = RACE[abbr.slice 0,2]
+      bkgd = BACKGROUND[abbr.slice 2,4]
+      raise Exception, "Unknown combo '#{abbr}'" unless race and bkgd
+      return race, bkgd
     end
   end
 end

@@ -42,12 +42,34 @@ describe Coroner, 'matching' do
     c = Coroner.new
     sections = c.make_sections "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
     c.find_race_class_turns_duration(sections).should eq({
-                                                       :race       => 'Felid',
-                                                       :background => 'Wanderer',
-                                                       :turns      => 3364,
-                                                       :duration   => '00:11:02'
-                                                     })
+                                                           :race       => 'Felid',
+                                                           :background => 'Wanderer',
+                                                           :turns      => 3364,
+                                                           :duration   => '00:11:02'
+                                                         })
+    
+    sections = c.make_sections "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
+    c.find_race_class_turns_duration(sections).should eq({
+                                                           :race       => 'Sludge Elf',
+                                                           :background => 'Earth Elementalist',
+                                                           :turns      => 14495,
+                                                           :duration   => '01:06:50'
+                                                         })
   end
+
+  it 'should match abbreviated race/background combo' do
+    'FeWn'.should =~ Coroner::CrawlCombos.abbr_combo_re
+    'HEFE'.should =~ Coroner::CrawlCombos.abbr_combo_re
+  end
+
+  it 'should return race/background combo from an abbreviated version' do
+    Coroner::CrawlCombos.abbr2combo('SEEE').should eq(['Sludge Elf', 'Earth Elementalist'])
+
+    expect {
+      Coroner::CrawlCombos.abbr2combo 'FAKE'
+    }.to raise_error(Exception, "Unknown combo 'FAKE'")
+  end
+
   it 'should parse' do
     morgue = <<MORGUE
  Dungeon Crawl Stone Soup version 0.9.1 character file.
