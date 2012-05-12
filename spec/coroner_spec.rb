@@ -86,6 +86,27 @@ HP  -1/15        AC  1     Str 10      XL: 3   Next: 25%
 MP   6/6         EV 17     Int 13      God: 
 Gold 141         SH  0     Dex 14      Spells:  1 memorised,  3 levels left
                                        Lives: 0, deaths: 1
+
+Res.Fire  : + . .   See Invis. : .    b - staff of conjuration
+Res.Cold  : . . .   Warding    : . .  p - +2 robe {MR}
+Life Prot.: . . .   Conserve   : .    (no shield)
+Res.Acid. : + . .   Res.Corr.  : +    (helmet restricted)
+Res.Poison: .       Clarity    : .    k - +0 orc cloak
+Res.Elec. : +       Spirit.Shd : .    J - +2 pair of gloves
+Sust.Abil.: . .     Stasis     : .    m - +2 pair of boots {run}
+Res.Mut.  : .       Ctrl.Telep.: x    Q - amulet of Xaco {rCorr rF+}
+Res.Rott. : .       Levitation : .    u - +5 ring of intelligence
+Saprovore : . . .   Ctrl.Flight: .    s - ring of teleport control
+
+@: quick, quite resistant to hostile enchantments, very stealthy
+A: antennae 1, electricity resistance, AC +1, Str +1
+a: Renounce Religion
+
+You were in the Abyss.
+You worshipped Vehumet.
+Vehumet was exalted by your worship.
+You were not hungry.
+
 MORGUE
     Coroner.new(morgue).parse.should eq({
                                           :version    => '0.9.1',
@@ -95,8 +116,13 @@ MORGUE
                                           :level      => 3,
                                           :race       => 'Felid',
                                           :background => 'Wanderer',
-                                          :turns      => 3364,
+                                          :turns      => 3364.0,
                                           :duration   => '00:11:02',
+                                          :god => "Vehumet",
+#                                          :hunger => "not hungry",
+                                          :piety => "exalted",
+                                          :place => "the Abyss",
+                                          
                                         })
   end
 end

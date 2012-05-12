@@ -6,7 +6,7 @@ class Game # Specifically DCSS
   field :morgue, :type => String
   
   # via https://github.com/greensnark/dcss_scoring/blob/master/databasedesign.txt
-  field :start_time , :type => String
+  field :start_time , :type => String  # Not in morgues?
   field :score      , :type => Integer # DONE
   field :race       , :type => String  # DONE
   field :background , :type => String  # DONE
@@ -14,10 +14,10 @@ class Game # Specifically DCSS
   field :level      , :type => String  # DONE # level == xl, what was lv?
   field :character  , :type => String  # DONE
   field :xl         , :type => Integer # DONE
-  field :skill      , :type => String
-  field :sk_lev     , :type => String
+  field :skill      , :type => String  # == level ?
+  field :sk_lev     , :type => String  # ???
   field :title      , :type => String  # DONE
-  field :place      , :type => String
+  field :place      , :type => String  #
   field :branch     , :type => String
   field :lvl        , :type => String
   field :ltyp       , :type => String

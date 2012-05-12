@@ -11,6 +11,7 @@ class Coroner
     autopsy[:version] = find_version sections
     autopsy.merge! find_score_char_title_level(sections)
     autopsy.merge! find_race_class_turns_duration(sections)
+    autopsy.merge! find_place_god_piety_hunger(sections)
 
     return ::Morgue.new(autopsy)
   end
@@ -77,16 +78,10 @@ class Coroner
        Time:  \s (?<duration>[\d:]+)
     /x
 
-    return {:nomatch => 1} if match.nil?
+    return {} if match.nil?
 
-    begin
-      # Umm, WTF - http://pastie.org/3886124
-      race, background = match[:combo] ? CrawlCombos.abbr2combo(match[:combo]) : [match[:race], match[:background]]
-    # Sometimes I see "Can't cast Symbol to Integer" which doesn't make sense if we didn't get match.
-    rescue TypeError
-      raise Excepion, "match = #{match}"
-    end
-
+    race, background = match[:combo] ? CrawlCombos.abbr2combo(match[:combo]) : [match[:race], match[:background]]
+    
     return {} unless race && background
 
     return {
@@ -96,7 +91,17 @@ class Coroner
       :duration   => match[:duration],
     }
   end
-
+  
+  def find_place_god_piety_hunger(sections)
+    # XXX Won't match everything yet e.g You were a toy of Xom
+    match_many sections, {
+      :place  => /You were [oi]n ([\w\s]+)[.]/,
+      :god    => /You worshipped (\w+)/,
+      :piety  => /^[\w\s]+ was ([\w\s]+) (?:by your worship|with you)?[.]$/,
+#      :hunger => /^You were ((?:not )?hungry|full)/, XXX Worth including?
+    }
+  end
+  
   # Hand scraped from the 0.9.1 char roll screens + new 0.10 bits.
   # This is just some static data with helper static methods.
   module CrawlCombos
@@ -185,6 +190,20 @@ class Coroner
       bkgd = BACKGROUND[abbr.slice 2,4]
       raise Exception, "Unknown combo '#{abbr}'" unless race and bkgd
       return race, bkgd
+    end
+
+    HUNGER = [
+              'Starving',
+              'Near',
+              'Very hungry',
+              'Hungry',
+              'Satiated',
+              'Full',
+              'Very',
+              'Engorged',
+              ];
+    def hunger_re
+      Regexp.new('(?:' + HUNGER.join('|') + ')')
     end
   end
 end
