@@ -2,9 +2,7 @@
 
 <table>
   <tr>
-    <th>Game</th>
     <th>User</th>
-    <th>Start time</th>
     <th>Score</th>
     <th>Race</th>
     <th>Background</th>
@@ -12,8 +10,6 @@
     <th>Level</th>
     <th>Character</th>
     <th>Xl</th>
-    <th>Skill</th>
-    <th>Sk lev</th>
     <th>Title</th>
     <th>Place</th>
     <th>Branch</th>
@@ -38,9 +34,7 @@
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= game.game %></td>
     <td><%= link_to game.user.name, game.user %></td>
-    <td><%= game.start_time %></td>
     <td><%= game.score %></td>
     <td><%= game.race %></td>
     <td><%= game.background %></td>
@@ -48,8 +42,6 @@
     <td><%= game.level %></td>
     <td><%= game.character %></td>
     <td><%= game.xl %></td>
-    <td><%= game.skill %></td>
-    <td><%= game.sk_lev %></td>
     <td><%= game.title %></td>
     <td><%= game.place %></td>
     <td><%= game.branch %></td>

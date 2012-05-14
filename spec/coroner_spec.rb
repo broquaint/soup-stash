@@ -102,7 +102,7 @@ Saprovore : . . .   Ctrl.Flight: .    s - ring of teleport control
 A: antennae 1, electricity resistance, AC +1, Str +1
 a: Renounce Religion
 
-You were in the Abyss.
+You were on level 4 of the Orcish Mines.
 You worshipped Vehumet.
 Vehumet was exalted by your worship.
 You were not hungry.
@@ -121,7 +121,9 @@ MORGUE
                                           :god => "Vehumet",
 #                                          :hunger => "not hungry",
                                           :piety => "exalted",
-                                          :place => "the Abyss",
+                                          :place => "level 4 of the Orcish Mines",
+                                          :branch => 'Orcish Mines',
+                                          :lvl => 4,
                                           
                                         })
   end

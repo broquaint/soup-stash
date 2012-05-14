@@ -94,12 +94,20 @@ class Coroner
   
   def find_place_god_piety_hunger(sections)
     # XXX Won't match everything yet e.g You were a toy of Xom
-    match_many sections, {
-      :place  => /You were [oi]n ([\w\s]+)[.]/,
-      :god    => /You worshipped (\w+)/,
+    place_religion = match_many sections, {
+      :place  => /You (?:were [oi]n )?([\w\s]+)[.]$/,
+      :god    => /You worshipped ([\s\w]+)[.]/,
       :piety  => /^[\w\s]+ was ([\w\s]+) (?:by your worship|with you)?[.]$/,
 #      :hunger => /^You were ((?:not )?hungry|full)/, XXX Worth including?
     }
+    
+    lvl    = place_religion[:place].match /(\d+)/
+    branch = place_religion[:place].match /(#{CrawlCombos.branch_re})/i
+
+    place_religion[:lvl]    = lvl[0].to_i if lvl
+    place_religion[:branch] = branch[0]   if branch
+    
+    return place_religion
   end
   
   # Hand scraped from the 0.9.1 char roll screens + new 0.10 bits.
@@ -111,7 +119,8 @@ class Coroner
       'DD' => 'Deep Elf',
       'Dg' => 'Demigod',
       'Ds' => 'Demonspawn',
-      'Dr' => 'Draconian',
+      # XXX Embedding the colours as a regexp is a bit gross.
+      'Dr' => '(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)?\s?Draconian',
       'Fe' => 'Felid',
       'Gh' => 'Ghoul',
       'Ha' => 'Halfling',
@@ -192,18 +201,44 @@ class Coroner
       return race, bkgd
     end
 
-    HUNGER = [
-              'Starving',
-              'Near',
-              'Very hungry',
-              'Hungry',
-              'Satiated',
-              'Full',
-              'Very',
-              'Engorged',
-              ];
-    def hunger_re
-      Regexp.new('(?:' + HUNGER.join('|') + ')')
+    BRANCHES = [
+                'Dungeon',
+                'Ecumenical Temple',
+                'Orcish Mines',
+                'Elven Halls',
+                'Lair of Beasts',
+                'Swamp',
+                'Snake Pit',
+                'Slime Pits',
+                'Shoals',
+                'Vaults',
+                'Crypt',
+                'Tomb',
+                'Hall of Blades',
+                'Hell',
+                'Vestibule of Hell',
+                'Cocytus',
+                'Gehenna',
+                'Tartarus',
+                'Iron City of Dis',
+                'Realm of Zot',
+                'Pandemonium',
+                'Abyss',
+                'Bailey',
+                'Bazaar',
+                'Ice Cave',
+                'Labyrinth',
+                'Ossuary',
+                'Sewers',
+                "Spider's Nest",
+                'Treasure trove',
+                'Volcano',
+                'Wizard Laboratory',
+                'Ziggurat',
+               ];
+
+    def CrawlCombos.branch_re
+      Regexp.new('(?:' + BRANCHES.join('|') + ')')
     end
   end
 end
