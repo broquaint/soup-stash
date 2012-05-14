@@ -4,6 +4,8 @@ class Game # Specifically DCSS
   field :game, :type => String
   # XXX All of it?
   field :morgue, :type => String
+
+  field :was_local, :type => Boolean # Perhaps should be an enum?
   
   # via https://github.com/greensnark/dcss_scoring/blob/master/databasedesign.txt
 #  field :start_time , :type => String  # Not in morgues?

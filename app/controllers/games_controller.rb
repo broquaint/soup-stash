@@ -48,6 +48,7 @@ class GamesController < ApplicationController
     morgue_io = params[:game][:morgue]
     
     @game = current_user.games.new(Coroner.new(morgue_io.read).parse)
+    @game.was_local = true
 
     respond_to do |format|
       if @game.save
