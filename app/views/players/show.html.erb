@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Game:</b>
-  <%= @player.game %>
+  <b>For game:</b>
+  <%= @player.for_game %>
 </p>
 
 <p>
@@ -13,14 +13,14 @@
 <% if @games.any? %>
   <h3>Games</h3>
   <ul>
-    <% for game in Game.where({:user_id => @user.id}).desc(:score) %>
+    <% for game in @games.desc(:score) %>
       <% # needs a helper %>
       <li><%= link_to "#{game.score} #{game.character} the #{game.title} (level #{game.level}, #{game.race} #{game.background})", game_path(game) %>
     <% end %>
   </ul>
 <% end %>
 
-<p><%= link_to 'Add game', new_game_path %></p>
+<p><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
 <% if @user == current_user %><%= link_to 'Edit',
                                   edit_user_player_path(@user,
                                                         @player)

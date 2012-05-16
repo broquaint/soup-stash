@@ -2,7 +2,7 @@
 
 <table>
   <tr>
-    <th>User</th>
+    <th>Player</th>
     <th>Score</th>
     <th>Race</th>
     <th>Background</th>
@@ -34,7 +34,7 @@
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= link_to game.user.name, game.user %></td>
+    <td><%= link_to game.player.name, [game.player.user, game.player] %></td>
     <td><%= game.score %></td>
     <td><%= game.race %></td>
     <td><%= game.background %></td>
@@ -65,7 +65,3 @@
   </tr>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New Game', new_game_path %>

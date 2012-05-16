@@ -1,6 +1,7 @@
 class Player
   include Mongoid::Document
-  field :game, :type => String
-  field :name, :type => String
-  embedded_in :user
+  field :for_game, :type => String # Possibly unnecessary/implied?
+  field :name,     :type => String
+  belongs_to  :user
+  has_many    :games
 end

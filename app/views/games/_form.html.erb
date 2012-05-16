@@ -11,6 +11,17 @@
     </div>
   <% end %>
 
+  <% if params[:player] %>
+    <input type="hidden" name="player" value="<%= params[:player] %>">
+  <% else %>
+    <div class="field">
+      <%= f.label :player %><br />
+      <%= f.select(:player_id, options_for_select(
+      @players.collect{|p| [p.name, p.id]}
+    )) %>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= f.label :morgue %><br />
     <%= f.file_field 'morgue' %>

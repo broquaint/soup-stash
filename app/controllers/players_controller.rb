@@ -17,8 +17,8 @@ class PlayersController < ApplicationController
   # GET /players/1.json
   def show
     @user   = User.find(params[:user_id])
-    @player = @user.players.find(params[:id])
-    @games  = Game.where({:user_id=>@user.id})
+    @player = Player.find(params[:id])
+    @games  = @player.games
 
     respond_to do |format|
       format.html # show.html.erb

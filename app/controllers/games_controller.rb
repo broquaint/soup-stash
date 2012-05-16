@@ -6,7 +6,8 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.desc(:score)
+    @games = Game.desc(:score).limit(27)
+    @games = @games.where({:user_id => params[:user_id]}) if params[:user_id]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,7 +18,8 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-    @game = Game.find(params[:id])
+    @game   = Game.find(params[:id])
+    @player = @game.player
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,7 +30,8 @@ class GamesController < ApplicationController
   # GET /games/new
   # GET /games/new.json
   def new
-    @game = Game.new
+    @game    = Game.new
+    @players = current_user.players
 
     respond_to do |format|
       format.html # new.html.erb
@@ -46,9 +49,11 @@ class GamesController < ApplicationController
   def create
     # TODO Check it looks like a morgue and not random/malicious junk etc
     morgue_io = params[:game][:morgue]
-    
-    @game = current_user.games.new(Coroner.new(morgue_io.read).parse)
-    @game.was_local = true
+
+    @player = current_user.players.find(params[:player])
+    morgue = Coroner.new(morgue_io.read).parse
+    morgue[:was_local] = true
+    @game = @player.games.new(morgue)
 
     respond_to do |format|
       if @game.save

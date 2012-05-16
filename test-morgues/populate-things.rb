@@ -9,6 +9,8 @@ end
 def create_user(user)
   ua = Mechanize.new
 
+  # There's likely a cleaner way to propagate state but I'm too lazy to figure it out ATM.
+  player = nil
   ua.get('http://localhost:3000/users/sign_up') do |user_form|
     puts "Creating user #{user}"
     user_list = user_form.form_with(:method => 'POST') do |form|
@@ -26,13 +28,15 @@ def create_user(user)
     puts "Creating player #{user}"
     # Assume user == player for simplicity
     # XXX - This fails because Rails tries to redirect to player_url for no obvious reason.
-    players_page = player_form.form_with(:method => 'POST') do |form|
+    player_list = player_form.form_with(:method => 'POST') do |form|
       form['player[name]'] = user
-      form['player[game]'] = 'dcss'
+      form['player[for_game]'] = 'dcss'
     end.submit
+
+    player = goto_link ua, player_list, 'Show'
   end
 
-  return ua
+  return [ua, player]
 end
 
 def upload_game(form, morgue)
@@ -50,16 +54,14 @@ users = Dir.open('.').select{|e| e =~ /^morgue/}.inject({}) do |res, morgue|
 end
 
 users.each_pair do |user, morgues|
-  ua = create_user user
-  # XXX Finish when a full upload works.
-#  pm = Parallel::ForkManager.new(morgues.size)
+  ua, player = create_user user
   sign_out_form = morgues.each do |m|
-#    pm.start(m)
+
     # ??? Needed because reusing game_form was repeatedly uploading the same file :S
     puts "Uploading #{m} for #{user}"
-    ua.get('http://localhost:3000/games/new') do |game_form|
-      upload_game game_form, m
-    end
+    game_form = goto_link ua, player, 'Add game'
+    upload_game game_form, m
+
   end
   # Bleh, this is handled by JS in the browsers.
   # REST is all good and well but the user should not have to care.

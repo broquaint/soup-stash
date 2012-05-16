@@ -1,14 +1,14 @@
 class Game # Specifically DCSS
   include Mongoid::Document
   
-  field :game, :type => String
+  field :game, :type => String # XXX This is a sucky field name.
   # XXX All of it?
   field :morgue, :type => String
 
   field :was_local, :type => Boolean # Perhaps should be an enum?
   
   # via https://github.com/greensnark/dcss_scoring/blob/master/databasedesign.txt
-#  field :start_time , :type => String  # Not in morgues?
+#  field :start_time , :type => String  # Not in morgues? Available in morgue filename?
   field :score      , :type => Integer # DONE
   field :race       , :type => String  # DONE
   field :background , :type => String  # DONE
@@ -38,6 +38,6 @@ class Game # Specifically DCSS
   field :damage     , :type => Integer
   field :piety      , :type => Integer # DONE
   field :end_time   , :type => String
-  
-  belongs_to :user
+
+  belongs_to :player
 end

@@ -5,7 +5,7 @@
   <% if @user.players %>
     <ul>
       <% for p in @user.players %>
-        <li><%= link_to "#{p.name}: #{p.game}", user_player_path(@user, p) %>
+        <li><%= link_to "#{p.name}: #{p.for_game}", user_player_path(@user, p) %>
       <% end %>
     </ul>
   <% end %>

@@ -2,7 +2,7 @@
 
 <table>
   <tr>
-    <th>Game</th>
+    <th>For game</th>
     <th>Name</th>
     <th></th>
     <th></th>
@@ -11,7 +11,7 @@
 
 <% @players.each do |player| %>
   <tr>
-    <td><%= player.game %></td>
+    <td><%= player.for_game %></td>
     <td><%= player.name %></td>
 
     <td><%= link_to 'Show', [@user, player] %></td>
