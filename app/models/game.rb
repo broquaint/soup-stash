@@ -8,7 +8,7 @@ class Game # Specifically DCSS
   field :was_local, :type => Boolean # Perhaps should be an enum?
   
   # via https://github.com/greensnark/dcss_scoring/blob/master/databasedesign.txt
-#  field :start_time , :type => String  # Not in morgues? Available in morgue filename?
+  field :start_time , :type => Time    # endtime - duration
   field :score      , :type => Integer # DONE
   field :race       , :type => String  # DONE
   field :background , :type => String  # DONE
@@ -37,7 +37,8 @@ class Game # Specifically DCSS
   field :killer     , :type => String
   field :damage     , :type => Integer
   field :piety      , :type => Integer # DONE
-  field :end_time   , :type => String
+  field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
+                                       #                      16th June 2012 at 22:01:45
 
   belongs_to :player
 end

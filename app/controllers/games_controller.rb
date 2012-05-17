@@ -51,7 +51,7 @@ class GamesController < ApplicationController
     morgue_io = params[:game][:morgue]
 
     @player = current_user.players.find(params[:player])
-    morgue = Coroner.new(morgue_io.read).parse
+    morgue = Coroner.new(morgue_io.read, morgue_io.original_filename).parse
     morgue[:was_local] = true
     @game = @player.games.new(morgue)
 

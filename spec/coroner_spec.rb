@@ -80,7 +80,7 @@ describe Coroner, 'matching' do
              ... on Level 3 of the Dungeon.
              The game lasted 00:11:02 (3364 turns).
 
-Snwcln the Vexing (Felid Wanderer)                  Turns: 3364, Time: 00:11:02
+Snwcln the Vexing (Felid Wanderer)                  Turns: 3364, Time: 23:11:02
 
 HP  -1/15        AC  1     Str 10      XL: 3   Next: 25%
 MP   6/6         EV 17     Int 13      God: 
@@ -108,24 +108,26 @@ Vehumet was exalted by your worship.
 You were not hungry.
 
 MORGUE
-    Coroner.new(morgue).parse.should eq({
-                                          :version    => '0.9.1',
-                                          :score      => 178,
-                                          :character  => 'Snwcln',
-                                          :title      => 'Vexing',
-                                          :level      => 3,
-                                          :race       => 'Felid',
-                                          :background => 'Wanderer',
-                                          :turns      => 3364.0,
-                                          :duration   => '00:11:02',
-                                          :god => "Vehumet",
-#                                          :hunger => "not hungry",
-                                          :piety => "exalted",
-                                          :place => "level 4 of the Orcish Mines",
-                                          :branch => 'Orcish Mines',
-                                          :lvl => 4,
-                                          
-                                        })
+    # TODO Configure ruby-mode to indent sanely
+    expected = {
+      :version    => '0.9.1',
+      :score      => 178,
+      :character  => 'Snwcln',
+      :title      => 'Vexing',
+      :level      => 3,
+      :race       => 'Felid',
+      :background => 'Wanderer',
+      :turns      => 3364.0,
+      :duration   => 83462,
+      :start_time => DateTime.parse('2012-04-23 00:50:42 +0100').to_time,
+      :end_time   => DateTime.parse('2012-04-24 00:01:44 +0100').to_time,
+      :god        => "Vehumet",
+      :piety      => "exalted",
+      :place      => "level 4 of the Orcish Mines",
+      :branch     => 'Orcish Mines',
+      :lvl        => 4,
+    }
+    Coroner.new(morgue, 'morgue-Snwcln-20120423-230144.txt').parse.should eq(expected)
   end
 end
 

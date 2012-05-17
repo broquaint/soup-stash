@@ -20,20 +20,15 @@ def create_user(user)
       form['user[password_confirmation]'] = 'abc123'
     end.submit
 
-    user_page = goto_link ua, user_list, user
-    
-    # Broken because rails thinks @player should map to players_path
-    player_form = goto_link ua, user_page, 'Add a player.'
+    player_form = ua.get "http://localhost:3000/users/#{user}/players/new"
 
     puts "Creating player #{user}"
     # Assume user == player for simplicity
     # XXX - This fails because Rails tries to redirect to player_url for no obvious reason.
-    player_list = player_form.form_with(:method => 'POST') do |form|
+    player = player_form.form_with(:method => 'POST') do |form|
       form['player[name]'] = user
       form['player[for_game]'] = 'dcss'
     end.submit
-
-    player = goto_link ua, player_list, 'Show'
   end
 
   return [ua, player]

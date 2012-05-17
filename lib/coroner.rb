@@ -1,7 +1,10 @@
+require 'date'
+
 class Coroner
-  def initialize(morgue="")
+  def initialize(morgue="", filename=nil)
     # XXX Assume a string for now, should enforce it too perhaps ...
     @morgue = morgue
+    @filename = filename # This interface is getting real ugly :S
   end
   
   def parse
@@ -10,12 +13,13 @@ class Coroner
     autopsy = {}
     autopsy[:version] = find_version sections
     autopsy.merge! find_score_char_title_level(sections)
-    autopsy.merge! find_race_class_turns_duration(sections)
     autopsy.merge! find_place_god_piety_hunger(sections)
+    autopsy.merge! find_race_class_turns_duration(sections)
+    autopsy.merge! discern_times(autopsy[:duration], @filename)
 
     return ::Morgue.new(autopsy)
   end
-
+  
   # TODO - Name split sections to obviate need for repeated scans
   def make_sections(m)
     m.split(/\n{2,}/)
@@ -43,7 +47,8 @@ class Coroner
       return [s, m] if m
     end
   end
-  
+
+  # TODO Fails on Zot Defense + Sprint
   def find_version(sections)
     return match_one sections, / Dungeon Crawl Stone Soup version (\S+)/
   end
@@ -89,6 +94,32 @@ class Coroner
       :background => background,
       :turns      => match[:turns].to_f,
       :duration   => match[:duration],
+    }
+  end
+
+  
+  def discern_times(duration, morgue_name)
+    return {} if duration.nil? or morgue_name.nil?
+    # morgue-snwcln-20120516-220145.txt
+    dt_m = @filename.match /\bmorgue-[^-]+-(?<year>\d{4})(?<month>\d\d)(?<day>\d\d)-(?<hour>\d\d)(?<minute>\d\d)(?<second>\d\d)[.]/
+    return {} unless dt_m
+
+    end_dt = DateTime.new *%w{year month day hour minute second}.collect{|p| dt_m[p].to_i}
+    
+    dur_m = duration.match /^(?<hours>\d+):(?<minutes>\d\d):(?<seconds>\d\d)\z/
+
+    # XXX Store this somewhere?
+    game_in_seconds = ( dur_m[:hours].to_i * 60 * 60 ) + ( dur_m[:minutes].to_i * 60 ) + dur_m[:seconds].to_i
+
+    # Casting to Time here results in the desired time but then we need to
+    # cast end_dt as well in the resultant hash. Also don't want to care about
+    # timezone either. Could just stringify perhaps ...
+    start_dt = end_dt.to_time - game_in_seconds
+
+    return {
+      :start_time => start_dt,
+      :end_time   => end_dt.to_time,
+      :duration   => game_in_seconds,
     }
   end
   
