@@ -210,8 +210,7 @@ class Coroner
     DRAC_RE = /(?:(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)\s)/
 
     def CrawlCombos.combo2abbr(race, background)
-      race.sub! /^\w+\s/, '' if race =~ /^#{DRAC_RE}/
-      r = RACE_ABBR[race]
+      r = RACE_ABBR[race.sub /^#{DRAC_RE}/, '']
       b = BACKGROUND_ABBR[background]
       raise Exception, "Unknown combo '#{race} #{background}'" unless r and b
       return r + b

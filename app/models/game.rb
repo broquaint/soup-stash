@@ -1,7 +1,7 @@
 class Game # Specifically DCSS
   include Mongoid::Document
   
-  field :game, :type => String # XXX This is a sucky field name.
+  field :name, :type => String
   # XXX All of it?
   field :morgue, :type => String
 
@@ -40,5 +40,10 @@ class Game # Specifically DCSS
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
                                        #                      16th June 2012 at 22:01:45
 
+  # key fields
+  field :end_time_str, :type => String
+  field :combo,        :type => String
+  
   belongs_to :player
+  key :name, :character, :combo, :end_time_str
 end

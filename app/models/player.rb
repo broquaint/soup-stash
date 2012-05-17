@@ -4,4 +4,5 @@ class Player
   field :name,     :type => String
   belongs_to  :user
   has_many    :games
+  key :name, :for_game
 end

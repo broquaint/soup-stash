@@ -49,4 +49,5 @@ class User
   # field :authentication_token, :type => String
 
   has_many :players
+  key :name
 end
