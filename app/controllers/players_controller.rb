@@ -48,10 +48,8 @@ class PlayersController < ApplicationController
     @player = current_user.players.new(params[:player])
 
     respond_to do |format|
-      # XXX Where/Why does rails consider @player == player_path?
-      url = user_players_path(params[:user_id])
       if @player.save
-        format.html { redirect_to url, notice: 'Player was successfully created.' }
+        format.html { redirect_to [@player.user, @player], notice: 'Player was successfully created.' }
         format.json { render json: @player, status: :created, location: url }
       else
         format.html { render action: "new" }
@@ -67,7 +65,7 @@ class PlayersController < ApplicationController
 
     respond_to do |format|
       if @player.update_attributes(params[:player])
-        format.html { redirect_to @player, notice: 'Player was successfully updated.' }
+        format.html { redirect_to [@player.user, @player], notice: 'Player was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -83,7 +81,7 @@ class PlayersController < ApplicationController
     @player.destroy
 
     respond_to do |format|
-      format.html { redirect_to players_url }
+      format.html { redirect_to user_players_url }
       format.json { head :no_content }
     end
   end
