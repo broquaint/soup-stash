@@ -110,6 +110,7 @@ You were not hungry.
 MORGUE
     # TODO Configure ruby-mode to indent sanely
     expected = {
+      :name       => 'dcss',
       :version    => '0.9.1',
       :score      => 178,
       :character  => 'Snwcln',

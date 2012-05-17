@@ -10,7 +10,7 @@ class Coroner
   def parse
     sections = make_sections @morgue
 
-    autopsy = {}
+    autopsy = { :name => 'dcss' }
     autopsy[:version] = find_version sections
     autopsy.merge! find_score_char_title_level(sections)
     autopsy.merge! find_place_god_piety_hunger(sections)
@@ -150,8 +150,7 @@ class Coroner
       'DD' => 'Deep Elf',
       'Dg' => 'Demigod',
       'Ds' => 'Demonspawn',
-      # XXX Embedding the colours as a regexp is a bit gross.
-      'Dr' => '(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)?\s?Draconian',
+      'Dr' => 'Draconian',
       'Fe' => 'Felid',
       'Gh' => 'Ghoul',
       'Ha' => 'Halfling',
@@ -172,7 +171,7 @@ class Coroner
       'Te' => 'Tengu',
       'Tr' => 'Troll',
       'Vp' => 'Vampire',
-    };
+    }
     BACKGROUND = {
       'AK' => 'Abyssal Knight',
       'AE' => 'Air Elementalist',
@@ -202,9 +201,24 @@ class Coroner
       'Wn' => 'Wanderer',
       'Wa' => 'Warper',
       'Wz' => 'Wizard',
-    };
+    }
+
+    RACE_ABBR       = Hash[ *RACE.flatten.reverse ]
+    BACKGROUND_ABBR = Hash[ *BACKGROUND.flatten.reverse ]
+
+    # There's always some unique snowflake of a race isn't there?
+    DRAC_RE = /(?:(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)\s)/
+
+    def CrawlCombos.combo2abbr(race, background)
+      race.sub! /^\w+\s/, '' if race =~ /^#{DRAC_RE}/
+      r = RACE_ABBR[race]
+      b = BACKGROUND_ABBR[background]
+      raise Exception, "Unknown combo '#{race} #{background}'" unless r and b
+      return r + b
+    end
+    
     def CrawlCombos.race_as_re
-      Regexp.new('(?:' + RACE.values.join('|') + ')')
+      Regexp.new("#{DRAC_RE}?(?:" + RACE.values.join('|') + ')')
     end
     def CrawlCombos.background_as_re
       Regexp.new('(?:' + BACKGROUND.values.join('|') + ')')
