@@ -46,4 +46,18 @@ class Game # Specifically DCSS
   
   belongs_to :player
   key :name, :character, :combo, :end_time_str
+
+  # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
+  def self.popular_combos # TODO Take time/version/etc as options
+    map = 'function() { emit(this.race + " " + this.background, { count: 1 }) }'
+    red = 'function(k,vals) { var tot = 0; vals.forEach(function(v) { tot += v.count }); return { count: tot }; }'
+    combos = Game.collection.map_reduce(map, red, :out => {:inline=>1}, :raw => true)
+    combos['results'].collect do |c|
+      {
+        :race  => c['_id'],
+        :count => c['value']['count'].to_i,
+      }
+    end
+  end
+ 
 end

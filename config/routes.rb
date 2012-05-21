@@ -1,6 +1,8 @@
 SoupStash::Application.routes.draw do
+  get "front_page/index"
+
 #  get "users/show"
-  root :to => "games#index"
+  root :to => "front_page#index"
 
   devise_for :users
 

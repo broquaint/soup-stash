@@ -1,0 +1,58 @@
+<div class='row'>
+  <div class='span8'>
+    <h1>High scores</h1>
+    <table class='table table-striped table-condensed'>
+      <thead>
+        <tr>
+          <th>Score</th>
+          <th>Player</th>
+          <th>Race + Background</th>
+          <th>God</th>
+          <th>XL</TH>
+        </tr>
+      </thead>
+      <tbody>
+        <% for game in @games_by_score %>
+        <tr>
+          <td><%= link_to game.score, game_path(game) %></td>
+          <td><%= player(game) %> the <%= game.title %></td>
+          <td><%= game.race %> <%= game.background %></td>
+          <td><%= game.god %></td>
+          <td><%= game.level %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class='span4'>
+    <h3>Recent games</h3>
+
+    <table class='table table-striped table-condensed'>
+      <thead>
+        <tr>
+          <th>Score</th>
+          <th>Player</th>
+          <th>XL</TH>
+          <th>R+B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for game in @games_by_date %>
+        <tr>
+          <td><%= link_to game.score, game_path(game) %></td>
+          <td><%= link_to game.character, user_player_path(game.player.user, game.player) %></td>
+          <td><%= game.level %></td>
+          <td><abbr title="<%= game.race %> <%= game.background %>"><%= combo_abbr(game) %></abbr></td>
+         </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <h3>Most popular Race + Background</h3>
+    <ol>
+      <% for combo in @popular_combos %>
+        <li><strong><%= combo[:race] %></strong> <em><%= combo[:count] %></em>
+      <% end %>
+    </ol>
+  </div>
+</div>
