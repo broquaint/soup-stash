@@ -1,4 +1,4 @@
-require_dependency 'coroner'
+require_dependency 'dcss/coroner'
 
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show]
@@ -51,11 +51,11 @@ class GamesController < ApplicationController
     morgue_io = params[:game][:morgue]
 
     @player = current_user.players.find(params[:player])
-    morgue = Coroner.new(morgue_io.read, morgue_io.original_filename).parse
+    morgue = DCSS::Coroner.new(morgue_io.read, morgue_io.original_filename).parse
     morgue[:was_local] = true
     # XXX For key name composition, very DCSS specific
     morgue[:end_time_str] = morgue[:end_time].strftime('%Y%m%d-%H%M%S')
-    morgue[:combo]        = Coroner::CrawlCombos.combo2abbr(morgue[:race], morgue[:background])
+    morgue[:combo]        = DCSS.combo2abbr(morgue[:race], morgue[:background])
     @game = @player.games.new(morgue)
 
     respond_to do |format|
