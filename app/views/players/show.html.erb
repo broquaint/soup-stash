@@ -1,28 +1,53 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>For game:</b>
-  <%= @player.for_game %>
-</p>
+<div class='row'>
+  <div class='span8'>
+    <h1><%= @player.name %></td>
+    <h4>Recent games</h4>
+    <table class='table table-striped table-condensed'>
+      <thead>
+        <tr>
+          <th>Score</th>
+          <th>Player</th>
+          <th>Race + Background</th>
+          <th>God</th>
+          <th>XL</TH>
+          <th>Killer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for game in @games.desc(:end_time).limit(10) %>
+        <tr>
+          <td><%= link_to game.score, game_path(game) %></td>
+          <td><%= game.character %> the <%= game.title %></td>
+          <td><%= game.race %> <%= game.background %></td>
+          <td><%= game.god || '-' %></td>
+          <td><%= game.level %></td>
+          <td><%= game.killer || '-' %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class='span4'>
+    <h4>Cumulative numbers</h4>
+    <dl class="dl-horizontal">
+      <dt>Games played</dt><dd><%= @player.played %></dd>
+      <dt>Total kills</dt><dd><%= @player.kills %></dd>
+      <dt>Time spent</dt><dd><%= @player.time_spent %> seconds</dd>
+      <dt>Levels seen</dt><dd><%= @player.levels_seen %></dd>
+    </dl>
+    <p><strong>TODO</strong>
+    Nemesis monster, unique. Favoured race, background, god,
+    skill(, level? only in 0.10 morgues I think).</p>
 
-<p>
-  <b>Name:</b>
-  <%= @player.name %>
-</p>
-
-<% if @games.any? %>
-  <h3>Games</h3>
-  <ul>
-    <% for game in @games.desc(:score) %>
-      <% # needs a helper %>
-      <li><%= link_to "#{game.score} #{game.character} the #{game.title} (level #{game.level}, #{game.race} #{game.background})", game_path(game) %>
+    <% if @user == current_user %>
+      <!-- XXX - Icon doesn't work, upgrade Bootstrap or something else? -->
+      <p><i class="icon-plus-sign"></i><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
+      <p><%= link_to 'Edit', edit_user_player_path(@user, @player) %></p>
     <% end %>
-  </ul>
-<% end %>
-
-<p><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
-<% if @user == current_user %><%= link_to 'Edit',
-                                  edit_user_player_path(@user,
-                                                        @player)
-                                  %> |<% end %>
-<%= link_to 'Back', user_players_path %>
+    <% if @user.players.length > 1 %>
+      <p><%= link_to "The user page of #{@user.name}", user_players_path %></p>
+    <% end %>
+  </div>
+</div>

@@ -58,8 +58,14 @@ class GamesController < ApplicationController
     morgue[:combo]        = DCSS.combo2abbr(morgue[:race], morgue[:background])
     @game = @player.games.new(morgue)
 
+    @player.played      += 1
+    @player.kills       += morgue[:kills]
+    @player.time_spent  += morgue[:duration]
+    @player.levels_seen += morgue[:levels_seen]
+
     respond_to do |format|
-      if @game.save
+      # XXX Should handle player errors too I guess.
+      if @game.save and @player.save
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
         format.json { render json: @game, status: :created, location: @game }
       else

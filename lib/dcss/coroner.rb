@@ -17,6 +17,9 @@ class DCSS::Coroner
     autopsy.merge! find_place_god_piety_hunger(sections)
     autopsy.merge! find_race_class_turns_duration(sections)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
+    autopsy.merge! find_killer(sections)
+    autopsy.merge! find_kills(sections)
+    autopsy.merge! find_visits(sections)
 
     return Morgue.new(autopsy)
   end
@@ -56,13 +59,13 @@ class DCSS::Coroner
 
   def find_score_char_title_level(sections)
     # 178 Snwcln the Vexing (level 3
-    _, match = find_section sections, /\A
-       (?<score>\d+)    \s
-       (?<character>.*) \s
-       the              \s
-       (?<title>.*)     \s
-       \(level \s (?<level>\d+)
-    /x;
+    _, match = find_section sections, score_section_re = /\A
+      (?<score>\d+)    \s
+      (?<character>.*) \s
+      the              \s
+      (?<title>.*)     \s
+      \(level \s (?<level>\d+)
+    /x
     return {} if match.nil?
     return {
       :score     => match[:score].to_i,
@@ -140,6 +143,26 @@ class DCSS::Coroner
     place_religion[:branch] = branch[0]   if branch
     
     return place_religion
+  end
+
+  def find_killer(sections)
+    notes, _ = find_section sections, /\ANotes$/m
+    return {} if notes.nil?
+    # Only looking for the monster that killed the player, not quits/escapes/etc
+    killer = notes.match(/(by|to)\s(\san?)?(?<culprit>\w+[()\w '-]*)( poison)?\s*\z/x)
+    return {} if killer.nil?
+    return { :killer => killer[:culprit].sub(/^an? /, '') } # Meh, too lazy to make re above DTRT
+  end
+
+  def find_kills(sections)
+    # XXX Worth distingusing between own/collateral/other?
+    kills = sections.collect{|s| s.match /^(?<v>\d+) creatures vanquished[.]$/m}.reject &:nil?
+    return { :kills => kills.reduce(0) {|acc, k| acc + k[:v].to_i } }
+  end
+
+  def find_visits(sections)
+    # XXX This is a bit fragile.
+    return { :levels_seen => match_one(sections, /saw (\d+) of its level/).to_i }
   end
 
   class Morgue < Hash

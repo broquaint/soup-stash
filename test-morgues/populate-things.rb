@@ -50,6 +50,7 @@ end
 
 users.each_pair do |user, morgues|
   ua, player = create_user user
+  # TODO take argument to parallelise
   sign_out_form = morgues.each do |m|
 
     # ??? Needed because reusing game_form was repeatedly uploading the same file :S

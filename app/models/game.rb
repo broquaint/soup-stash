@@ -23,6 +23,7 @@ class Game # Specifically DCSS
   field :branch     , :type => String  # DONE
   field :lvl        , :type => Integer # DONE
   field :ltyp       , :type => String  # == branch ???
+  field :levels_seen , :type => Integer
   field :hp         , :type => Integer
   field :maxhp      , :type => Integer
   field :maxmaxhp   , :type => Integer
@@ -30,11 +31,12 @@ class Game # Specifically DCSS
   field :int        , :type => Integer
   field :dex        , :type => Integer
   field :god        , :type => String  # DONE
-  field :duration   , :type => String  # DONE
+  field :duration   , :type => Integer # DONE
   field :turn       , :type => Float   # DONE
   field :runes      , :type => Integer
   field :killertype , :type => String
   field :killer     , :type => String
+  field :kills      , :type => Integer
   field :damage     , :type => Integer
   field :piety      , :type => Integer # DONE
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
