@@ -47,7 +47,7 @@ class Game # Specifically DCSS
   field :combo,        :type => String
   
   belongs_to :player
-  key :name, :character, :combo, :end_time_str
+  field :_id, :type => String, :default => ->{ [name, character, combo, end_time_str] }
 
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options

@@ -6,8 +6,8 @@ class User
          :recoverable, :rememberable, :trackable, :validatable
 
   ## Database authenticatable
-  field :email,              :type => String, :null => false, :default => ""
-  field :encrypted_password, :type => String, :null => false, :default => ""
+  field :email,              :type => String, :default => "" # :null => false <-- not liked by mongoid 3
+  field :encrypted_password, :type => String, :default => "" # :null => false ^^
 
   ## Recoverable
   field :reset_password_token,   :type => String
@@ -49,5 +49,6 @@ class User
   # field :authentication_token, :type => String
 
   has_many :players
-  key :name
+
+  field :_id, :type => String, :default => ->{ name }
 end

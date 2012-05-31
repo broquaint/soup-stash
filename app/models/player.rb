@@ -15,5 +15,5 @@ class Player
   
   belongs_to  :user
   has_many    :games
-  key :name, :for_game
+  field :_id, :type => String, :default => -> { [name, for_game] }
 end

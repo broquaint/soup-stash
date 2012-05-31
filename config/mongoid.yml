@@ -1,7 +1,9 @@
 development:
-  host: localhost
-  database: soup_stash_development
-
+  sessions:
+    default:
+      database: soup_stash_development
+      hosts:
+        - localhost:27017
 test:
   host: localhost
   database: soup_stash_test
