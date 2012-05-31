@@ -23,7 +23,7 @@ class Game # Specifically DCSS
   field :branch     , :type => String  # DONE
   field :lvl        , :type => Integer # DONE
   field :ltyp       , :type => String  # == branch ???
-  field :levels_seen , :type => Integer
+  field :levels_seen , :type => Integer # DONE
   field :hp         , :type => Integer
   field :maxhp      , :type => Integer
   field :maxmaxhp   , :type => Integer
@@ -35,8 +35,8 @@ class Game # Specifically DCSS
   field :turn       , :type => Float   # DONE
   field :runes      , :type => Integer
   field :killertype , :type => String
-  field :killer     , :type => String
-  field :kills      , :type => Integer
+  field :killer     , :type => String  # DONE
+  field :kills      , :type => Integer # DONE
   field :damage     , :type => Integer
   field :piety      , :type => Integer # DONE
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
@@ -53,13 +53,48 @@ class Game # Specifically DCSS
   def self.popular_combos # TODO Take time/version/etc as options
     map = 'function() { emit(this.race + " " + this.background, { count: 1 }) }'
     red = 'function(k,vals) { var tot = 0; vals.forEach(function(v) { tot += v.count }); return { count: tot }; }'
-    combos = Game.collection.map_reduce(map, red, :out => {:inline=>1}, :raw => true)
-    combos['results'].collect do |c|
+    Game.map_reduce(map, red).out(:inline=>1).collect do |c|
       {
         :race  => c['_id'],
         :count => c['value']['count'].to_i,
       }
     end
+  end
+
+  
+  def self.character_favourites(character) # TODO Take time/version/etc as options
+    # XXX db.eval(File.read('underscore.js'))
+    map = %Q{
+      function() {
+        var e = { race: {}, background: {}, god: {} },
+           me = this;
+        // { race: { val: 'High Elf', count: 1 } }
+        ['race','background','god'].forEach(function(i) { e[i][me[i] || 'none'] = 1; });
+        emit(this.character, e);
+      }
+    }
+
+    red = %Q{
+      function(k, vals) {
+        var t = { race: {}, background: {}, god: {} };
+        // Oh for CoffeeScript!
+        vals.forEach(function(v) {
+          ['race','background','god'].forEach(function(i) {
+            for(var p in v[i])
+              t[i][p] = 1 + (p in t[i] ? t[i][p] : 0);
+          });
+        });
+        return t;
+      }
+    }
+
+    faves = Game.where(:character => character).map_reduce(map, red).out(:inline=>1)
+    return {} if faves.empty?
+    return {
+      :race       => faves.first['value']['race'],
+      :background => faves.first['value']['background'],
+      :god        => faves.first['value']['god'],
+    }
   end
  
 end

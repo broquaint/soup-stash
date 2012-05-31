@@ -33,13 +33,22 @@
     <h4>Cumulative numbers</h4>
     <dl class="dl-horizontal">
       <dt>Games played</dt><dd><%= @player.played %></dd>
-      <dt>Total kills</dt><dd><%= @player.kills %></dd>
-      <dt>Time spent</dt><dd><%= @player.time_spent %> seconds</dd>
-      <dt>Levels seen</dt><dd><%= @player.levels_seen %></dd>
+      <dt>Total kills</dt> <dd><%= @player.kills %></dd>
+      <!-- TODO Make seconds human readable -->
+      <dt>Time spent</dt>  <dd><%= @player.time_spent %> seconds</dd>
+      <dt>Levels seen</dt> <dd><%= @player.levels_seen %></dd>
+    </dl>
+    <h4>Favourites</h4>
+    <dl class="dl-horizontal">
+      <!-- TODO Handle ties somehow. -->
+      <dt>Race</dt><dd><%= @race[:fave] %> x <em><%= @race[:count] %></em></dd>
+      <dt>Background</dt><dd><%= @background[:fave] %> x <em><%= @background[:count] %></em></dd>
+      <% unless @god[:fave].nil? and @god[:fave] != 'none' %>
+      <dt>God</dt><dd><%= @god[:fave] %> x <em><%= @god[:count] %></em></dd>
+      <% end %>
     </dl>
     <p><strong>TODO</strong>
-    Nemesis monster, unique. Favoured race, background, god,
-    skill(, level? only in 0.10 morgues I think).</p>
+    Nemesis monster, unique. Favoured skill(, level? only in 0.10 morgues I think).</p>
 
     <% if @user == current_user %>
       <!-- XXX - Icon doesn't work, upgrade Bootstrap or something else? -->

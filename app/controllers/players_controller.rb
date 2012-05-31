@@ -19,6 +19,12 @@ class PlayersController < ApplicationController
     @user   = User.find(params[:user_id])
     @player = Player.find(params[:id])
     @games  = @player.games
+    faves  = Game.character_favourites(@player.name)
+    # XXX There's surely a more elegant approach?
+    @race, @background, @god = faves.keys.collect do |type|
+      f, c = faves[type].reduce {|fave, pair| pair[1] > fave[1] ? pair : fave}
+      { fave: f, count: c.to_i }
+    end
 
     respond_to do |format|
       format.html # show.html.erb

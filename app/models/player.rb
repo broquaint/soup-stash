@@ -10,8 +10,9 @@ class Player
   field :levels_seen, :type => Integer, :default => -> { 0 }
   field :nemesis, :type => String
 
-  field :favourites # An object of things, don't want to decide yet what they'll be
-
+  field :favourites, :type => Hash, :default => { :race => {}, :background => {}, :god => {} }
+ 
+  field :created_at, :type => Time, :default => -> { Time.now }
   
   belongs_to  :user
   has_many    :games
