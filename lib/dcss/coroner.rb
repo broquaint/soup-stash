@@ -20,6 +20,7 @@ class DCSS::Coroner
     autopsy.merge! find_killer(sections)
     autopsy.merge! find_kills(sections)
     autopsy.merge! find_visits(sections)
+    autopsy.merge! find_stats(sections)
 
     return Morgue.new(autopsy)
   end
@@ -84,7 +85,7 @@ class DCSS::Coroner
     _, match = find_section sections, /
        \( #{@rbc_re} \) \s+
        Turns: \s (?<turns>[\d.]+), \s
-       Time:  \s (?<duration>[\d:]+)
+       Time:  \s (?<duration>[\d:]+) $
     /x
 
     return {} if match.nil?
@@ -145,6 +146,7 @@ class DCSS::Coroner
     return place_religion
   end
 
+  # TODO Grab "death notice" from score summary section.
   def find_killer(sections)
     notes, _ = find_section sections, /\ANotes$/m
     return {} if notes.nil?
@@ -165,6 +167,43 @@ class DCSS::Coroner
     return { :levels_seen => match_one(sections, /saw (\d+) of its level/).to_i }
   end
 
+  def find_stats(sections)
+    stats, _ = find_section sections, %r{^HP\s+-?\d+/}
+
+    stat_list = %w{HP AC Str MP EV Int Gold SH Dex}
+    stat_res  = stat_list.inject({}) do |h, s|
+      h.merge({ s => %r{
+        #{s} \s+ (?<#{s.downcase}> -?\d+ (?:/\d+)?) # HP -1/12
+         (?:\s+\((?<max#{s.downcase}>\d+)\))? \s+   # (13)
+      }x })
+    end
+    numbers = stats.match %r{\A
+      #{stat_res.values_at('HP', 'AC', 'Str').join('')}
+      XL: \s+  (?<xl>\d+) \s+ (?: Next: \s+ (?<next>\d+%) ) \n
+      #{stat_res.values_at('MP', 'EV', 'Int').join('')}
+      God: \s+ (?: (?<god>[\w]+[ \w]*) \s \[......\])? \s* \n
+      #{stat_res.values_at('Gold', 'SH', 'Dex').join('')}
+    }x
+
+    return {} if numbers.nil?
+
+    return {
+      # TODO Special case hp/maxhp to make the regexps above smaller + simpler
+      :hp  => numbers[:hp], # Given "-1/12" should it be the LHS or RHS?
+      :maxhp => numbers[:maxhp] && numbers[:maxhp].to_i,
+      
+      :ac   => numbers[:ac].to_i,
+      :str  => numbers[:str].to_i,
+      :mp   => numbers[:mp], # Given "3/6" should it be the LHS or RHS?
+      :ev   => numbers[:ev].to_i,
+      :int  => numbers[:int].to_i,
+      :gold => numbers[:gold].to_i,
+      :sh   => numbers[:sh].to_i,
+      :dex  => numbers[:dex].to_i
+    }
+  end
+
+  # TODO Use Hashie::Mash
   class Morgue < Hash
     def initialize(args)
       # I have been spoilt by Moose, would've used this but instance_variable_set makes inspect empty.

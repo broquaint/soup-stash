@@ -57,6 +57,28 @@ describe DCSS::Coroner, 'matching' do
                                                          })
   end
 
+  it 'finds stats' do
+    c = DCSS::Coroner.new
+    sections = c.make_sections <<STATS
+HP  -1/15        AC  1     Str 10      XL: 3   Next: 25%
+MP   6/6         EV 17     Int 13      God: Vehumet [*.....]
+Gold 141         SH  0     Dex 14      Spells:  1 memorised,  3 levels left
+                                       Lives: 0, deaths: 1
+STATS
+    c.find_stats(sections).should eq({
+                                       :hp    => '-1/15',
+                                       :maxhp => nil,
+                                       :ac    => 1,
+                                       :str   => 10,
+                                       :mp    => '6/6',
+                                       :ev    => 17,
+                                       :int   => 13,
+                                       :gold  => 141,
+                                       :sh    => 0,
+                                       :dex   => 14
+                                     })
+  end
+
   it 'should match abbreviated race/background combo' do
     'FeWn'.should =~ DCSS.abbr_combo_re
     'HEFE'.should =~ DCSS.abbr_combo_re
@@ -107,26 +129,57 @@ You worshipped Vehumet.
 Vehumet was exalted by your worship.
 You were not hungry.
 
+You visited 1 branch of the dungeon, and saw 3 of its levels.
+
+...
+
+Vanquished Creatures
+  Jessica (D:3)
+  A snake (D:2)
+  4 giant geckos (D:2)
+  8 bats
+  4 goblins
+  6 hobgoblins
+  3 jackals (D:2)
+  6 giant cockroaches
+  5 giant newts
+  8 kobolds
+  5 rats
+  2 small snakes (D:1)
+53 creatures vanquished.
+
 MORGUE
     # TODO Configure ruby-mode to indent sanely
     expected = {
-      :name       => 'dcss',
-      :version    => '0.9.1',
-      :score      => 178,
-      :character  => 'Snwcln',
-      :title      => 'Vexing',
-      :level      => 3,
-      :race       => 'Felid',
-      :background => 'Wanderer',
-      :turns      => 3364.0,
-      :duration   => 83462,
-      :start_time => DateTime.parse('2012-04-23 00:50:42 +0100').to_time,
-      :end_time   => DateTime.parse('2012-04-24 00:01:44 +0100').to_time,
-      :god        => "Vehumet",
-      :piety      => "exalted",
-      :place      => "level 4 of the Orcish Mines",
-      :branch     => 'Orcish Mines',
-      :lvl        => 4,
+      :name        => 'dcss',
+      :version     => '0.9.1',
+      :score       => 178,
+      :character   => 'Snwcln',
+      :title       => 'Vexing',
+      :level       => 3,
+      :race        => 'Felid',
+      :background  => 'Wanderer',
+      :turns       => 3364.0,
+      :duration    => 83462,
+      :start_time  => DateTime.parse('2012-04-23 00:50:42 +0100').to_time,
+      :end_time    => DateTime.parse('2012-04-24 00:01:44 +0100').to_time,
+      :god         => "Vehumet",
+      :piety       => "exalted",
+      :place       => "level 4 of the Orcish Mines",
+      :branch      => 'Orcish Mines',
+      :lvl         => 4,
+      :kills       => 53,
+      :levels_seen => 3,
+      :hp          => '-1/15',
+      :maxhp       => nil,
+      :ac          => 1,
+      :str         => 10,
+      :mp          => "6/6",
+      :ev          => 17,
+      :int         => 13,
+      :gold        => 141,
+      :sh          => 0,
+      :dex         => 14
     }
     DCSS::Coroner.new(morgue, 'morgue-Snwcln-20120423-230144.txt').parse.should eq(expected)
   end
