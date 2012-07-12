@@ -41,6 +41,10 @@ def upload_game(form, morgue)
   end.submit
 end
 
+p `echo 'db.games.remove();db.players.remove();db.users.remove()' | mongo soup_stash_development`;
+
+Dir::chdir '/home/dbrook/dev/soup-stash/test-morgues';
+
 users = Dir.open('.').select{|e| e =~ /^morgue/}.inject({}) do |res, morgue|
 #  puts "Getting morgue #{morgue}"
   k = morgue.match(/morgue-([^-]+)-/)[1]
