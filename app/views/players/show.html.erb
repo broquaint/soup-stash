@@ -28,6 +28,7 @@
         <% end %>
       </tbody>
     </table>
+    <%= paginate @games %>
   </div>
   <div class='span4'>
     <h4>Cumulative numbers</h4>
@@ -38,6 +39,7 @@
       <dt>Time spent</dt>  <dd><%= @player.time_spent %> seconds</dd>
       <dt>Levels seen</dt> <dd><%= @player.levels_seen %></dd>
     </dl>
+    <% if @games.length > 0 %>
     <h4>Favourites</h4>
     <dl class="dl-horizontal">
       <!-- TODO Handle ties somehow. -->
@@ -47,6 +49,7 @@
       <dt>God</dt><dd><%= @god[:fave] %> x <em><%= @god[:count] %></em></dd>
       <% end %>
     </dl>
+    <% end %>
     <p><strong>TODO</strong>
     Nemesis monster, unique. Favoured skill(, level? only in 0.10 morgues I think).</p>
 

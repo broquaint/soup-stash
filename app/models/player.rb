@@ -1,5 +1,8 @@
 class Player
   include Mongoid::Document
+
+  paginates_per 27
+  
   field :for_game, :type => String # Possibly unnecessary/implied?
   field :name,     :type => String
 

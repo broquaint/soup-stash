@@ -20,32 +20,32 @@ group :assets do
 end
 
 gem 'jquery-rails'
-
-gem 'bson_ext'
+gem 'bootstrap-sass'
 
 gem 'devise'
+gem 'cancan'  # https://github.com/ryanb/cancan TODO - Use in anger.
 
-gem 'cancan'  # https://github.com/ryanb/cancan
+gem 'bson_ext'
+gem 'mongoid', "~> 3.0.0" # http://mongoid.org/docs/installation.html
 
-gem 'mongoid', "~> 3.0.0.rc" # http://mongoid.org/docs/installation.html
+gem 'kaminari'
 
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
 gem 'rspec-rails', :group => [:development, :test]
-gem 'database_cleaner', :group => :test
-gem 'factory_girl_rails', :group => :test
 
 # This hasn't been updated for mongoid 3 yet, not using it in anger so meh.
 # gem 'mongoid-rspec', :group => :test
 
 # "Cucumber Gems"
 group :test do
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
+
   gem 'cucumber-rails'
   gem 'capybara'
   gem 'database_cleaner'
 end
-
-gem 'bootstrap-sass'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'

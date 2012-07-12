@@ -4,9 +4,7 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @user    = User.find(params[:user_id])
-    @players = @user.players
-
+    # TODO
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @players }
@@ -18,7 +16,8 @@ class PlayersController < ApplicationController
   def show
     @user   = User.find(params[:user_id])
     @player = Player.find(params[:id])
-    @games  = @player.games
+    # WTF, this broke after Mongoid 3 upgrade - @player.games
+    @games  = Game.where(character: @player.name).page params[:page]
     faves  = Game.character_favourites(@player.name)
     # XXX There's surely a more elegant approach?
     @race, @background, @god = faves.keys.collect do |type|

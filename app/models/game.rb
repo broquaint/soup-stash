@@ -1,5 +1,7 @@
 class Game # Specifically DCSS
   include Mongoid::Document
+  # Kaminara paging dealy.
+  paginates_per 27
   
   field :name, :type => String
   # XXX All of it?
