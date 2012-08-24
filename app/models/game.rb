@@ -55,6 +55,8 @@ class Game # Specifically DCSS
 
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options
+    return [] if Game.count == 0
+
     map = 'function() { emit(this.race + " " + this.background, { count: 1 }) }'
     red = 'function(k,vals) { var tot = 0; vals.forEach(function(v) { tot += v.count }); return { count: tot }; }'
     Game.map_reduce(map, red).out(:inline=>1).collect do |c|
@@ -67,6 +69,7 @@ class Game # Specifically DCSS
 
   
   def self.character_favourites(character) # TODO Take time/version/etc as options
+    return {} if Game.count == 0
     # XXX db.eval(File.read('underscore.js'))
     map = %Q{
       function() {
