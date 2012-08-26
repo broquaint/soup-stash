@@ -85,7 +85,7 @@ class DCSS::Coroner
     _, match = find_section sections, /
        \( #{@rbc_re} \) \s+
        Turns: \s (?<turns>[\d.]+), \s
-       Time:  \s (?<duration>[\d:]+) $
+       Time:  \s (?<duration>[\d\s:,]+) $
     /x
 
     return {} if match.nil?
@@ -111,10 +111,11 @@ class DCSS::Coroner
 
     end_dt = DateTime.new *%w{year month day hour minute second}.collect{|p| dt_m[p].to_i}
     
-    dur_m = duration.match /^(?<hours>\d+):(?<minutes>\d\d):(?<seconds>\d\d)\z/
+    dur_m = duration.match /^(?:(?<days>\d+),\s*)?(?<hours>\d+):(?<minutes>\d\d):(?<seconds>\d\d)\z/
 
     # XXX Store this somewhere?
-    game_in_seconds = ( dur_m[:hours].to_i * 60 * 60 ) + ( dur_m[:minutes].to_i * 60 ) + dur_m[:seconds].to_i
+    game_in_seconds  = ( dur_m[:hours].to_i * 60 * 60 ) + ( dur_m[:minutes].to_i * 60 ) + dur_m[:seconds].to_i
+    game_in_seconds += 3600 * 24 * dur_m[:days].to_i if dur_m[:days].to_i
 
     # Casting to Time here results in the desired time but then we need to
     # cast end_dt as well in the resultant hash. Also don't want to care about
