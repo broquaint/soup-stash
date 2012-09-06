@@ -17,6 +17,7 @@ class DCSS::Coroner
     autopsy.merge! find_place_god_piety_hunger(sections)
     autopsy.merge! find_race_class_turns_duration(sections)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
+    autopsy.merge! find_resistances_slots(sections, autopsy[:race])
     autopsy.merge! find_killer_ending(sections)
     autopsy.merge! find_kills(sections)
     autopsy.merge! find_visits(sections)
@@ -146,6 +147,42 @@ class DCSS::Coroner
     place_religion[:branch] = branch[0]   if branch
     
     return place_religion
+  end
+
+  def find_resistances_slots(sections, race)
+    rEquip, _ = find_section sections, /\ARes[.]Fire\s+:/;
+
+    return {} if rEquip.nil?
+
+    resistances = {}
+    rTot_re   = %r{(?:[+x.]\s)+}
+    rMatch_re = %r{
+      ([A-Z][A-Za-z. ]+\S) \s*: \s (#{rTot_re})
+    }x
+
+    rEquip.scan(rMatch_re) do |r, t|
+      t.gsub! /\s+/, ''
+      resistances[r] = if t.length == 1
+                         t == '+' ? 'on' : t == '.' ? 'off' : 'disabled'
+                       else # Use fractionals?
+                         "%d/%d" % [t.count('+'), t.length]
+                       end
+    end
+
+    equipped_re = %r{([A-Za-z]) - (.*)\z}   # Mmm, fixed width records.
+    items       = rEquip.split(/\n/).collect{|line| line[37, line.length-1]}
+
+    slot_list = race != 'Octopode' ? DCSS::EQUIPMENT_SLOTS : DCSS::EQUIPMENT_SLOTS_OP
+    equipped  = slot_list.length.times.reduce({}) do |slots, idx|
+      has_slot, slot, item = *items[idx].match(equipped_re)
+      slots[ DCSS::EQUIPMENT_SLOTS[idx] ] = has_slot ? { :slot => slot, :item => item } : nil
+      slots
+    end
+
+    return {
+      :resistances => resistances,
+      :equipped    => equipped
+    }
   end
 
   # TODO Grab "death notice" from score summary section.

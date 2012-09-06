@@ -139,5 +139,31 @@ module DCSS
   def DCSS.branch_re
     Regexp.new('(?:' + BRANCHES.join('|') + ')')
   end
-end
 
+  EQUIPMENT_SLOTS = [
+                     'weapon',
+                     'armour',
+                     'shield',
+                     'helmet',
+                     'cloak',
+                     'gloves',
+                     'boots',
+                     'amulet',
+                     'right ring',
+                     'left ring',
+                    ]
+  EQUIPMENT_SLOTS_OP = [
+                     'weapon',
+                     'armour',
+                     'helmet',
+                     'amulet',
+                     'ring',
+                     'ring',
+                     'ring',
+                     'ring',
+                     'ring',
+                     'ring',
+                     'ring',
+                     'ring',
+                    ]
+end

@@ -52,6 +52,9 @@ class Game # Specifically DCSS
   field :character_features,  :type => Array # A: horns, claws, teleportitis, etc
   field :character_abilities, :type => Array # a: Bend Time, Evoke Blink, etc
 
+  field :resistances, :type => Object # Res.Fire  : + . .
+  field :equipped,    :type => Object # p - +2 leather armour
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String
