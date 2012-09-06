@@ -17,7 +17,7 @@ class DCSS::Coroner
     autopsy.merge! find_place_god_piety_hunger(sections)
     autopsy.merge! find_race_class_turns_duration(sections)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
-    autopsy.merge! find_killer(sections)
+    autopsy.merge! find_killer_ending(sections)
     autopsy.merge! find_kills(sections)
     autopsy.merge! find_visits(sections)
     autopsy.merge! find_stats(sections)
@@ -148,13 +148,18 @@ class DCSS::Coroner
   end
 
   # TODO Grab "death notice" from score summary section.
-  def find_killer(sections)
+  def find_killer_ending(sections)
     notes, _ = find_section sections, /\ANotes$/m
     return {} if notes.nil?
+
+    ret = { :ending => notes.split(/\s*[|]\s*/)[-1].strip } # Last note == ending
+
     # Only looking for the monster that killed the player, not quits/escapes/etc
     killer = notes.match(/(by|to)\s(\san?)?(?<culprit>\w+[()\w '-]*)( poison)?\s*\z/x)
-    return {} if killer.nil?
-    return { :killer => killer[:culprit].sub(/^an? /, '') } # Meh, too lazy to make re above DTRT
+    return ret if killer.nil?
+    return ret.merge({
+      :killer => killer[:culprit].sub(/^an? /, ''), # Meh, too lazy to make re above DTRT
+    })
   end
 
   def find_kills(sections)
@@ -192,9 +197,9 @@ class DCSS::Coroner
       # TODO Special case hp/maxhp to make the regexps above smaller + simpler
       :hp  => numbers[:hp], # Given "-1/12" should it be the LHS or RHS?
       :maxhp => numbers[:maxhp] && numbers[:maxhp].to_i,
-      
       :ac   => numbers[:ac].to_i,
       :str  => numbers[:str].to_i,
+      :xl   => numbers[:xl].to_i,
       :mp   => numbers[:mp], # Given "3/6" should it be the LHS or RHS?
       :ev   => numbers[:ev].to_i,
       :int  => numbers[:int].to_i,

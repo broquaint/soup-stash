@@ -70,6 +70,7 @@ STATS
                                        :maxhp => nil,
                                        :ac    => 1,
                                        :str   => 10,
+                                       :xl    => 3,
                                        :mp    => '6/6',
                                        :ev    => 17,
                                        :int   => 13,
@@ -148,6 +149,27 @@ Vanquished Creatures
   2 small snakes (D:1)
 53 creatures vanquished.
 
+Grand Total: 56 creatures vanquished
+
+Notes
+Turn   | Place    | Note
+--------------------------------------------------------------
+     0 | D:1      | Snwcln, the Felid Wanderer, began the quest for the Orb.
+     0 | D:1      | Reached XP level 1. HP: 8/8 MP: 3/3
+   752 | D:1      | Reached skill level 1 in Stealth
+   752 | D:1      | Reached XP level 2. HP: 10/12 MP: 4/4
+   841 | D:1      | Reached skill level 1 in Dodging
+  1054 | D:1      | Reached skill level 1 in Unarmed Combat
+  1906 | D:2      | Reached XP level 3. HP: 15/15 MP: 6/6
+  2510 | D:2      | Reached skill level 1 in Stabbing
+  2888 | D:3      | Found a radiant altar of Vehumet.
+  2920 | D:3      | Noticed Jessica
+  2931 | D:3      | Defeated Jessica
+  2931 | D:3      | Reached XP level 4. HP: 12/19 MP: 9/9
+  3341 | D:3      | Slain by a hound
+  3342 | D:3      | Reached XP level 3. HP: -1/15 MP: 6/6
+  3364 | D:3      | Slain by a hound
+
 MORGUE
     # TODO Configure ruby-mode to indent sanely
     expected = {
@@ -169,17 +191,21 @@ MORGUE
       :branch      => 'Orcish Mines',
       :lvl         => 4,
       :kills       => 53,
+      :killer      => 'hound',
       :levels_seen => 3,
       :hp          => '-1/15',
       :maxhp       => nil,
       :ac          => 1,
       :str         => 10,
+      :xl          => 3,
       :mp          => "6/6",
       :ev          => 17,
       :int         => 13,
       :gold        => 141,
       :sh          => 0,
-      :dex         => 14
+      :dex         => 14,
+      :ending      => 'Slain by a hound',
+      :morgue      => morgue,
     }
     DCSS::Coroner.new(morgue, 'morgue-Snwcln-20120423-230144.txt').parse.should eq(expected)
   end

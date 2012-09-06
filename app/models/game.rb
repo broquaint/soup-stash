@@ -17,7 +17,7 @@ class Game # Specifically DCSS
   field :version    , :type => String  # DONE
   field :level      , :type => String  # DONE # level == xl, what was lv?
   field :character  , :type => String  # DONE
-  field :xl         , :type => Integer # DONE
+  field :xl         , :type => Integer # DONE == level
 #  field :skill      , :type => String  # sk=Unarmed Combat
 #  field :sk_lev     , :type => String  # sklev=5
   field :title      , :type => String  # DONE
@@ -26,12 +26,13 @@ class Game # Specifically DCSS
   field :lvl        , :type => Integer # DONE
   field :ltyp       , :type => String  # == branch ???
   field :levels_seen , :type => Integer # DONE
-  field :hp         , :type => Integer
-  field :maxhp      , :type => Integer
-  field :maxmaxhp   , :type => Integer
-  field :str        , :type => Integer
-  field :int        , :type => Integer
-  field :dex        , :type => Integer
+  field :hp         , :type => Integer # DONE
+  field :maxhp      , :type => Integer # DONE
+  field :maxmaxhp   , :type => Integer # DONE
+  field :ac         , :type => Integer # DONE
+  field :str        , :type => Integer # DONE
+  field :int        , :type => Integer # DONE
+  field :dex        , :type => Integer # DONE
   field :god        , :type => String  # DONE
   field :duration   , :type => Integer # DONE
   field :turn       , :type => Float   # DONE
@@ -40,10 +41,11 @@ class Game # Specifically DCSS
   field :killer     , :type => String  # DONE
   field :kills      , :type => Integer # DONE
   field :damage     , :type => Integer
-  field :piety      , :type => Integer # DONE
+  field :piety      , :type => String  # DONE
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
                                        #                      16th June 2012 at 22:01:45
 
+  field :ending, :type => String
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String
@@ -52,6 +54,10 @@ class Game # Specifically DCSS
   field :_id, :type => String, :default => ->{
     "%s-%s-%s-%s" % [name, character, combo, end_time_str]
   }
+
+  def won
+    ending == 'Escaped with the Orb!' # A bit fragile but it'll do.
+  end
 
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options
@@ -70,6 +76,7 @@ class Game # Specifically DCSS
   
   def self.character_favourites(character) # TODO Take time/version/etc as options
     return {} if Game.count == 0
+
     # XXX db.eval(File.read('underscore.js'))
     map = %Q{
       function() {
