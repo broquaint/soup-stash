@@ -223,9 +223,9 @@ class DCSS::Coroner
     end
     numbers = stats.match %r{\A
       #{stat_res.values_at('HP', 'AC', 'Str').join('')}
-      XL: \s+  (?<xl>\d+) \s+ (?: Next: \s+ (?<next>\d+%) ) \n
+      XL: \s+  (?<xl>\d+) \s* (?: Next: \s+ (?<next>\d+%) )? \n
       #{stat_res.values_at('MP', 'EV', 'Int').join('')}
-      God: \s+ (?: (?<god>[\w]+[ \w]*) \s \[......\])? \s* \n
+      God: \s+ (?: (?<god>\w+[ \w]*) (?:\s \[......\])? \s* )? \n
       #{stat_res.values_at('Gold', 'SH', 'Dex').join('')}
     }x
 

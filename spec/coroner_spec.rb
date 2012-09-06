@@ -78,6 +78,27 @@ STATS
                                        :sh    => 0,
                                        :dex   => 14
                                      })
+
+    # via dcss-Arrhythmia-HuIE-20120814-024123 e.g winning stats
+    sections = c.make_sections <<STATS
+HP 223/231 (241) AC 18     Str 30      XL: 27
+MP  42/47        EV 39     Int 46      God: Cheibriados [******]
+Gold 8008        SH 43     Dex 33      Spells: 15 memorised,  1 level left
+STATS
+    c.find_stats(sections).should eq({
+                                       :hp    => '223/231',
+                                       :maxhp => 241,
+                                       :ac    => 18,
+                                       :str   => 30,
+                                       :xl    => 27,
+                                       :mp    => '42/47',
+                                       :ev    => 39,
+                                       :int   => 46,
+                                       :gold  => 8008,
+                                       :sh    => 43,
+                                       :dex   => 33
+                                     })
+
   end
 
   it 'should match abbreviated race/background combo' do
