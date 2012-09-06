@@ -37,6 +37,7 @@ class Game # Specifically DCSS
   field :duration   , :type => Integer # DONE
   field :turn       , :type => Float   # DONE
   field :runes      , :type => Integer
+  field :rune_list  , :type => Array
   field :killertype , :type => String
   field :killer     , :type => String  # DONE
   field :kills      , :type => Integer # DONE
@@ -46,6 +47,11 @@ class Game # Specifically DCSS
                                        #                      16th June 2012 at 22:01:45
 
   field :ending, :type => String
+
+  field :character_state,     :type => Array # @: stealthy, fast, etc
+  field :character_features,  :type => Array # A: horns, claws, teleportitis, etc
+  field :character_abilities, :type => Array # a: Bend Time, Evoke Blink, etc
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String

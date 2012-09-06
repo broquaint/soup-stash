@@ -21,6 +21,7 @@ class DCSS::Coroner
     autopsy.merge! find_kills(sections)
     autopsy.merge! find_visits(sections)
     autopsy.merge! find_stats(sections)
+    autopsy.merge! find_state_abilities_runes(sections)
 
     return Morgue.new(autopsy)
   end
@@ -207,6 +208,28 @@ class DCSS::Coroner
       :sh   => numbers[:sh].to_i,
       :dex  => numbers[:dex].to_i
     }
+  end
+
+  def find_state_abilities_runes(sections)
+    state_etc, _ = find_section sections, /\A@: /
+
+    state, features, abilities, runes =
+      state_etc.gsub(/\n(.[^:])/, ' \1').split(/\n/).collect{|s| s.sub /^.: /m, '' }
+
+    ret = {
+      :character_state => state.split(/, /),
+      :character_features => features.split(/, /),
+      :character_abilities => abilities.split(/, /),
+    }
+
+    runes_match = runes && runes.match(%r<(?<found>\d+)/\d+ runes: (?<rune_list>.*)>s)
+
+    ret.merge!({
+      :runes     => runes_match[:found].to_i,
+      :rune_list => runes_match[:rune_list].scan(/[^,\s]+/m)
+    }) if runes_match
+
+    return ret
   end
 
   # TODO Use Hashie::Mash

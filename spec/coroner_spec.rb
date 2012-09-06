@@ -121,7 +121,8 @@ Res.Mut.  : .       Ctrl.Telep.: x    Q - amulet of Xaco {rCorr rF+}
 Res.Rott. : .       Levitation : .    u - +5 ring of intelligence
 Saprovore : . . .   Ctrl.Flight: .    s - ring of teleport control
 
-@: quick, quite resistant to hostile enchantments, very stealthy
+@: quick, quite resistant to hostile enchantments, very stealthy, very
+slightly contaminated
 A: antennae 1, electricity resistance, AC +1, Str +1
 a: Renounce Religion
 
@@ -204,6 +205,9 @@ MORGUE
       :gold        => 141,
       :sh          => 0,
       :dex         => 14,
+      :character_abilities => ["Renounce Religion"],
+      :character_features => ["antennae 1", "electricity resistance", "AC +1", "Str +1"],
+      :character_state => ["quick", "quite resistant to hostile enchantments", "very stealthy", "very slightly contaminated"],
       :ending      => 'Slain by a hound',
       :morgue      => morgue,
     }
