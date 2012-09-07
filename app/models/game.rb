@@ -34,10 +34,11 @@ class Game # Specifically DCSS
   field :int        , :type => Integer # DONE
   field :dex        , :type => Integer # DONE
   field :god        , :type => String  # DONE
-  field :duration   , :type => Integer # DONE
-  field :turn       , :type => Float   # DONE
-  field :runes      , :type => Integer
-  field :rune_list  , :type => Array
+  field :duration         , :type => String  # DONE
+  field :duration_seconds , :type => Integer # DONE
+  field :turns      , :type => Float   # DONE
+  field :runes      , :type => Integer # DONE
+  field :rune_list  , :type => Array   # DONE
   field :killertype , :type => String
   field :killer     , :type => String  # DONE
   field :kills      , :type => Integer # DONE

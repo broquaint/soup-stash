@@ -62,7 +62,7 @@ class GamesController < ApplicationController
     # XXX Might be simpler to pull these out of a map/reduce as necessary.
     @player.played       += 1
     @player.kills        += morgue[:kills]
-    @player.time_spent   += morgue[:duration]
+    @player.time_spent   += morgue[:duration_seconds]
     @player.levels_seen  += morgue[:levels_seen]
 
     respond_to do |format|

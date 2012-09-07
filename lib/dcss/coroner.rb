@@ -132,9 +132,9 @@ class DCSS::Coroner
     start_dt = end_dt.to_time - game_in_seconds
 
     return {
-      :start_time => start_dt,
-      :end_time   => end_dt.to_time,
-      :duration   => game_in_seconds,
+      :start_time       => start_dt,
+      :end_time         => end_dt.to_time,
+      :duration_seconds => game_in_seconds,
     }
   end
   
