@@ -1,37 +1,37 @@
 require 'dcss/coroner'
 
 describe DCSS::Coroner, 'matching' do
-  it 'should make sections' do
+  it 'should make blocks' do
     c = DCSS::Coroner.new
-    c.make_sections("foo\n\nbar\n\nbaz").should eq(%w{foo bar baz})
+    c.make_blocks("foo\n\nbar\n\nbaz").should eq(%w{foo bar baz})
   end
-  it 'matches version in a section' do
+  it 'matches version in a block' do
     c = DCSS::Coroner.new
-    sections = c.make_sections "the version 0.1\n\nanother section"
-    c.match_one(sections, /([\d.]+)/).should eq('0.1')
+    blocks = c.make_blocks "the version 0.1\n\nanother block"
+    c.match_one(blocks, /([\d.]+)/).should eq('0.1')
   end
-  it 'matches nothing in a section' do
+  it 'matches nothing in a block' do
     c = DCSS::Coroner.new
-    sections = c.make_sections "the version twelve\n\nanother section"
-    c.match_one(sections, /([\d.]+)/).should be_false
+    blocks = c.make_blocks "the version twelve\n\nanother block"
+    c.match_one(blocks, /([\d.]+)/).should be_false
   end
-  it 'matches many things in a section' do
+  it 'matches many things in a block' do
     c = DCSS::Coroner.new
-    sections = c.make_sections "HP  -1/15   AC   1\n\nMP   6/6   EV 17"
-    c.match_many(sections, {
+    blocks = c.make_blocks "HP  -1/15   AC   1\n\nMP   6/6   EV 17"
+    c.match_many(blocks, {
       :hp => /\bHP\s+(\S+)/,
       :ev => /\bEV\s+(\S+)/
     }).should eq({:hp => '-1/15', :ev => '17'})
   end
   it 'finds a version' do
     c = DCSS::Coroner.new
-    sections = c.make_sections " Dungeon Crawl Stone Soup version 0.9.1 character file.\n\n178 Snwcln the Vexing (level 3, -1/15 HPs)"
-    c.find_version(sections).should eq('0.9.1')
+    blocks = c.make_blocks " Dungeon Crawl Stone Soup version 0.9.1 character file.\n\n178 Snwcln the Vexing (level 3, -1/15 HPs)"
+    c.find_version(blocks).should eq('0.9.1')
   end
   it 'finds score, char, title + level' do
     c = DCSS::Coroner.new
-    sections = c.make_sections "178 Snwcln the Vexing (level 3, -1/15 HPs)\n\n33 creatures vanquished"
-    c.find_score_char_title_level(sections).should eq({
+    blocks = c.make_blocks "178 Snwcln the Vexing (level 3, -1/15 HPs)\n\n33 creatures vanquished"
+    c.find_score_char_title_level(blocks).should eq({
                                                         :score     => 178,
                                                         :character => 'Snwcln',
                                                         :title     => 'Vexing',
@@ -40,16 +40,16 @@ describe DCSS::Coroner, 'matching' do
   end
   it 'find race, background, turns + duration' do
     c = DCSS::Coroner.new
-    sections = c.make_sections "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
-    c.find_race_class_turns_duration(sections).should eq({
+    blocks = c.make_blocks "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
+    c.find_race_class_turns_duration(blocks).should eq({
                                                            :race       => 'Felid',
                                                            :background => 'Wanderer',
                                                            :turns      => 3364,
                                                            :duration   => '00:11:02'
                                                          })
     
-    sections = c.make_sections "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
-    c.find_race_class_turns_duration(sections).should eq({
+    blocks = c.make_blocks "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
+    c.find_race_class_turns_duration(blocks).should eq({
                                                            :race       => 'Sludge Elf',
                                                            :background => 'Earth Elementalist',
                                                            :turns      => 14495,
@@ -59,13 +59,13 @@ describe DCSS::Coroner, 'matching' do
 
   it 'finds stats' do
     c = DCSS::Coroner.new
-    sections = c.make_sections <<STATS
+    blocks = c.make_blocks <<STATS
 HP  -1/15        AC  1     Str 10      XL: 3   Next: 25%
 MP   6/6         EV 17     Int 13      God: Vehumet [*.....]
 Gold 141         SH  0     Dex 14      Spells:  1 memorised,  3 levels left
                                        Lives: 0, deaths: 1
 STATS
-    c.find_stats(sections).should eq({
+    c.find_stats(blocks).should eq({
                                        :hp    => '-1/15',
                                        :maxhp => nil,
                                        :ac    => 1,
@@ -80,12 +80,12 @@ STATS
                                      })
 
     # via dcss-Arrhythmia-HuIE-20120814-024123 e.g winning stats
-    sections = c.make_sections <<STATS
+    blocks = c.make_blocks <<STATS
 HP 223/231 (241) AC 18     Str 30      XL: 27
 MP  42/47        EV 39     Int 46      God: Cheibriados [******]
 Gold 8008        SH 43     Dex 33      Spells: 15 memorised,  1 level left
 STATS
-    c.find_stats(sections).should eq({
+    c.find_stats(blocks).should eq({
                                        :hp    => '223/231',
                                        :maxhp => 241,
                                        :ac    => 18,
