@@ -55,6 +55,8 @@ class Game # Specifically DCSS
   field :resistances, :type => Object # Res.Fire  : + . .
   field :equipped,    :type => Object # p - +2 leather armour
 
+  field :inventory, :type => Object # { slot: { item: String, desc: String, type: String } }
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String

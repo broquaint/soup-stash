@@ -25,6 +25,7 @@ class DCSS::Coroner
     autopsy.merge! find_visits(blocks)
     autopsy.merge! find_stats(blocks)
     autopsy.merge! find_state_abilities_runes(blocks)
+    autopsy.merge! understand_inventory(sections)
 
     return Morgue.new(autopsy)
   end
@@ -175,13 +176,13 @@ class DCSS::Coroner
                        end
     end
 
-    equipped_re = %r{([A-Za-z]) - (.*)\z}   # Mmm, fixed width records.
+    equipped_re = %r{([A-Za-z]) - }                 # Mmm, fixed width records.
     items       = rEquip.split(/\n/).collect{|line| line[37, line.length-1]}
 
     slot_list = race != 'Octopode' ? DCSS::EQUIPMENT_SLOTS : DCSS::EQUIPMENT_SLOTS_OP
     equipped  = slot_list.length.times.reduce({}) do |slots, idx|
-      has_slot, slot, item = *items[idx].match(equipped_re)
-      slots[ DCSS::EQUIPMENT_SLOTS[idx] ] = has_slot ? { :slot => slot, :item => item } : nil
+      has_slot, slot = *items[idx].match(equipped_re)
+      slots[ DCSS::EQUIPMENT_SLOTS[idx] ] = has_slot ? slot : nil
       slots
     end
 
@@ -273,6 +274,25 @@ class DCSS::Coroner
     }) if runes_match
 
     return ret
+  end
+
+  def understand_inventory(sections)
+    invt, _ = find_in sections, /^Inventory:$/m
+
+    groups = invt.scan /^([A-Z][\w ]+)$(.*?)(?:(?=^[A-Z])|\z)/m
+    return {
+      :inventory => groups.reduce({}) do |inventory, g|
+        type, slots_block  = g
+        slots_block.scan /^ (\w) - (.*?)$(.*?)(?:(?=^ \w -)|\z)/m do |slot, item, desc|
+          inventory[slot] = {
+            :type => type,
+            :item => item,
+            :desc => desc.strip.empty? ? nil : desc
+          }
+        end
+        inventory
+      end
+    }
   end
 
   # TODO Use Hashie::Mash
