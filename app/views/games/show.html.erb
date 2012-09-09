@@ -1,5 +1,90 @@
 <p id="notice"><%= notice %></p>
 
+<div class='row'>
+  <div class='span8'>
+    <div style='display: none;'><%= @game.morgue %></div>
+
+    <div id=announce'>
+      <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.level %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
+      <h2><%= @game.ending %></h2>
+      <h2>with <%= @game.score %>
+	<% if @game.won %>
+	holding the <em><%= @game.rune_list.to_sentence %></em> runes
+	<% else %>
+	at <%= @game.place %>
+	<% end %></h2>
+      <h2>It took <%= @game.turns %> turns in <%= @game.duration %></h2>
+      <!-- Link to subsections with more details further down -->
+      <% if @game.god %><h3>Worshipper of <%= @game.god %></h3><% end %>
+    </div>
+
+    <div id='status'>
+      <% equipped = @game.equipped
+	 if equipped['weapon'] %>
+        <h4>Wielding <span class='equipped'><%= @game.inventory[ equipped['weapon'] ]['item'] %></span></h4>
+      <% end %>
+      <h4>Was <%= @game.character_state.to_sentence %></h4>
+      <% if @game.character_features != 'no striking features' %>
+        <h4>Had <%= @game.character_features.to_sentence %></h4>
+      <% end %>
+      <% if @game.character_features != 'no special abilities' %>
+        <h4>Could <%= @game.character_abilities.to_sentence %></h4>
+      <% end %>
+
+      <% if equipped.values.select{|e| e.nil?}.length %>
+      <dl>
+	<% for k in equipped.keys %>
+	  <% if equipped[k].nil? %>
+	  <dt>no <%= k %></dt><dd></dd>
+	  <% else %>
+	  <dt><%= k %></dt><dd><%= @game.inventory[ equipped[k] ]['item'] %></dd>
+          <% end %>
+	<% end %>
+      </dl>
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class='span4'>
+    <div id='vital-stats'>
+      <h3>Vital Statistics</h3>
+
+      <table class='stats table table-condensed'>
+	<!-- TODO - More <abbr>, probably make a helper -->
+	<tr>
+	  <td>HP</td><td><%= @game.hp %><%= @game.maxhp ? " (#{@game.maxhp})" : '' %></td>
+	  <td>AC</td><td><%= @game.ac %></td>
+	  <td>Str</td><td><%= @game.str %></td>
+	</tr>
+	<tr>
+	  <td>MP</td><td><%= @game.mp %></td>
+	  <td>EV</td><td><%= @game.ev %></td>
+	  <td>Int</td><td><%= @game.int %></td>
+	</tr>
+	<tr>
+	  <td>Gold</td><td><%= @game.gold %></td>
+	  <td>SH</td><td><%= @game.sh %></td>
+	  <td>Dex</td><td><%= @game.dex %></td>
+	</tr>
+      </table>
+
+      <h3>Resist, protect, control</h3>
+      <table class='stats table table-condensed'>
+	<% rk = @game.resistances.keys.sort
+	   for idx in 0 .. 9 %>
+	<tr>
+	  <td><%= rk[idx]      %></td><td><%= @game.resistances[rk[idx]] %></td>
+	  <td><%= rk[idx + 10] %></td><td><%= @game.resistances[rk[idx + 10 ]] %></td>
+	</tr>
+	<% end %>
+      </table>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
 <p>
   <b>Game:</b>
   <%= @game.name %>
