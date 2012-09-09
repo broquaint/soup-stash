@@ -26,9 +26,10 @@ class Game # Specifically DCSS
   field :lvl        , :type => Integer # DONE
   field :ltyp       , :type => String  # == branch ???
   field :levels_seen , :type => Integer # DONE
-  field :hp         , :type => Integer # DONE
+  field :hp         , :type => String  # DONE
   field :maxhp      , :type => Integer # DONE
   field :maxmaxhp   , :type => Integer # DONE
+  field :mp         , :type => String 
   field :ac         , :type => Integer # DONE
   field :str        , :type => Integer # DONE
   field :int        , :type => Integer # DONE
