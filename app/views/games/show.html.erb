@@ -72,10 +72,36 @@
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
 	<% rk = @game.resistances.keys.sort
+	   # TODO - Bootstrap icon helper
+	   rIcons = { 'on' => 'plus', 'off' => 'minus', 'disabled' => 'remove' }
 	   for idx in 0 .. 9 %>
 	<tr>
-	  <td><%= rk[idx]      %></td><td><%= @game.resistances[rk[idx]] %></td>
-	  <td><%= rk[idx + 10] %></td><td><%= @game.resistances[rk[idx + 10 ]] %></td>
+	  <% for jdx in [idx, idx + 10] %>
+	    <% rField = @game.resistances[rk[jdx]] %>
+	    <td><%= rk[jdx] %></td>
+	    <td>
+ 	      <% if rField =~ /\d/ %> 
+	        <%= rField %>
+	      <% else %>
+	        <i class="icon-<%= rIcons[rField] %>" title="<%= rField %>"></i>
+	      <% end %>
+	    </td>
+	  <% end %>
+	</tr>
+	<% end %>
+      </table>
+
+      <h3>Skills</h3>
+      <table class='stats table table-condensed'>
+	<% # XXX Yes this is a bit round-about.
+	   skill_icons = { 'selected' => 'plus', 'deselected' => 'minus', 'focused' => 'asterisk', 'max' => 'ok' }
+	   for sk in @game.skills.keys %>
+	<tr>
+	  <%# FIXME Bleh bug in bootstrap-sass breaks background-image because of a faulty $iconSpritePath %>
+	  <% skill = @game.skills[sk] %>
+	  <td><i class="icon-<%= skill_icons[skill['state']] %>" title="<%= skill['state'] %>"></i></td>
+	  <td><%= sk %></td>
+	  <td><%= skill['level'] %></td>
 	</tr>
 	<% end %>
       </table>
