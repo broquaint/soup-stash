@@ -114,6 +114,7 @@ STATS
     }.to raise_error(Exception, "Unknown combo 'FAKE'")
   end
 
+  # TODO Use a single full morgue of my own instead of this hodge podge
   it 'should parse' do
     morgue = <<MORGUE
  Dungeon Crawl Stone Soup version 0.9.1 character file.
@@ -154,7 +155,138 @@ You were not hungry.
 
 You visited 1 branch of the dungeon, and saw 3 of its levels.
 
+
+Inventory:
+
+Hand weapons
+ a - the +5,+3 dagger of Eternal Night (weapon) {=f, holy, +Inv rN+ MR Dex+1 Int+1}
+   (You bought it in a shop on level 4 of the Orcish Mines)   
+   
+   It has been blessed by the Shining One to cause great damage to the undead
+   and demons.
+   
+   It affects your intelligence (+1).
+   It affects your dexterity (+1).
+   It protects you from negative energy.
+   It increases your resistance to enchantments.
+   It lets you turn invisible.
+ b - the +5,+6 quick blade of Inflation {god gift, drain, Dex+1 Int-2}
+   (Okawaru gifted it to you on level 17 of the Dungeon)   
+   
+   A truly terrible weapon, it drains the life of those it strikes.
+   
+   It affects your intelligence (-2).
+   It affects your dexterity (+1).
+ d - the +3,+2 quick blade "Danoixt" {god gift, elec, rF+ rC- rN+ Dex-2 Int+2}
+   (Okawaru gifted it to you on level 20 of the Dungeon)   
+   
+   Occasionally, upon striking a foe, it will discharge some electrical energy
+   and cause terrible harm.
+   
+   It affects your intelligence (+2).
+   It affects your dexterity (-2).
+   It protects you from fire.
+   It makes you vulnerable to cold.
+   It protects you from negative energy.
+Armour
+ m - a +2 buckler of reflection
+ v - a +2 cap of intelligence (worn) {god gift}
+ H - the +5 swamp dragon armour "Mugejaj" (worn) {god gift, rElec rPois SInv}
+   (Okawaru gifted it to you on level 1 of the Shoals)   
+   
+   It insulates you from electricity.
+   It protects you from poison.
+   It enhances your eyesight.
+ J - a +2 cloak of darkness (worn) {god gift}
+Magical devices
+ e - a wand of teleportation (4)
+ g - a wand of digging (9)
+ k - a wand of teleportation (5)
+ l - a wand of hasting (2)
+ n - a wand of digging (11)
+ s - a wand of frost (19)
+ u - a wand of disintegration (0)
+ S - a wand of heal wounds (0)
+ U - a wand of lightning (8)
+ W - a wand of fire (9)
+Scrolls
+ f - 4 scrolls of teleportation
+ i - 2 scrolls of fear
+ t - 6 scrolls of identify
+ w - 4 scrolls of blinking
+ K - 2 scrolls of fog
+Jewellery
+ c - an uncursed ring of wizardry
+ q - an uncursed ring of protection from fire
+ y - an uncursed amulet of resist corrosion
+ B - a +3 ring of dexterity (right hand)
+ F - an uncursed ring of sustain abilities
+ M - the ring "Lililuexu" {-TELE rN+ Acc+4}
+   (You found it on level 5 of the Elven Halls)   
+   
+   [ring of life protection]
+   
+   It affects your accuracy (+4).
+   It prevents most forms of teleportation.
+ O - an uncursed amulet of resist mutation
+ P - an amulet of clarity (around neck)
+ R - an uncursed amulet of stasis
+ V - a +5 ring of strength (left hand)
+Potions
+ j - 3 potions of heal wounds
+ o - a potion of brilliance
+ p - a potion of restore abilities
+ r - a potion of might
+ x - 2 potions of speed
+ E - 2 potions of magic
+ L - 3 potions of curing
+Books
+ A - a book of Frost   
+   
+   Spells                             Type                      Level
+   Freeze                             Ice                          1
+   Throw Frost                        Conjuration/Ice              2
+   Ozocubu's Armour                   Charms/Ice                   3
+   Throw Icicle                       Conjuration/Ice              4
+   Summon Ice Beast                   Ice/Summoning                4
+   Condensation Shield                Ice/Transmutation            4
+ C - a book of Party Tricks   
+   
+   Spells                             Type                      Level
+   Summon Butterflies                 Summoning                    1
+   Apportation                        Translocation                1
+   Projected Noise                    Hexes                        2
+   Blink                              Translocation                2
+   Alistair's Intoxication            Transmutation/Poison         4
+Magical staves
+ D - a staff of death
+ Q - a staff of channeling
+
+
 ...
+
+
+   Skills:
+ + Level 25.3 Fighting
+ + Level 25.8 Dodging
+ - Level 2.0 Stealth
+ + Level 23.7 Shields
+ - Level 16.1 Traps & Doors
+ - Level 22.4 Spellcasting
+ - Level 20.0 Conjurations
+ - Level 7.5 Charms
+ - Level 6.5 Summonings
+ - Level 15.4 Necromancy
+ - Level 10.6 Translocations
+ - Level 15.2 Transmutations
+ O Level 27 Ice Magic
+ - Level 7.7 Air Magic
+ - Level 18.0 Invocations
+ O Level 27 Evocations
+
+
+...
+
 
 Vanquished Creatures
   Jessica (D:3)
@@ -172,6 +304,7 @@ Vanquished Creatures
 53 creatures vanquished.
 
 Grand Total: 56 creatures vanquished
+
 
 Notes
 Turn   | Place    | Note
@@ -193,7 +326,7 @@ Turn   | Place    | Note
   3364 | D:3      | Slain by a hound
 
 MORGUE
-    # TODO Configure ruby-mode to indent sanely
+
     expected = {
       :name             => 'dcss',
       :version          => '0.9.1',
@@ -249,23 +382,15 @@ MORGUE
         "Saprovore"   => "0/3",
         "Ctrl.Flight" => "off"
       },
-      :equipped => {
-        "weapon"     => { :slot => "b", :item => "staff of conjuration"},
-        "armour"     => { :slot => "p", :item => "+2 robe {MR}" },
-        "shield"     => nil,
-        "helmet"     => nil,
-        "cloak"      => { :slot => "k", :item => "+0 orc cloak" },
-        "gloves"     => { :slot => "J", :item => "+2 pair of gloves" },
-        "boots"      => { :slot => "m", :item => "+2 pair of boots {run}" },
-        "amulet"     => { :slot => "Q", :item => "amulet of Xaco {rCorr rF+}" },
-        "right ring" => { :slot => "u", :item => "+5 ring of intelligence" },
-        "left ring"  => { :slot => "s", :item => "ring of teleport control" }
-      },
+      :equipped => {"weapon"=>"b", "armour"=>"p", "shield"=>nil, "helmet"=>nil, "cloak"=>"k", "gloves"=>"J", "boots"=>"m", "amulet"=>"Q", "right ring"=>"u", "left ring"=>"s"},
+      # via http://crawl.develz.org/morgues/0.10/Snowclone/morgue-Snowclone-20120303-000043.txt
+      :inventory => {"a"=>{:type=>"Hand weapons", :item=>"the +5,+3 dagger of Eternal Night (weapon) {=f, holy, +Inv rN+ MR Dex+1 Int+1}", :desc=>"\n   (You bought it in a shop on level 4 of the Orcish Mines)   \n   \n   It has been blessed by the Shining One to cause great damage to the undead\n   and demons.\n   \n   It affects your intelligence (+1).\n   It affects your dexterity (+1).\n   It protects you from negative energy.\n   It increases your resistance to enchantments.\n   It lets you turn invisible.\n"}, "b"=>{:type=>"Hand weapons", :item=>"the +5,+6 quick blade of Inflation {god gift, drain, Dex+1 Int-2}", :desc=>"\n   (Okawaru gifted it to you on level 17 of the Dungeon)   \n   \n   A truly terrible weapon, it drains the life of those it strikes.\n   \n   It affects your intelligence (-2).\n   It affects your dexterity (+1).\n"}, "d"=>{:type=>"Hand weapons", :item=>"the +3,+2 quick blade \"Danoixt\" {god gift, elec, rF+ rC- rN+ Dex-2 Int+2}", :desc=>"\n   (Okawaru gifted it to you on level 20 of the Dungeon)   \n   \n   Occasionally, upon striking a foe, it will discharge some electrical energy\n   and cause terrible harm.\n   \n   It affects your intelligence (+2).\n   It affects your dexterity (-2).\n   It protects you from fire.\n   It makes you vulnerable to cold.\n   It protects you from negative energy.\n"}, "m"=>{:type=>"Armour", :item=>"a +2 buckler of reflection", :desc=>nil}, "v"=>{:type=>"Armour", :item=>"a +2 cap of intelligence (worn) {god gift}", :desc=>nil}, "H"=>{:type=>"Armour", :item=>"the +5 swamp dragon armour \"Mugejaj\" (worn) {god gift, rElec rPois SInv}", :desc=>"\n   (Okawaru gifted it to you on level 1 of the Shoals)   \n   \n   It insulates you from electricity.\n   It protects you from poison.\n   It enhances your eyesight.\n"}, "J"=>{:type=>"Armour", :item=>"a +2 cloak of darkness (worn) {god gift}", :desc=>nil}, "e"=>{:type=>"Magical devices", :item=>"a wand of teleportation (4)", :desc=>nil}, "g"=>{:type=>"Magical devices", :item=>"a wand of digging (9)", :desc=>nil}, "k"=>{:type=>"Magical devices", :item=>"a wand of teleportation (5)", :desc=>nil}, "l"=>{:type=>"Magical devices", :item=>"a wand of hasting (2)", :desc=>nil}, "n"=>{:type=>"Magical devices", :item=>"a wand of digging (11)", :desc=>nil}, "s"=>{:type=>"Magical devices", :item=>"a wand of frost (19)", :desc=>nil}, "u"=>{:type=>"Magical devices", :item=>"a wand of disintegration (0)", :desc=>nil}, "S"=>{:type=>"Magical devices", :item=>"a wand of heal wounds (0)", :desc=>nil}, "U"=>{:type=>"Magical devices", :item=>"a wand of lightning (8)", :desc=>nil}, "W"=>{:type=>"Magical devices", :item=>"a wand of fire (9)", :desc=>nil}, "f"=>{:type=>"Scrolls", :item=>"4 scrolls of teleportation", :desc=>nil}, "i"=>{:type=>"Scrolls", :item=>"2 scrolls of fear", :desc=>nil}, "t"=>{:type=>"Scrolls", :item=>"6 scrolls of identify", :desc=>nil}, "w"=>{:type=>"Scrolls", :item=>"4 scrolls of blinking", :desc=>nil}, "K"=>{:type=>"Scrolls", :item=>"2 scrolls of fog", :desc=>nil}, "c"=>{:type=>"Jewellery", :item=>"an uncursed ring of wizardry", :desc=>nil}, "q"=>{:type=>"Jewellery", :item=>"an uncursed ring of protection from fire", :desc=>nil}, "y"=>{:type=>"Jewellery", :item=>"an uncursed amulet of resist corrosion", :desc=>nil}, "B"=>{:type=>"Jewellery", :item=>"a +3 ring of dexterity (right hand)", :desc=>nil}, "F"=>{:type=>"Jewellery", :item=>"an uncursed ring of sustain abilities", :desc=>nil}, "M"=>{:type=>"Jewellery", :item=>"the ring \"Lililuexu\" {-TELE rN+ Acc+4}", :desc=>"\n   (You found it on level 5 of the Elven Halls)   \n   \n   [ring of life protection]\n   \n   It affects your accuracy (+4).\n   It prevents most forms of teleportation.\n"}, "O"=>{:type=>"Jewellery", :item=>"an uncursed amulet of resist mutation", :desc=>nil}, "P"=>{:type=>"Jewellery", :item=>"an amulet of clarity (around neck)", :desc=>nil}, "R"=>{:type=>"Jewellery", :item=>"an uncursed amulet of stasis", :desc=>nil}, "V"=>{:type=>"Jewellery", :item=>"a +5 ring of strength (left hand)", :desc=>nil}, "j"=>{:type=>"Potions", :item=>"3 potions of heal wounds", :desc=>nil}, "o"=>{:type=>"Potions", :item=>"a potion of brilliance", :desc=>nil}, "p"=>{:type=>"Potions", :item=>"a potion of restore abilities", :desc=>nil}, "r"=>{:type=>"Potions", :item=>"a potion of might", :desc=>nil}, "x"=>{:type=>"Potions", :item=>"2 potions of speed", :desc=>nil}, "E"=>{:type=>"Potions", :item=>"2 potions of magic", :desc=>nil}, "L"=>{:type=>"Potions", :item=>"3 potions of curing", :desc=>nil}, "A"=>{:type=>"Books", :item=>"a book of Frost   ", :desc=>"\n   \n   Spells                             Type                      Level\n   Freeze                             Ice                          1\n   Throw Frost                        Conjuration/Ice              2\n   Ozocubu's Armour                   Charms/Ice                   3\n   Throw Icicle                       Conjuration/Ice              4\n   Summon Ice Beast                   Ice/Summoning                4\n   Condensation Shield                Ice/Transmutation            4\n"}, "C"=>{:type=>"Books", :item=>"a book of Party Tricks   ", :desc=>"\n   \n   Spells                             Type                      Level\n   Summon Butterflies                 Summoning                    1\n   Apportation                        Translocation                1\n   Projected Noise                    Hexes                        2\n   Blink                              Translocation                2\n   Alistair's Intoxication            Transmutation/Poison         4\n"}, "D"=>{:type=>"Magical staves", :item=>"a staff of death", :desc=>nil}, "Q"=>{:type=>"Magical staves", :item=>"a staff of channeling", :desc=>nil}},
+      :skills => {"Fighting"=>{:state=>"selected", :level=>25.3}, "Dodging"=>{:state=>"selected", :level=>25.8}, "Stealth"=>{:state=>"deselected", :level=>2.0}, "Shields"=>{:state=>"selected", :level=>23.7}, "Traps & Doors"=>{:state=>"deselected", :level=>16.1}, "Spellcasting"=>{:state=>"deselected", :level=>22.4}, "Conjurations"=>{:state=>"deselected", :level=>20.0}, "Charms"=>{:state=>"deselected", :level=>7.5}, "Summonings"=>{:state=>"deselected", :level=>6.5}, "Necromancy"=>{:state=>"deselected", :level=>15.4}, "Translocations"=>{:state=>"deselected", :level=>10.6}, "Transmutations"=>{:state=>"deselected", :level=>15.2}, "Air Magic"=>{:state=>"deselected", :level=>7.7}, "Invocations"=>{:state=>"deselected", :level=>18.0}},
       :character_abilities => ["Renounce Religion"],
       :character_features => ["antennae 1", "electricity resistance", "AC +1", "Str +1"],
       :character_state => ["quick", "quite resistant to hostile enchantments", "very stealthy", "very slightly contaminated"],
       :ending      => 'Slain by a hound',
-      :morgue      => morgue,
+      :morgue      => '' #morgue,
     }
     DCSS::Coroner.new(morgue, 'morgue-Snwcln-20120423-230144.txt').parse.should eq(expected)
   end
