@@ -59,6 +59,8 @@ class Game # Specifically DCSS
 
   field :inventory, :type => Object # { slot: { item: String, desc: String, type: String } }
 
+  field :skills, :type => Object # { skill: { state: String, level: Float } }
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String

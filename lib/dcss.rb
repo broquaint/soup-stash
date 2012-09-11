@@ -166,4 +166,11 @@ module DCSS
                      'ring',
                      'ring',
                     ]
+
+  SKILL_STATE = {
+    '+' => 'selected',
+    '-' => 'deselected',
+    '*' => 'focused',
+    'O' => 'max',
+  }
 end

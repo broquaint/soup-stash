@@ -26,6 +26,7 @@ class DCSS::Coroner
     autopsy.merge! find_stats(blocks)
     autopsy.merge! find_state_abilities_runes(blocks)
     autopsy.merge! understand_inventory(sections)
+    autopsy.merge! find_skills(sections)
 
     return Morgue.new(autopsy)
   end
@@ -291,6 +292,22 @@ class DCSS::Coroner
           }
         end
         inventory
+      end
+    }
+  end
+
+  def find_skills(sections)
+    skills_str, _ = find_in sections, /\A\s+Skills:/
+
+    skill_matches = skills_str.scan /^ (.) Level (\d+(?:.\d+)?) ([\w& ]+)$/m
+    return {
+      :skills => skill_matches.reduce({}) do |skills, match|
+        state, level, skill = match
+        skills[skill] = {
+          :state => DCSS::SKILL_STATE[state],
+          :level => level.sub(/,/, '.').to_f, # Handle localization (I guess)
+        }
+        skills
       end
     }
   end
