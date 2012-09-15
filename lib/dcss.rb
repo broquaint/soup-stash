@@ -173,4 +173,23 @@ module DCSS
     '*' => 'focused',
     'O' => 'max',
   }
+
+  SPELL_TYPES = {
+    'Air'  => 'Air',
+    'Chrm' => 'Charms',
+    'Conj' => 'Conjurations',
+    'Erth' => 'Earth',
+    'Fire' => 'Fire',
+    'Hex'  => 'Hexes',
+    'Ice'  => 'Ice',
+    'Necr' => 'Necromancy',
+    'Pois' => 'Poison',
+    'Summ' => 'Summoning',
+    'Tloc' => 'Translocation',
+    'Trmt' => 'Transmutation',
+  }
+
+  def DCSS.spell_type_re
+    Regexp.new('(?:(?:' + SPELL_TYPES.keys.join('|') + ')/?)+')
+  end
 end

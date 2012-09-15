@@ -27,6 +27,7 @@ class DCSS::Coroner
     autopsy.merge! find_state_abilities_runes(blocks)
     autopsy.merge! understand_inventory(sections)
     autopsy.merge! find_skills(sections)
+    autopsy.merge! find_spells(sections)
 
     return Morgue.new(autopsy)
   end
@@ -61,6 +62,7 @@ class DCSS::Coroner
       m = s.match re
       return [s, m] if m
     end
+    return
   end
 
   # TODO Fails on Zot Defense + Sprint
@@ -299,6 +301,8 @@ class DCSS::Coroner
   def find_skills(sections)
     skills_str, _ = find_in sections, /\A\s+Skills:/
 
+    return { :skills => {} } if skills_str.nil?
+
     skill_matches = skills_str.scan /^ (.) Level (\d+(?:.\d+)?) ([\w& ]+)$/m
     return {
       :skills => skill_matches.reduce({}) do |skills, match|
@@ -308,6 +312,41 @@ class DCSS::Coroner
           :level => level.sub(/,/, '.').to_f, # Handle localization (I guess)
         }
         skills
+      end
+    }
+  end
+
+  def find_spells(sections)
+    spells_str, match = find_in sections, /\AYou had (?<left>\d+|one) spell levels? left./
+
+    # i.e "You couldn't memorise any spells."
+    return { :spells_left => 0, :spells_known => [] } if spells_str.nil?
+
+    left_i = match[:left] == 'one' ? 1 : match[:left].to_i
+
+    spell_re = %r{^
+      (.) \s - \s (\w+(?:\s\w+)*) \s+ # b - Throw Frost
+      (#{DCSS.spell_type_re})     \s+ # Ice/Conj
+      ( (?:N/A|[#.]+) )           \s+ # #####..
+      (\d+%)                      \s+ # 5%
+      (\d)                        \s+ # 2
+      ([\w/]+)                        # Choko
+    $}mx
+      
+    return {
+      :spells_left  => left_i,
+      :spells_known => spells_str.scan(spell_re).collect do |match|
+        slot, name, type, p, fail_rate, level, hunger = match
+        power = p == 'N/A' ? p : "%d/%d" % [p.count('#'), p.length]
+        {
+          :slot      => slot,
+          :name      => name,
+          :type      => type.split('/'),
+          :power     => power,
+          :fail_rate => fail_rate,
+          :level     => level.to_i,
+          :hunger    => hunger,
+        }
       end
     }
   end

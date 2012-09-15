@@ -42,6 +42,29 @@
 	<% end %>
       </dl>
       <% end %>
+
+      <% unless @game.spells_known.empty? %>
+      <h3>Spells</h3>
+      <table class='stats table table-condensed'>
+	<thead>
+	  <tr><th>Name</th><th>Type</th><th>Power</th><th>Failure</th><th>Level</th><th>Hunger</th>
+	</thead>
+
+	<tbody>
+	<% for spell in @game.spells_known %>
+	<tr>
+	  <td><%= spell['name'] %></td>
+	  <td><%= spell['type'].map{|t|DCSS::SPELL_TYPES[t]}.join(', ') %></td>
+	  <td><%= spell['power'] %></td>
+	  <td><%= spell['fail_rate'] %></td>
+	  <td><%= spell['level'] %></td>
+	  <td><%= spell['hunger'] %></td>
+	</tr>
+	<% end %>
+	</tbody>
+      </table>
+      <% end %>
+
     </div>
 
   </div>

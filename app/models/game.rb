@@ -61,6 +61,9 @@ class Game # Specifically DCSS
 
   field :skills, :type => Object # { skill: { state: String, level: Float } }
 
+  field :spells_left,  :type => Integer
+  field :spells_known, :type => Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String
