@@ -28,6 +28,7 @@ class DCSS::Coroner
     autopsy.merge! understand_inventory(sections)
     autopsy.merge! find_skills(sections)
     autopsy.merge! find_spells(sections)
+    autopsy.merge! find_notes(blocks)
 
     return Morgue.new(autopsy)
   end
@@ -389,6 +390,20 @@ class DCSS::Coroner
           :level     => level.to_i,
           :hunger    => hunger,
         }
+      end
+    }
+  end
+
+  def find_notes(blocks)
+    notes_str, _ = find_in blocks, /^Notes$/
+
+    # Slightly ugly regex to drop the "heading".
+    lines = notes_str.sub(/(?:^.*?$\s*){3}/m, '').split /\n/
+    # Pretty sure notes are always present
+    return {
+      :notes => lines.collect do |line|
+        turn, place, note = line.split('|').collect(&:strip)
+        { :turn => turn.to_i, :place => place, :note => note }
       end
     }
   end

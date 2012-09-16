@@ -112,6 +112,19 @@
       <% end %>
     </div>
 
+    <div id='notes'>
+      <h3>Notes</h4>
+      <table class='table table-condensed'>
+      <% for note in @game.notes %>
+        <tr>
+	  <td><%= note['turn']  %></td>
+	  <td><%= note['place'] %></td>
+	  <td><%= note['note']  %></td>
+	</tr>
+      <% end %>
+      </table>
+    </div>
+
   </div>
 
   <div class='span4'>

@@ -67,6 +67,8 @@ class Game # Specifically DCSS
   field :kill_total,  :type => Integer
   field :ghost_kills, :type => Array # [{:kills[v][idx] + type: String}]
 
+  field :notes, :type => Array # [{ turn: Int, place: String, note: String }]
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String
