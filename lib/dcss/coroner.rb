@@ -322,6 +322,14 @@ class DCSS::Coroner
     return ret
   end
 
+  def _clean_desc(desc)
+    return nil if desc.strip.empty?
+    desc.strip
+        .gsub(/^ +(?=\S)/m, '')                # Leading space
+        .gsub(/your? /, '')                    # "It affects your", "It lets you"
+        .sub(/\(You (\w)/) {|c| '('+$1.upcase} # "(You found it", "(You took it"
+  end
+
   def understand_inventory(sections)
     invt, _ = find_in sections, /^Inventory:$/m
 
@@ -333,7 +341,7 @@ class DCSS::Coroner
           inventory[slot] = {
             :type => type,
             :item => item,
-            :desc => desc.strip.empty? ? nil : desc
+            :desc => _clean_desc(desc),
           }
         end
         inventory
