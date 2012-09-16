@@ -148,6 +148,7 @@ slightly contaminated
 A: antennae 1, electricity resistance, AC +1, Str +1
 a: Renounce Religion
 
+
 You were on level 4 of the Orcish Mines.
 You worshipped Vehumet.
 Vehumet was exalted by your worship.

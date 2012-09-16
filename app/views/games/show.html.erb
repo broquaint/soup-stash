@@ -2,34 +2,25 @@
 
 <div class='row'>
   <div class='span8'>
-    <div style='display: none;'><%= @game.morgue %></div>
-
-    <div id=announce'>
+    <div id='announce'>
       <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.level %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
-      <h2><%= @game.ending %></h2>
-      <h2>with <%= @game.score %>
-	<% if @game.won %>
-	holding the <em><%= @game.rune_list.to_sentence %></em> runes
-	<% else %>
-	at <%= @game.place %>
-	<% end %></h2>
-      <h2>It took <%= @game.turns %> turns in <%= @game.duration %></h2>
+      <h4>
+	<%= @game.ending.sub /!$/, '' %> with <u><%= @game.score %></u>
+	<% unless @game.won %> at <%= @game.place %><% end %>
+      </h4>
+      <h4>It took <%= @game.turns %> turns in <%= @game.duration %></h4>
       <!-- Link to subsections with more details further down -->
-      <% if @game.god %><h3>Worshipper of <%= @game.god %></h3><% end %>
+      <% if @game.god %><h4><%= @game.standing %> of <%= @game.god %></h4><% end %>
     </div>
 
     <div id='status'>
       <% equipped = @game.equipped
 	 if equipped['weapon'] %>
-        <h4>Wielding <span class='equipped'><%= @game.inventory[ equipped['weapon'] ]['item'] %></span></h4>
+        <p><strong>Wielding <span class='equipped'><%= @game.inventory[ equipped['weapon'] ]['item'] %></span></strong></p>
       <% end %>
-      <h4>Was <%= @game.character_state.to_sentence %></h4>
-      <% if @game.character_features != 'no striking features' %>
-        <h4>Had <%= @game.character_features.to_sentence %></h4>
-      <% end %>
-      <% if @game.character_features != 'no special abilities' %>
-        <h4>Could <%= @game.character_abilities.to_sentence %></h4>
-      <% end %>
+      <p><strong>Was <%= @game.character_state.to_sentence %></strong></p>
+      <p><strong>Had <%= @game.character_features.to_sentence %></strong></p>
+      <p><strong>Could <%= @game.character_abilities.to_sentence %></strong></p>
 
       <% if equipped.values.length != equipped.values.select{|e| e.nil?}.length %>
       <h3>Equipped</h3>
@@ -186,6 +177,15 @@
 	</tr>
 	<% end %>
       </table>
+
+      <% if @game.won %>
+      <h3>Runes</h3>
+      <ol>
+	<% for rune in @game.rune_list %>
+          <li><%= rune.titleize %>
+        <% end %>
+      </ol>
+      <% end %>
     </div>
   </div>
 </div>

@@ -34,7 +34,6 @@ class Game # Specifically DCSS
   field :str        , :type => Integer # DONE
   field :int        , :type => Integer # DONE
   field :dex        , :type => Integer # DONE
-  field :god        , :type => String  # DONE
   field :duration         , :type => String  # DONE
   field :duration_seconds , :type => Integer # DONE
   field :turns      , :type => Float   # DONE
@@ -43,11 +42,14 @@ class Game # Specifically DCSS
   field :killertype , :type => String
   field :killer     , :type => String  # DONE
   field :damage     , :type => Integer
-  field :piety      , :type => String  # DONE
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
                                        #                      16th June 2012 at 22:01:45
 
   field :ending, :type => String
+
+  field :piety,    :type => String
+  field :god,      :type => String
+  field :standing, :type => String
 
   field :character_state,     :type => Array # @: stealthy, fast, etc
   field :character_features,  :type => Array # A: horns, claws, teleportitis, etc

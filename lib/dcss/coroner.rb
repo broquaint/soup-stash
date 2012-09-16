@@ -16,7 +16,7 @@ class DCSS::Coroner
     autopsy[:version] = find_version blocks
     # TODO order by default appearance in moregues
     autopsy.merge! find_score_char_title_level(blocks)
-    autopsy.merge! find_place_god_piety_hunger(blocks)
+    autopsy.merge! find_place_god_piety_hunger(sections)
     autopsy.merge! find_race_class_turns_duration(blocks)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
     autopsy.merge! find_resistances_slots(blocks, autopsy[:race])
@@ -49,15 +49,6 @@ class DCSS::Coroner
     end
   end
   
-  # XXX Use blocks?
-  def match_many(blocks, regexps)
-    # XXX This is a bit gross, should find the block first then match on that.
-    return regexps.keys.inject({}) do |results, to_match|
-      m = match_one blocks, regexps[to_match]
-      m ? results.merge({to_match => m}) : results
-    end
-  end
-
   def find_in(blocks, re)
     blocks.each do |s|
       m = s.match re
@@ -114,7 +105,6 @@ class DCSS::Coroner
       :duration   => match[:duration],
     }
   end
-
   
   def discern_times(duration, morgue_name)
     return {} if duration.nil? or morgue_name.nil?
@@ -142,20 +132,35 @@ class DCSS::Coroner
     }
   end
   
-  def find_place_god_piety_hunger(blocks)
+  def find_place_god_piety_hunger(sections)
     # XXX Won't match everything yet e.g You were a toy of Xom
-    place_religion = match_many blocks, {
-      :place  => /You (?:were [oi]n )?([\w\s]+)[.]$/,
-      :god    => /You worshipped ([\s\w]+)[.]/,
-      :piety  => /^[\w\s]+ was ([\w\s]+) (?:by your worship|with you)?[.]$/,
-#      :hunger => /^You were ((?:not )?hungry|full)/, XXX Worth including?
+    pgp_str, _ = find_in sections, /\AYou (?:escapsed|were) [oi]n [\w ]+.$/m
+
+    return {} unless pgp_str
+
+    pgp_res = {
+      :place => /You (?:were [oi]n )?(?<place>[\w\s]+)[.]$/,    
+      :god   => /You (?:worshipped (?<god>[\s\w]+)[.])|(?:were (?<god>Xom))|(?:.*?(?<god>Xom).$)/,
+      # Too lazy to handle Xom weirdness
+      :piety => /^[\w\s]+ was (?<piety>[\w\s]+) (?:by your worship|with you)?[.]$/,
+      # :hunger => /^You were ((?:not )?hungry|full)/, XXX Worth including?
     }
     
+    place_religion = pgp_res.reduce({}) do |pgp, kv|
+      key, re = kv
+      match   = pgp_str.match re
+      match ? pgp.merge({key => match[key]}) : pgp
+    end
+
     lvl    = place_religion[:place].match /(\d+)/
     branch = place_religion[:place].match /(#{DCSS.branch_re})/i
 
     place_religion[:lvl]    = lvl[0].to_i if lvl
     place_religion[:branch] = branch[0]   if branch
+
+    if place_religion[:god]
+      _, place_religion[:standing] = *sections[0].match(/Was \w+ ([\w ]+) of #{place_religion[:god]}/)
+    end
     
     return place_religion
   end
