@@ -167,6 +167,20 @@ module DCSS
                      'ring',
                     ]
 
+  INVENTORY_TYPES = [
+                     'Missiles',
+                     'Armour',
+                     'Magical devices',
+                     'Comestibles',
+                     'Scrolls',
+                     'Jewellery',
+                     'Potions',
+                     'Books',
+                     'Magical staves',
+                     'Orbs of Power',
+                     'Miscellaneous',
+                    ]
+
   SKILL_STATE = {
     '+' => 'selected',
     '-' => 'deselected',

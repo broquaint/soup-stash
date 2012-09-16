@@ -31,16 +31,39 @@
         <h4>Could <%= @game.character_abilities.to_sentence %></h4>
       <% end %>
 
-      <% if equipped.values.select{|e| e.nil?}.length %>
+      <% if equipped.values.length != equipped.values.select{|e| e.nil?}.length %>
+      <h3>Equipped</h3>
       <dl>
 	<% for k in equipped.keys %>
 	  <% if equipped[k].nil? %>
 	  <dt>no <%= k %></dt><dd></dd>
 	  <% else %>
-	  <dt><%= k %></dt><dd><%= @game.inventory[ equipped[k] ]['item'] %></dd>
+	  <% item = @game.inventory[ equipped[k] ]['item'] %>
+	  <%# TODO - Markup + abbreviate inscriptions e.g {rC+ Int+1} %>
+	  <dt><%= k %></dt><dd><%= item.sub /\([^)]+\)/, '' %></dd>
           <% end %>
 	<% end %>
       </dl>
+      <% end %>
+    </div>
+
+    <div id='things'>
+      <% unless @game.inventory.keys.empty? %>
+        <h3>Inventory</h3>
+
+        <% for inty in DCSS::INVENTORY_TYPES
+	   items = @game.inventory.values.select{|i| i['type'] == inty}
+	   next if items.empty? %>
+        <h4><%= inty %></h4>
+	<ul>
+          <% for item in items %>
+	    <li><%= item['item'] %>
+	    <% if item['desc'] %>
+	      <blockquote><pre><%= item['desc'] %></pre></blockquote>
+	    <% end %>
+          <% end %>
+	</ul>
+        <% end %>
       <% end %>
 
       <% unless @game.spells_known.empty? %>
@@ -64,7 +87,9 @@
 	</tbody>
       </table>
       <% end %>
+    </div>
 
+    <div id='vanquished'>
       <% unless @game.kills.keys.empty? 
 	 for ktype in @game.kills.keys
 	   vanquished = @game.kills[ktype] %>
@@ -152,153 +177,7 @@
   </div>
 </div>
 
-<hr/>
-
-<p>
-  <b>Game:</b>
-  <%= @game.name %>
-</p>
-
-<p>
-  <b>Player:</b>
-  <%= link_to @player.name, [@player.user, @player] %>
-</p>
-
-<p>
-  <b>Score:</b>
-  <%= @game.score %>
-</p>
-
-<p>
-  <b>Race:</b>
-  <%= @game.race %>
-</p>
-
-<p>
-  <b>Char class:</b>
-  <%= @game.background %>
-</p>
-
-<p>
-  <b>Version:</b>
-  <%= @game.version %>
-</p>
-
-<p>
-  <b>Level:</b>
-  <%= @game.level %>
-</p>
-
-<p>
-  <b>Character:</b>
-  <%= @game.character %>
-</p>
-
-<p>
-  <b>Xl:</b>
-  <%= @game.xl %>
-</p>
-
-<p>
-  <b>Title:</b>
-  <%= @game.title %>
-</p>
-
-<p>
-  <b>Place:</b>
-  <%= @game.place %>
-</p>
-
-<p>
-  <b>Branch:</b>
-  <%= @game.branch %>
-</p>
-
-<p>
-  <b>Lvl:</b>
-  <%= @game.lvl %>
-</p>
-
-<p>
-  <b>Ltyp:</b>
-  <%= @game.ltyp %>
-</p>
-
-<p>
-  <b>Hp:</b>
-  <%= @game.hp %>
-</p>
-
-<p>
-  <b>Maxhp:</b>
-  <%= @game.maxhp %>
-</p>
-
-<p>
-  <b>Maxmaxhp:</b>
-  <%= @game.maxmaxhp %>
-</p>
-
-<p>
-  <b>Str:</b>
-  <%= @game.str %>
-</p>
-
-<p>
-  <b>Int:</b>
-  <%= @game.int %>
-</p>
-
-<p>
-  <b>Dex:</b>
-  <%= @game.dex %>
-</p>
-
-<p>
-  <b>God:</b>
-  <%= @game.god %>
-</p>
-
-<p>
-  <b>Duration:</b>
-  <%= @game.duration %>
-</p>
-
-<p>
-  <b>Turn:</b>
-  <%= @game.turns %>
-</p>
-
-<p>
-  <b>Runes:</b>
-  <%= @game.runes %>
-</p>
-
-<p>
-  <b>Killertype:</b>
-  <%= @game.killertype %>
-</p>
-
-<p>
-  <b>Killer:</b>
-  <%= @game.killer %>
-</p>
-
-<p>
-  <b>Damage:</b>
-  <%= @game.damage %>
-</p>
-
-<p>
-  <b>Piety:</b>
-  <%= @game.piety %>
-</p>
-
-<p>
-  <b>End time:</b>
-  <%= @game.end_time %>
-</p>
-
-
+<!-- TODO - Make this DTRT -->
 <%= link_to 'Edit', edit_game_path(@game) %> |
 <%= link_to 'Back', games_path %>
+
