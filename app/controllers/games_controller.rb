@@ -61,7 +61,7 @@ class GamesController < ApplicationController
     # XXX This should probably be handled elsewhere.
     # XXX Might be simpler to pull these out of a map/reduce as necessary.
     @player.played       += 1
-    @player.kills        += morgue[:kills]
+    @player.kills        += morgue[:kill_total]
     @player.time_spent   += morgue[:duration_seconds]
     @player.levels_seen  += morgue[:levels_seen]
 

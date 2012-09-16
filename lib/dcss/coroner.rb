@@ -21,7 +21,7 @@ class DCSS::Coroner
     autopsy.merge! discern_times(autopsy[:duration], @filename)
     autopsy.merge! find_resistances_slots(blocks, autopsy[:race])
     autopsy.merge! find_killer_ending(blocks)
-    autopsy.merge! find_kills(blocks)
+    autopsy.merge! find_kills(sections)
     autopsy.merge! find_visits(blocks)
     autopsy.merge! find_stats(blocks)
     autopsy.merge! find_state_abilities_runes(blocks)
@@ -210,10 +210,52 @@ class DCSS::Coroner
     })
   end
 
-  def find_kills(blocks)
-    # XXX Worth distingusing between own/collateral/other?
-    kills = blocks.collect{|s| s.match /^(?<v>\d+) creatures vanquished[.]$/m}.reject &:nil?
-    return { :kills => kills.reduce(0) {|acc, k| acc + k[:v].to_i } }
+  def find_kills(sections)
+    kills_str, _ = find_in sections, /^Vanquished Creatures/m
+
+    return { :kills => {}, :kill_total => 0, :ghost_kills => [] } if kills_str.nil?
+
+    kills_re = /^\s+(?:(\d+|An?) )?(.*?)(?: \(([^)]+)\))?$/
+
+    # Bleurgh, so much state.
+    killed_by  = :player
+    kills      = { killed_by => [] }
+    kill_total = 0
+    gkills     = []
+
+    # A bit suboptimal as kills_str will also include Notes hence "fin".
+    kills_str.split("\n").each do |line|
+      _, amount, creature, location = *line.match(kills_re)
+      vanquisher                    = line.match /^Vanquished Creatures \((?<kb>\w+)/
+      total                         = line.match /^(?<t>\d+) creatures vanquished[.]/
+      fin                           = line.match /^Notes/
+      
+      if creature
+        amount = 1 if amount.nil? or amount[0] == 'A'
+
+        vanquished = {
+          :amount   => amount,
+          :creature => creature,
+          :location => location,
+        }
+        puts "adding #{creature} to #{killed_by}"
+        kills[killed_by].push vanquished
+        gkills.push vanquished.merge({:vanquisher => killed_by}) if creature.match /^The ghost of/
+      elsif vanquisher
+        killed_by = vanquisher[:kb].to_sym
+        kills[killed_by] = []
+      elsif total
+        kill_total += total[:t].to_i
+      elsif fin
+        break
+      end
+    end
+
+    return {
+      :kills       => kills,
+      :kill_total  => kill_total,
+      :ghost_kills => gkills,
+    }
   end
 
   def find_visits(blocks)

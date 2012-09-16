@@ -42,7 +42,6 @@ class Game # Specifically DCSS
   field :rune_list  , :type => Array   # DONE
   field :killertype , :type => String
   field :killer     , :type => String  # DONE
-  field :kills      , :type => Integer # DONE
   field :damage     , :type => Integer
   field :piety      , :type => String  # DONE
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
@@ -63,6 +62,10 @@ class Game # Specifically DCSS
 
   field :spells_left,  :type => Integer
   field :spells_known, :type => Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
+
+  field :kills,       :type => Object # { vanquisher: [{ amount: Int, creature: String, location: String }] }
+  field :kill_total,  :type => Integer
+  field :ghost_kills, :type => Array # [{:kills[v][idx] + type: String}]
 
   # key fields
   field :end_time_str, :type => String

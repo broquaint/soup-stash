@@ -65,6 +65,26 @@
       </table>
       <% end %>
 
+      <% unless @game.kills.keys.empty? 
+	 for ktype in @game.kills.keys
+	   vanquished = @game.kills[ktype] %>
+           <h3>Vanquished (<%= ktype %>)</h3>
+	   <ul class='unstyled'>
+           <% for kill in vanquished %>
+             <li><%= kill['amount'] %> <%= kill['creature'] %> <em><%= kill['location'] %></em>
+           <% end %>
+	   </ul>
+         <% end %>
+      <% end %>
+      <% unless @game.ghost_kills.empty? %>
+        <h4>Ghost kills</h4>
+	<ul class='unstyled'>
+        <% for kill in @game.ghost_kills %>
+	  <!-- TODO - Parse and link to relevant account -->
+          <li><%= kill['creature'] %> <em><%= kill['location'] %></em>
+	<% end %>
+	</ul>
+      <% end %>
     </div>
 
   </div>
