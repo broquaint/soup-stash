@@ -135,12 +135,12 @@ class DCSS::Coroner
   
   def find_place_god_piety_hunger(sections)
     # XXX Won't match everything yet e.g You were a toy of Xom
-    pgp_str, _ = find_in sections, /\AYou (?:escapsed|were) [oi]n [\w ]+.$/m
+    pgp_str, _ = find_in sections, /\AYou escaped|were/
 
     return {} unless pgp_str
 
     pgp_res = {
-      :place => /You (?:were [oi]n )?(?<place>[\w\s]+)[.]$/,    
+      :place => /^You (?:were [oi]n )?(?<place>[^.]+)[.]/,
       :god   => /You (?:worshipped (?<god>[\s\w]+)[.])|(?:were (?<god>Xom))|(?:.*?(?<god>Xom).$)/,
       # Too lazy to handle Xom weirdness
       :piety => /^[\w\s]+ was (?<piety>[\w\s]+) (?:by your worship|with you)?[.]$/,
@@ -153,11 +153,14 @@ class DCSS::Coroner
       match ? pgp.merge({key => match[key]}) : pgp
     end
 
-    lvl    = place_religion[:place].match /(\d+)/
-    branch = place_religion[:place].match /(#{DCSS.branch_re})/i
+    # Will be false if the player escaped f.ex.
+    if place_religion[:place]
+      lvl    = place_religion[:place].match /(\d+)/
+      branch = place_religion[:place].match /(#{DCSS.branch_re})/i
 
-    place_religion[:lvl]    = lvl[0].to_i if lvl
-    place_religion[:branch] = branch[0]   if branch
+      place_religion[:lvl]    = lvl[0].to_i if lvl
+      place_religion[:branch] = branch[0]   if branch
+    end
 
     if place_religion[:god]
       _, place_religion[:standing] = *sections[0].match(/Was \w+ ([\w ]+) of #{place_religion[:god]}/)
