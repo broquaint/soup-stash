@@ -6,4 +6,26 @@
   /* via https://developer.mozilla.org/en-US/docs/CSS/white-space */
   word-wrap: break-word;      /* IE 5.5-7 */
   white-space: pre-wrap;
+  font-family: monospace; /* Needed for books */
+}
+
+/* to be toggled */
+.bigthing {
+  display: none;
+}
+
+#morgue {
+  .toggle-list .toggle-on {
+    display: inherit;
+  }
+
+  .toggle-list .toggle-off {
+    display: none;
+  }	    
+}
+
+#pointer-up {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: smaller;
 }
