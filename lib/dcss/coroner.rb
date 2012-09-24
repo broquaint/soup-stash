@@ -25,6 +25,7 @@ class DCSS::Coroner
     autopsy.merge! find_visits(blocks)
     autopsy.merge! find_stats(blocks)
     autopsy.merge! find_state_abilities_runes(blocks)
+    autopsy.merge! find_map(sections)
     autopsy.merge! understand_inventory(sections)
     autopsy.merge! find_skills(sections)
     autopsy.merge! find_spells(sections)
@@ -327,8 +328,16 @@ class DCSS::Coroner
     return ret
   end
 
+  def find_map(sections)
+    # Oddly 'Message History' isn't always preced by two newlines
+    _, map_n_message = find_in sections, /^Message History\n(.*)\z/m
+    return { :map => map_n_message[1] }
+  end
+
   def _clean_desc(desc)
     return nil if desc.strip.empty?
+    # XXX A bit buggy e.g for the Necronomicon:
+    # WARNING: If fail in an attempt to memorise a spell from this book, the book will lash out at you.
     desc.strip
         .gsub(/^ +(?=\S)/m, '')                # Leading space
         .gsub(/your? /, '')                    # "It affects your", "It lets you"

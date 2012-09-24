@@ -65,6 +65,8 @@ class Game # Specifically DCSS
   field :spells_left,  :type => Integer
   field :spells_known, :type => Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
 
+  field :map, :type => String
+
   field :kills,       :type => Object # { vanquisher: [{ amount: Int, creature: String, location: String }] }
   field :kill_total,  :type => Integer
   field :ghost_kills, :type => Array # [{:kills[v][idx] + type: String}]
