@@ -28,7 +28,8 @@ gem 'cancan'  # https://github.com/ryanb/cancan TODO - Use in anger.
 gem 'bson_ext'
 gem 'mongoid', "~> 3.0.0" # http://mongoid.org/docs/installation.html
 
-gem 'kaminari'
+gem 'kaminari', ">= 0.14.0"
+gem 'kaminari-bootstrap'
 
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
