@@ -6,7 +6,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.desc(:score).limit(27)
+    @games = Game.desc(:end_time).limit(27).page params[:page]
     @games = @games.where({:user_id => params[:user_id]}) if params[:user_id]
 
     respond_to do |format|
