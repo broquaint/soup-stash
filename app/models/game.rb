@@ -15,33 +15,29 @@ class Game # Specifically DCSS
   field :race       , :type => String  # DONE
   field :background , :type => String  # DONE
   field :version    , :type => String  # DONE
-  field :level      , :type => String  # DONE # level == xl, what was lv?
   field :character  , :type => String  # DONE
-  field :xl         , :type => Integer # DONE == level
-#  field :skill      , :type => String  # sk=Unarmed Combat
-#  field :sk_lev     , :type => String  # sklev=5
+  field :xl         , :type => Integer # DONE == experience level
   field :title      , :type => String  # DONE
   field :place      , :type => String  # DONE level 7 of the dungeon
-  field :branch     , :type => String  # DONE
-  field :lvl        , :type => Integer # DONE
-  field :ltyp       , :type => String  # == branch ???
+  field :level      , :type => Integer # DONE       7
+  field :branch     , :type => String  # DONE                dungeon
   field :levels_seen , :type => Integer # DONE
   field :hp         , :type => String  # DONE
   field :maxhp      , :type => Integer # DONE
   field :maxmaxhp   , :type => Integer # DONE
-  field :mp         , :type => String 
+  field :mp         , :type => String  # DONE
+  field :ev         , :type => Integer # DONE
   field :ac         , :type => Integer # DONE
   field :str        , :type => Integer # DONE
   field :int        , :type => Integer # DONE
   field :dex        , :type => Integer # DONE
+  field :sh         , :type => Integer # DONE
   field :duration         , :type => String  # DONE
   field :duration_seconds , :type => Integer # DONE
   field :turns      , :type => Float   # DONE
   field :runes      , :type => Integer # DONE
   field :rune_list  , :type => Array   # DONE
-  field :killertype , :type => String
   field :killer     , :type => String  # DONE
-  field :damage     , :type => Integer
   field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
                                        #                      16th June 2012 at 22:01:45
 
@@ -73,10 +69,38 @@ class Game # Specifically DCSS
 
   field :notes, :type => Array # [{ turn: Int, place: String, note: String }]
 
+  ## Fields from logfile
+  # New fields with exact logfile mappings
+  field :game_type , :type => String
+  field :gold      , :type => Integer
+  field :splat     , :type => Boolean
+  field :tiles     , :type => Boolean
+  field :place_abbr, :type => String
+  field :map_name  , :type => String
+
+  # New fields needing mapping
+  field :deepest_level      , :type => Integer # was absdepth
+  field :killer_weapon      , :type => String  # was ckaux
+  field :damage             , :type => Integer # was dam
+  field :gold_found         , :type => Integer # was goldfound
+  field :gold_spent         , :type => Integer # was goldspent
+  field :invocant_killer    , :type => String  # was ikiller
+  field :killer_weapon_desc , :type => String  # was kaux
+  field :killer_type        , :type => String  # was ktyp
+  field :source_damage      , :type => Integer # was sdam
+  field :skill              , :type => String  # was sk
+  field :skill_level        , :type => Integer # was sklev
+  field :server             , :type => String  # was src
+  field :turn_damage        , :type => Integer # was tdam
+  field :terse_ending       , :type => String
+
+  # A bit gross but simplifies things elsewhere e.g in display.
+  field :from_log_file, :type => Boolean
+
   # key fields
   field :end_time_str, :type => String
   field :combo,        :type => String
-  
+
   belongs_to :player
   field :_id, :type => String, :default => ->{
     "%s-%s-%s-%s" % [name, character, combo, end_time_str]

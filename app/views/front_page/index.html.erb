@@ -18,7 +18,7 @@
           <td><%= player(game) %> the <%= game.title %></td>
           <td><%= game.race %> <%= game.background %></td>
           <td><%= game.god %></td>
-          <td><%= game.level %></td>
+          <td><%= game.xl %></td>
         </tr>
         <% end %>
       </tbody>
@@ -42,7 +42,7 @@
         <tr>
           <td><%= link_to game.score, game_path(game) %></td>
           <td><%= link_to game.character, user_player_path(game.player.user, game.player) %></td>
-          <td><%= game.level %></td>
+          <td><%= game.xl %></td>
           <td><abbr title="<%= game.race %> <%= game.background %>"><%= combo_abbr(game) %></abbr></td>
          </tr>
         <% end %>

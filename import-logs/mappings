@@ -1,0 +1,70 @@
+# New field, same name, no mapping required
+"game_type"	=> "crawl", # notdefined =/= new!
+"gold"		=> 129, # notdefined =/= new!
+"splat"		=> "", # notdefined =/= new!
+"tiles"		=> "y", # notdefined =/= new!
+
+# New field, different name, requires mapping
+"absdepth"	=> 2, # notdefined =/= deepest_level
+"ckaux"		=> "spear", # notdefined =/= killer_weapon
+"dam"		=> 8, # notdefined =/= damage
+"goldfound"	=> 109, # notdefined =/= gold_found
+"goldspent"	=> 0, # notdefined =/= gold_spent
+"ikiller"	=> "a gnoll", # notdefined =/= invocant_killer
+"kaux"		=> "a +1,+1 spear", # notdefined =/= killer_weapon_desc
+"ktyp"		=> "mon", # notdefined =/= killer_type
+"sdam"		=> 8, # notdefined =/= source_damage
+"sk"		=> "Necromancy", # notdefined =/= skill
+"sklev"		=> 6, # notdefined =/= skill_level
+"src"		=> "cszo", # notdefined =/= server
+"tdam"		=> 8, # notdefined =/= turn_damage
+
+# Existing field, different name, requires mapping
+"br"		=> "D", # notdefined =|= branch (needs expanding?)
+"char"		=> "DENe", # notdefined =|= combo
+"cls"		=> "Necromancer", # notdefined =|= class
+"crace"		=> "Deep Elf", # notdefined =|= race
+"cv"		=> "0.11-a", # notdefined =|= version
+"dur"		=> 553, # notdefined =|= duration
+"end"		=> 20120814002413, # notdefined =/= end_time
+"map"		=> "", # defined =|= map_name
+"mhp"		=> 19, # notdefined =|= maxhp
+"mmhp"		=> 19, # notdefined =|= maxmaxhp
+"name"          => "broquaint", # notdefined =|= character
+"place"		=> "D:2", # defined =|= place_abbr
+"sc"		=> 185, # notdefined =|= score
+"start"		=> 20120814001132, # notdefined =|= start_time
+"tmsg"		=> "slain by a gnoll", # notdefined =|= terse_ending
+"turn"		=> 2263, # notdefined =|= turns
+"v"		=> "0.11-b1", # notdefined =|= version
+"vmsg"		=> "slain by a gnoll (a +1,+1 spear)", # notdefined =|= verbose_ending
+
+# Existing field, same name, no mapping
+"dex"		=> 15, # defined
+"hp"		=> 0, # defined
+"int"		=> 19, # defined
+"killer"	=> "a gnoll", # defined
+"kills"		=> 30, # defined
+"lvl"		=> 2, # defined
+"name"		=> "broquaint", # defined
+"race"		=> "Deep Elf", # defined
+"str"		=> 6, # defined
+"title"		=> "Grave Robber", # defined
+"xl"		=> 3 # defined
+
+# Won't use - empty, undefined, not relevant, etc
+"alpha"		=> "y", # notdefined =!= meh
+"ckiller"	=> "a gnoll", # notdefined =!= meaningless?
+"cvnum"		=> 11000000097000, # notdefined =!= wah?
+"file"		=> nil, # notdefined =!= meh
+"fruit"		=> 73728, # notdefined =!= wah?
+"game_key"	=> "broquaint:cszo:20120714001132S", # notdefined =!= meh
+"kmod"		=> "", # notdefined =!= always empty
+"lv"		=> 0.1, # notdefined =!= always 0.1
+"mapdesc"	=> "", # notdefined =!= always empty
+"offset"	=> 0, # notdefined =!= always 0
+"oplace"	=> nil, # notdefined =!= always empty
+"rend"		=> "20120714002413S", # notdefined =!= same as end
+"rstart"	=> "20120714001132S", # notdefined =!= same as start
+"time"		=> nil, # notdefined =!= always empty
+"vnum"		=> 11000000098001, # notdefined =!= wah???

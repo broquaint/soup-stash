@@ -3,7 +3,7 @@
 <div id='morgue' class='row'>
   <div class='span8'>
     <div id='announce'>
-      <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.level %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
+      <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.xl %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
       <h4>
 	<%= @game.ending.sub /!$/, '' %> with <u><%= @game.score %></u>
 	<% unless @game.won %> at <%= @game.place %><% end %>
@@ -13,9 +13,13 @@
       <% if @game.god %><h4><%= @game.standing %> of <%= @game.god %></h4><% end %>
     </div>
 
+    <% if @game.from_log_file %>
+    <%= morgue_link(@game) %>
+    <% else %>
+
     <div id='status'>
       <% equipped = @game.equipped
-	 if equipped['weapon'] %>
+	 if equipped && equipped['weapon'] %>
         <p><strong>Wielding <span class='equipped'><%= @game.inventory[ equipped['weapon'] ]['item'] %></span></strong></p>
       <% end %>
       <p><strong>Was <%= @game.character_state.to_sentence %></strong></p>
@@ -126,6 +130,8 @@
       </table>
     </div>
 
+    <p id="pointer-up"><a href="#thetop"><i class="icon-arrow-up"></i> Go to the top of the page</a></p>
+    <% end # not from_log_file %>
   </div>
 
   <div class='span4'>
@@ -140,17 +146,18 @@
 	  <td>Str</td><td><%= @game.str %></td>
 	</tr>
 	<tr>
-	  <td>MP</td><td><%= @game.mp %></td>
-	  <td>EV</td><td><%= @game.ev %></td>
+	  <td>MP</td><td><%= @game.mp.nil? ? '-' : @game.mp %></td>
+	  <td>EV</td><td><%= @game.ev.nil? ? '-' : @game.ev %></td>
 	  <td>Int</td><td><%= @game.int %></td>
 	</tr>
 	<tr>
 	  <td>Gold</td><td><%= @game.gold %></td>
-	  <td>SH</td><td><%= @game.sh %></td>
+	  <td>SH</td><td><%= @game.sh.nil? ? '-' : @game.sh %></td>
 	  <td>Dex</td><td><%= @game.dex %></td>
 	</tr>
       </table>
 
+      <% unless @game.from_log_file %>
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
 	<% rk = @game.resistances.keys.sort
@@ -197,7 +204,9 @@
       </ol>
       <% end %>
     </div>
+
+    <% end # not from_log_file %>
+
   </div>
 </div>
 
-<p id="pointer-up"><a href="#thetop"><i class="icon-arrow-up"></i> Go to the top of the page</a></p>

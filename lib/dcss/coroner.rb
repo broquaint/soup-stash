@@ -12,7 +12,7 @@ class DCSS::Coroner
     blocks   = make_blocks @morgue
     sections = make_sections @morgue
 
-    autopsy = { :name => 'dcss', :morgue => '' } # XXX Too noisy for now - @morgue }
+    autopsy = { :name => 'crawl', :morgue => '' } # XXX Too noisy for now - @morgue }
     autopsy[:version] = find_version blocks
     # TODO order by default appearance in moregues
     autopsy.merge! find_score_char_title_level(blocks)
@@ -77,7 +77,6 @@ class DCSS::Coroner
       :score     => match[:score].to_i,
       :character => match[:character],
       :title     => match[:title],
-      :level     => match[:level].to_i
     }
   end
 
@@ -158,7 +157,7 @@ class DCSS::Coroner
       lvl    = place_religion[:place].match /(\d+)/
       branch = place_religion[:place].match /(#{DCSS.branch_re})/i
 
-      place_religion[:lvl]    = lvl[0].to_i if lvl
+      place_religion[:level]  = lvl[0].to_i if lvl
       place_religion[:branch] = branch[0]   if branch
     end
 
