@@ -6,11 +6,11 @@ require 'dcss/coroner'
 require 'yaml'
 require 'pp'
 
-# TODO Pull out models into a separate lib.
-require 'kaminari' # needed by Player & Game
-Kaminari::Hooks.init # kaminari/railtie.rb
+# "I'm sorry, Dave. I'm afraid I can't do that."
 require 'devise' # needed by User
 require_relative "../config/initializers/devise.rb"
+require 'kaminari' # needed by Player & Game models which User drags in
+Kaminari::Hooks.init # kaminari/railtie.rb
 
 require 'mongoid'
 Mongoid.load!("../config/mongoid.yml", :development)
@@ -50,6 +50,7 @@ class IngestLogfile
       "cv"        => :version,
       "dur"       => :duration,
       "end"       => :end_time,
+      "game_type" => :name,
       "kills"     => :kill_total,
       "lvl"       => :level,
       "map"       => :map_name,
@@ -68,6 +69,7 @@ class IngestLogfile
       :splat      => lambda {|v| v && v.length != 0},
       :tiles      => lambda {|v| v == 'y'},
       :branch     => lambda {|v| DCSS::BRANCHES[v]},
+      :character  => lambda {|v| v.to_s}, # YAML/Perl can produce non-strings.
       :end_time   => lambda {|v| time_str_to_object(v.to_s)},
       :start_time => lambda {|v| time_str_to_object(v.to_s)},
     }
@@ -89,11 +91,10 @@ class IngestLogfile
   end
 
   def player_id_for(game)
-    c = game[:character]
+    c = game[:character].to_s
     return @players[c].id if @players.key? c
 
-    # TODO Accumulation stats
-    p = Player.create(:name => c, :for_game => game[:name], user_id: @user_id)
+    p = Player.create(:name => c, :for_game => game[:game_type], user_id: @user_id)
     @players[c] = p
 
     p.id
@@ -111,7 +112,6 @@ class IngestLogfile
     @transforms.each {|k, trans| game[k]  = trans.call(game[k])}
     # Fields use to make up the _id of the document
     game.merge({
-                 :name          => game[:game_type],
                  :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
                  :from_log_file => true,
                  :player_id     => player_id_for(game)
@@ -119,7 +119,10 @@ class IngestLogfile
   end
 
   def commit_game(game)
-    Game.create(game)
+    g = Game.create!(game)
+    p = @players[g.character]
+    p.update_accumulators(g)
+    p.save!
   end
 end
 
@@ -147,7 +150,7 @@ perl_out.close
 i = 0
 $stdout.sync
 ingester = IngestLogfile.new
-IO.readlines("/home/dbrook/dev/soup-stash/import-logs/logfile-full").each do |line|
+IO.readlines("/home/dbrook/dev/soup-stash/import-logs/logfile").each do |line|
   log_out.puts line
 
   yaml = ''
@@ -158,8 +161,8 @@ IO.readlines("/home/dbrook/dev/soup-stash/import-logs/logfile-full").each do |li
     model = ingester.logfile_to_model(game)
     ingester.commit_game(model)
   rescue Exception => e
-    puts PP.pp(game)
-    puts e
+    puts 'Something went horribly wrong -', e
+    break
   end
 
   $stdout.print "At line #{i}\r"

@@ -58,12 +58,7 @@ class GamesController < ApplicationController
     morgue[:combo]        = DCSS.combo2abbr(morgue[:race], morgue[:background])
     @game = @player.games.new(morgue)
 
-    # XXX This should probably be handled elsewhere.
-    # XXX Might be simpler to pull these out of a map/reduce as necessary.
-    @player.played       += 1
-    @player.kills        += morgue[:kill_total]
-    @player.time_spent   += morgue[:duration_seconds]
-    @player.levels_seen  += morgue[:levels_seen]
+    @player.update_accumulators(@game)
 
     respond_to do |format|
       # XXX Should handle player errors too I guess.
