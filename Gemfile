@@ -20,7 +20,10 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'underscore-rails'
 gem 'bootstrap-sass'
+
+gem 'rabl'
 
 gem 'devise'
 gem 'cancan'  # https://github.com/ryanb/cancan TODO - Use in anger.

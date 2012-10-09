@@ -122,7 +122,6 @@ class IngestLogfile
     g = Game.create!(game)
     p = @players[g.character]
     p.update_accumulators(g)
-    p.save!
   end
 end
 

@@ -50,11 +50,8 @@
       <% end %>
     </dl>
     <% end %>
-    <p><strong>TODO</strong>
-    Nemesis monster, unique. Favoured skill(, level? only in 0.10 morgues I think).</p>
 
     <% if @user == current_user %>
-      <!-- XXX - Icon doesn't work, upgrade Bootstrap or something else? -->
       <p><i class="icon-plus-sign"></i><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
       <p><%= link_to 'Edit', edit_user_player_path(@user, @player) %></p>
     <% end %>

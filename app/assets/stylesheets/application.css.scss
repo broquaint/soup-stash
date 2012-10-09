@@ -12,6 +12,12 @@
  *= require_tree .
 */
 
+/* Needed for navbar-static-top */
+body { padding-top: 0 !important;	 }
+
+/* The input in the navbar looks wonky and not quite right :/ */
+.navbar-form input { margin-top: 10px !important; }
+
 header nav ul {
   list-style: none;
   margin: 0 0 2em;
@@ -20,6 +26,7 @@ header nav ul {
 header nav ul li {
   display: inline;
 }
+
 #flash_notice, #flash_alert {
   padding: 5px 8px;
   margin: 10px 0;

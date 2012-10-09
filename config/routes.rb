@@ -9,6 +9,7 @@ SoupStash::Application.routes.draw do
   resources :users do
     resources :players
   end
+  match 'players/search' => 'players#search', :via => :get
 
   resources :games
 

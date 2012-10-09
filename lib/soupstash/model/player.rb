@@ -28,5 +28,6 @@ class SoupStash::Model::Player
     self.kills       += game.kill_total       || 0
     self.time_spent  += game.duration_seconds || 0
     self.levels_seen += game.levels_seen      || 0
+    save!
   end
 end

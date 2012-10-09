@@ -1,5 +1,5 @@
 class PlayersController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show]
+  before_filter :authenticate_user!, :except => [:index, :show, :search]
 
   # GET /players
   # GET /players.json
@@ -89,5 +89,10 @@ class PlayersController < ApplicationController
       format.html { redirect_to user_players_url }
       format.json { head :no_content }
     end
+  end
+
+  # respond_to :json
+  def search
+    @players = Player.where(name: /^#{Regexp::quote(params[:q])}/i)
   end
 end
