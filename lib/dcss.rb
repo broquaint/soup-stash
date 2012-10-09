@@ -139,6 +139,53 @@ module DCSS
     Regexp.new('(?:' + BRANCHES.values.join('|') + ')')
   end
 
+  RESISTANCES_ORDER = [
+                       'Resist Fire',
+                       'Resist Cold',
+                       'Life Protection',
+                       'Resist Acid',
+                       'Resist Poison',
+                       'Resist Electric',
+                       'Sustain Abilities',
+                       'Resist Mutation',
+                       'Resist Rotting',
+                       'Sappovore',
+
+                       'See Invisible',
+                       'Warding',
+                       'Conservation',
+                       'Resist Corrosion',
+                       'Clarity',
+                       'Spirit Shield',
+                       'Stasis',
+                       'Control Telport',
+                       'Levitation',
+                       'Control Flight',
+                      ]
+
+  RESISTANCES_MAP = {
+    "Res.Fire"    => 'Resist Fire',
+    "See Invis."  => 'See Invisible',
+    "Res.Cold"    => 'Resist Cold',
+    "Warding"     => 'Warding',
+    "Life Prot."  => 'Life Protection',
+    "Conserve"    => 'Conservation',
+    "Res.Poison"  => 'Resist Poison',
+    "Res.Corr."   => 'Resist Corrosion',
+    "Res.Acid."   => 'Resist Acid',
+    "Res.Elec."   => 'Resist Electric',
+    "Clarity"     => 'Clarity',
+    "Sust.Abil."  => 'Sustain Abilities',
+    "Spirit.Shd"  => 'Spirit Shield',
+    "Res.Mut."    => 'Resist Mutation',
+    "Stasis"      => 'Stasis',
+    "Res.Rott."   => 'Resist Rotting',
+    "Ctrl.Telep." => 'Control Telport',
+    "Saprovore"   => 'Sappovore',
+    "Levitation"  => 'Levitation',
+    "Ctrl.Flight" => 'Control Flight',
+  }
+
   EQUIPMENT_SLOTS = [
                      'weapon',
                      'armour',

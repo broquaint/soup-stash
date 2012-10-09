@@ -181,6 +181,7 @@ class DCSS::Coroner
 
     rEquip.scan(rMatch_re) do |r, t|
       t.gsub! /\s+/, ''
+      r = DCSS::RESISTANCES_MAP[r]
       resistances[r] = if t.length == 1
                          t == '+' ? 'on' : t == '.' ? 'off' : 'disabled'
                        else # Use fractionals?
@@ -247,7 +248,7 @@ class DCSS::Coroner
           :creature => creature,
           :location => location,
         }
-        puts "adding #{creature} to #{killed_by}"
+
         kills[killed_by].push vanquished
         gkills.push vanquished.merge({:vanquisher => killed_by}) if creature.match /^The ghost of/
       elsif vanquisher

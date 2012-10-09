@@ -158,7 +158,7 @@
       <% unless @game.from_log_file %>
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
-	<% rk = @game.resistances.keys.sort
+	<% rk = DCSS::RESISTANCES_ORDER
 	   # TODO - Bootstrap icon helper
 	   rIcons = { 'on' => 'plus', 'off' => 'minus', 'disabled' => 'remove' }
 	   for idx in 0 .. 9 %>
