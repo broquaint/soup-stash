@@ -1,7 +1,8 @@
 require_dependency 'dcss/coroner'
+require 'open-uri'
 
 class GamesController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show]
+  before_filter :authenticate_user!, :except => [:index, :show, :update]
 
   # GET /games
   # GET /games.json
@@ -27,21 +28,26 @@ class GamesController < ApplicationController
     end
   end
 
-  # GET /games/new
-  # GET /games/new.json
-  def new
-    @game    = Game.new
-    @players = current_user.players
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @game }
-    end
-  end
-
-  # GET /games/1/edit
-  def edit
+  def update
     @game = Game.find(params[:id])
+
+    file = 'morgue-%s-%s.txt' % [@game.character, @game.end_time_str]
+    path = ['morgue', @game.character, file].join '/'
+    uri  = URI::HTTP.build(host: 'dobrazupa.org', path: "/#{path}")
+
+    morgue  = DCSS::Coroner.new(open(uri.to_s).read, file).parse
+
+    @player = @game.player
+
+    @game.update_attributes(morgue.merge from_log_file: false)
+    @game.save!
+    @player.update_accumulators(@game) # XXX Updates too many things!
+
+    # Why doesn't it update the object too?!
+    @game = Game.find(params[:id])
+
+    flash[:notice] = "Updated game details from #{uri}"
+    render 'show'
   end
 
   # POST /games
@@ -67,22 +73,6 @@ class GamesController < ApplicationController
         format.json { render json: @game, status: :created, location: @game }
       else
         format.html { render action: "new" }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /games/1
-  # PUT /games/1.json
-  def update
-    @game = Game.find(params[:id])
-
-    respond_to do |format|
-      if @game.update_attributes(params[:game])
-        format.html { redirect_to @game, notice: 'Game was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
