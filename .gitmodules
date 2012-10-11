@@ -1,0 +1,3 @@
+[submodule "vendor/dcss_henzell"]
+	path = vendor/dcss_henzell
+	url = git://github.com/broquaint/dcss_henzell.git
