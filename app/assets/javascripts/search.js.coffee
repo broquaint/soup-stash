@@ -14,7 +14,6 @@ goToPlayer = (event, ui) ->
 playerSelectionMenu = (event, ui) ->
   # Seems odd this isn't passed in as an arg.
   $('ul.ui-autocomplete').addClass 'dropdown-menu'
-  window.console.log "Got this ", this, " with ", event, " and ", ui
 
 $ () ->    
   $('#player-search').autocomplete

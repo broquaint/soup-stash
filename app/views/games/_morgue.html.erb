@@ -12,7 +12,11 @@
     </div>
 
     <% if @game.from_log_file %>
-    Update from morgue on <%= update_morgue_link(@game) %>
+    <button id="update-morgue"
+	    class="btn btn-primary" type="button"
+	    href="<%= game_path(@game) %>" data-method="put">
+      Update from morgue
+    </button> on <%= morgue_link(@game) %>
     <% else %>
 
     <div id='status'>

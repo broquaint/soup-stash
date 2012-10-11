@@ -11,3 +11,7 @@ $ ->
   $('#pointer-up a').click ->
     scrollTo(0, 0)
     return false
+
+  # Treat the button as though it were a link.
+  $('#update-morgue').click ->
+    $.rails.handleMethod $(this)
