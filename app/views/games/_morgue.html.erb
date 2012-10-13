@@ -93,15 +93,20 @@
 	 for ktype in @game.kills.keys
 	   vanquished = @game.kills[ktype] %>
            <h3>Vanquished (<%= ktype %>)</h3>
-	   <a class='btn toggle-list'>
+	   <a class='btn large-load' data-field='kills'>
 	     <span class='toggle-on'>Show</span><span class='toggle-off'>Hide</span>
 	     full list
 	   </a>
-	   <ul class='unstyled bigthing'>
-           <% for kill in vanquished %>
-             <li><%= kill['amount'] %> <%= kill['creature'] %> <em><%= kill['location'] %></em>
-           <% end %>
-	   </ul>
+	   <div class='bigthing'>
+	     <script type="text/x-underscore-tmpl">
+	       <ul class='unstyled'>
+		 <!-- XXX - Pulls in all the kills, a bit lazy but meh for now -->
+		 [% _.each(kills.<%= ktype %>, function(kill) { %]
+		 <li>[%= kill['amount'] %] [%= kill['creature'] %] <em>[%= kill['location'] %]</em>
+		 [% }); %]
+	       </ul>
+	     </script>
+	   </div>
          <% end %>
       <% end %>
       <% unless @game.ghost_kills.empty? %>
@@ -117,19 +122,23 @@
 
     <div id='notes'>
       <h3>Notes</h4>
-      <a class='btn toggle-list'>
+      <a class='btn large-load' data-field='notes'>
 	<span class='toggle-on'>Show</span><span class='toggle-off'>Hide</span>
 	all
       </a>
-      <table class='table table-condensed bigthing'>
-      <% for note in @game.notes %>
-        <tr>
-	  <td><%= note['turn']  %></td>
-	  <td><%= note['place'] %></td>
-	  <td><%= note['note']  %></td>
-	</tr>
-      <% end %>
-      </table>
+      <div class='bigthing'>
+	<script type="text/x-underscore-tmpl">
+	  <table class='table table-condensed'>
+	  [% _.each(notes, function(note) { %]
+          <tr>
+	    <td>[%= note['turn']  %]</td>
+	    <td>[%= note['place'] %]</td>
+	    <td>[%= note['note']  %]</td>
+	  </tr>
+	  [% }); %]
+	  </table>
+	</script>
+      </div>
     </div>
 
     <p id="pointer-up"><a href="#thetop"><i class="icon-arrow-up"></i> Go to the top of the page</a></p>
