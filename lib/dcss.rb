@@ -214,6 +214,7 @@ module DCSS
                     ]
 
   INVENTORY_TYPES = [
+                     'Hand weapons',
                      'Missiles',
                      'Armour',
                      'Magical devices',
@@ -223,8 +224,10 @@ module DCSS
                      'Potions',
                      'Books',
                      'Magical staves',
+                     'Rods',
                      'Orbs of Power',
                      'Miscellaneous',
+                     'Carrion',
                     ]
 
   SKILL_STATE = {

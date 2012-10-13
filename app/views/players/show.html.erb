@@ -18,12 +18,13 @@
       <tbody>
         <% for game in @games.desc(:end_time).limit(10) %>
         <tr>
-          <td><%= link_to game.score, game_path(game) %></td>
+	  <td><%= link_to game.score, game_path(game) %>
+	    <% if game.won %><i class="icon-star" title="Won!"></i><% end %></td>
           <td><%= game.character %> the <%= game.title %></td>
           <td><%= game.race %> <%= game.background %></td>
           <td><%= game.god || '-' %></td>
           <td><%= game.level %></td>
-          <td><%= game.killer || '-' %></td>
+	  <td><%= game.killer || ( game.won ? 'WON!' : 'quit' ) %></td>
         </tr>
         <% end %>
       </tbody>
@@ -33,11 +34,11 @@
   <div class='span4'>
     <h4>Cumulative numbers</h4>
     <dl class="dl-horizontal">
-      <dt>Games played</dt><dd><%= @player.played %></dd>
-      <dt>Total kills</dt> <dd><%= @player.kills %></dd>
+      <dt>Games played</dt><dd><%= @player.played || '-' %></dd>
+      <dt>Total kills</dt> <dd><%= @player.kills  || '-' %></dd>
       <!-- TODO Make seconds human readable -->
       <dt>Time spent</dt>  <dd><%= @player.time_spent %> seconds</dd>
-      <dt>Levels seen</dt> <dd><%= @player.levels_seen %></dd>
+      <dt>Levels seen</dt> <dd><%= @player.levels_seen || '-' %></dd>
     </dl>
     <% if @games.length > 0 %>
     <h4>Favourites</h4>
@@ -51,6 +52,7 @@
     </dl>
     <% end %>
 
+    <!--
     <% if @user == current_user %>
       <p><i class="icon-plus-sign"></i><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
       <p><%= link_to 'Edit', edit_user_player_path(@user, @player) %></p>
@@ -58,5 +60,6 @@
     <% if @user.players.length > 1 %>
       <p><%= link_to "The user page of #{@user.name}", user_players_path %></p>
     <% end %>
+    -->
   </div>
 </div>

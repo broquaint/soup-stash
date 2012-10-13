@@ -163,6 +163,8 @@ class DCSS::Coroner
 
     if place_religion[:god]
       _, place_religion[:standing] = *sections[0].match(/Was \w+ ([\w ]+) of #{place_religion[:god]}/)
+      # the Shining One -> The Shining One
+      place_religion[:god].sub!(/^(.)/) {|c| c.upcase}
     end
     
     return place_religion

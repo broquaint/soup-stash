@@ -4,11 +4,10 @@
       <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.xl %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
       <h4>
 	<%= @game.ending.sub /!$/, '' %> with <u><%= @game.score %></u>
-	<% unless @game.won %> at <%= @game.place %><% end %>
+	<% unless @game.won %> at <%= @game.place || @game.place_abbr %><% end %>
       </h4>
       <h4>It took <%= @game.turns %> turns in <%= @game.duration %></h4>
-      <!-- Link to subsections with more details further down -->
-      <% if @game.god %><h4><%= @game.standing %> of <%= @game.god %></h4><% end %>
+      <% if @game.god %><h4><%= @game.standing || 'Worshipper' %> of <%= @game.god %></h4><% end %>
     </div>
 
     <% if @game.from_log_file %>

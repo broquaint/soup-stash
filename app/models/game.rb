@@ -107,7 +107,7 @@ class Game # Specifically DCSS
   }
 
   def won
-    ending == 'Escaped with the Orb!' # A bit fragile but it'll do.
+    ending.match /escaped with the orb/i # A bit fragile but it'll do.
   end
 
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
