@@ -14,9 +14,9 @@ while(<>) {
     # Parent process indicates we're done here.
     last if $line eq '__EXIT__';
 
-    # FIXME - Assumes cszo as the server, takes as an argument probably.
     print YAML::Dump(
-	build_fields_from_logline({server => 'cszo'}, tell(*STDIN), $line)
+        # server is lies to keep the code happy (think it's ok to lie?)
+	build_fields_from_logline({server => 'cao'}, tell(*STDIN), $line)
     );
     print '__EOF__', $/; # Indicate we've finished YAML output.
 }

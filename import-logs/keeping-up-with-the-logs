@@ -1,22 +1,84 @@
+#!/usr/bin/env ruby
+
 $LOAD_PATH.unshift '../lib'
 
+require 'slop'
+require 'uri'
 require 'soupstash/ingestlogfile'
 require 'net/tailhttp'
 
 #logfile_uri = 'http://localhost:8085/dev/logfile-test/logfile'
-logfile_uri = 'http://dobrazupa.org/meta/0.11/logfile'
+#logfile_uri = 'http://dobrazupa.org/meta/0.11/logfile'
 
-ingester = IngestLogfile.new
-parser   = IngestLogfile::Parser.new
+def get_logfile_uri_from_opts(opts)
+  logfile_arg = opts[:uri]
+  begin
+    logfile_uri = URI.parse(logfile_arg)
+  rescue => uri_err
+    uri_err
+  end
 
-puts "Watching #{logfile_uri}"
+  if uri_err or logfile_uri.class == URI::Generic
+    puts "Invalid URI '#{logfile_arg}', bailing#{uri_err || ''}!"
+    abort opts.to_s
+  end
+
+  return logfile_arg
+end
+
+def get_opts
+  opts = Slop.new(help: true) do
+    banner = 'Usage: keeping-up-with-the-logs [--help] URL'
+
+    on :u, :uri=, 'The URL of the log to follow.', required: true
+    on :v, :verbose,  'Be verbose in output'
+    on :o, :offset=, 'The file offset to start from', as: Integer
+  end
+  opts.parse
+
+  return opts
+end
+
+opts        = get_opts
+logfile_uri = get_logfile_uri_from_opts(opts)
+
+ingester = IngestLogfile.new(logfile_uri)
+parser   = ingester.parser
+offset   = ingester.offset_state
+
+puts "Watching #{logfile_uri}" if opts.verbose?
+
 begin
-  Net::TailHTTP.for_uri(logfile_uri, 60) do |response|
+  tail_opts = {
+    uri:     logfile_uri,
+    wait:    60,
+    offset:  opts[:offset] || offset.get_latest,
+    verbose: opts.verbose?
+  }
+  Net::TailHTTP.for_uri(tail_opts) do |response, new_offset|
     logfile_lines = response.body.split("\n")
     parser.import_from(logfile_lines) do |game|
-      ingester.commit_game(game)
+      if game.class == Hash
+        ingester.commit_game(game)
+      else
+        # XXX There seems to be an off-by-one error, not quite sure how though.
+        puts "!!! Couldn't make sense of: #{game}\n#{logfile_lines}" if tail_opts[:verbose]
+      end
     end
+    offset.update_to new_offset
   end
 rescue Interrupt
   parser.finish_parsing
 end
+
+=begin
+
+Now at 9864405 for http://dobrazupa.org/meta/0.11/logfile
+!!! Couldn't make sense of: false
+["v=0.11.0:lv=0.1:tiles=1:name=Drone:race=Deep Dwarf:cls=Necromancer:char=DDNe:xl=2:sk=Necromancy:sklev=5:title=Grave Robber:place=D::2:br=D:lvl=2:absdepth=2:hp=-2:mhp=22:mmhp=22:str=11:int=15:dex=13:start=20120915170427S:dur=510:turn=780:kills=14:status=non-regenerating:gold=106:goldfound=86:goldspent=0:sc=122:ktyp=mon:killer=a gnoll:dam=4:sdam=4:tdam=11:kaux=a +0,+0 whip:end=20120915171827S:tmsg=slain by a gnoll:vmsg=slain by a gnoll (a +0,+0 whip)", "v"]
+At line 1434
+Now at 9864859 for http://dobrazupa.org/meta/0.11/logfile
+!!! Couldn't make sense of: false
+["=0.11.0:lv=0.1:name=Lukan:race=Tengu:cls=Berserker:char=TeBe:xl=7:sk=Dodging:sklev=5:title=Ducker:place=D::6:br=D:lvl=6:absdepth=6:hp=-1:mhp=43:mmhp=43:str=20:int=7:dex=13:god=Trog:start=20120915170103S:dur=1034:turn=4873:kills=111:status=regenerating:gold=185:goldfound=165:goldspent=0:fruit=7168:sc=724:ktyp=mon:killer=an orc wizard:dam=3:sdam=3:tdam=3:kaux=a -1,+1 orcish dagger:piety=109:end=20120915171911S:tmsg=slain by an orc wizard:vmsg=slain by an orc wizard (a -1,+1 orcish dagger)"]
+
+=end

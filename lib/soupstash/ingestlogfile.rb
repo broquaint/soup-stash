@@ -18,6 +18,7 @@ require 'models/player'
 require 'models/game'
 
 # require 'soupstash'
+# TODO - Stick this in a namespace or something.
 class IngestLogfile
   class Transformer
     def initialize
@@ -75,14 +76,15 @@ class IngestLogfile
       return dt.to_time
     end
 
-    def logfile_to_model(log_game)
+    def logfile_to_model(log_game, source)
       game = @existing.reduce({}) {|g, k| g.merge k => log_game[k.to_s]}
       @from_to.each    {|from, to| game[to] = log_game[from]}
       @transforms.each {|k, trans| game[k]  = trans.call(game[k])}
-      # Fields use to make up the _id of the document
+
       game.merge({
                    :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
                    :from_log_file => true,
+                   :server        => source, # Assume we have a useful URI string.
                  })
     end
   end
@@ -116,7 +118,6 @@ class IngestLogfile
 
     def import_from(logfile)
       $stdout.sync
-      ingester = IngestLogfile.new
       logfile.each do |line|
         @log_out.puts line
 
@@ -143,8 +144,19 @@ class IngestLogfile
     end
   end
 
+  def parser
+    Parser.new
+  end
+
+  # A utility class to simplify keeping track of state.
+  require 'soupstash/ingestlogfile/offsetstate'
+  def offset_state
+    OffsetState.new(@source)
+  end
+
   attr_reader :players
-  def initialize
+  def initialize(source)
+    @source      = source
     init_user
     @players     = {}
     @transformer = Transformer.new
@@ -176,11 +188,10 @@ class IngestLogfile
   end
 
   def commit_game(game)
-    for_model = @transformer.logfile_to_model(game)
+    for_model = @transformer.logfile_to_model(game, @source)
     for_model.merge!(:player_id => player_id_for(for_model))
     g = Game.create!(for_model)
     p = @players[g.character]
     p.update_accumulators(g)
   end
-
 end
