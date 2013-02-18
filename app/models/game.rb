@@ -106,6 +106,9 @@ class Game # Specifically DCSS
     "%s-%s-%s-%s" % [name, character, combo, end_time_str]
   }
 
+  # XXX Will the time always reflect startup?
+  scope :last_week, gt(end_time: DateTime.now - 7)
+
   def won
     ending.match /escaped with the orb/i # A bit fragile but it'll do.
   end

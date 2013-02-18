@@ -1,4 +1,6 @@
 module DCSS
+  # TODO - Move all this out of code and into some kind of data.
+
   RACE = {
     'Ce' => 'Centaur',
     'DE' => 'Deep Dwarf',
@@ -58,8 +60,8 @@ module DCSS
     'Wz' => 'Wizard',
   }
 
-  RACE_ABBR       = Hash[ *RACE.flatten.reverse ]
-  BACKGROUND_ABBR = Hash[ *BACKGROUND.flatten.reverse ]
+  RACE_ABBR       = RACE.invert
+  BACKGROUND_ABBR = BACKGROUND.invert
 
   # There's always some unique snowflake of a race isn't there?
   DRAC_RE = /(?:(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)\s)/
@@ -255,4 +257,25 @@ module DCSS
   def DCSS.spell_type_re
     Regexp.new('(?:(?:' + SPELL_TYPES.keys.join('|') + ')/?)+')
   end
+
+  GODS = [
+          'Ashenzari',
+          'Beogh',
+          'Cheibriados',
+          'Elyvilon',
+          'Fedhas Madash',
+          'Jiyva',
+          'Kikubaaqudgha',
+          'Lugonu',
+          'Makhleb',
+          'Nemelex Xobeh',
+          'Okawaru',
+          'Sif Muna',
+          'The Shining One',
+          'Trog',
+          'Vehumet',
+          'Xom',
+          'Yredelemnul',
+          'Zin',
+         ]
 end
