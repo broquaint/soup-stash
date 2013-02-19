@@ -5,14 +5,14 @@ require 'yaml'
 
 # "I'm sorry, Dave. I'm afraid I can't do that."
 require 'devise' # needed by User
-require_relative "../../config/initializers/devise.rb"
+require "./config/initializers/devise.rb"
 require 'kaminari' # needed by Player & Game models which User drags in
 Kaminari::Hooks.init # kaminari/railtie.rb
 
 require 'mongoid'
-Mongoid.load!("../config/mongoid.yml", :development)
+Mongoid.load!("./config/mongoid.yml", :development)
 
-$LOAD_PATH.unshift '../app'
+$LOAD_PATH.unshift './app'
 require 'models/user'
 require 'models/player'
 require 'models/game'
@@ -97,9 +97,9 @@ class IngestLogfile
       @yaml_in, perl_out = IO.pipe
 
       @pid = fork {
-        parser_path = Dir.getwd + '/logfile-parser.pl'
+        parser_path = Dir.getwd + '/script/logfile-parser.pl'
 
-        Dir::chdir '../vendor/dcss_henzell'
+        Dir::chdir './vendor/dcss_henzell'
 
         $stdin.reopen  perl_in
         $stdout.reopen perl_out 

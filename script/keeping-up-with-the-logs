@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift '../lib'
+# Assumes this is executed as ./script/$0
+$LOAD_PATH.unshift './lib'
 
 require 'slop'
 require 'uri'
@@ -30,9 +31,10 @@ def get_opts
   opts = Slop.new(help: true) do
     banner = 'Usage: keeping-up-with-the-logs [--help] URL'
 
-    on :u, :uri=, 'The URL of the log to follow.', required: true
-    on :v, :verbose,  'Be verbose in output'
+    on :u, :uri=,    'The URL of the log to follow.', required: true
+    on :v, :verbose, 'Be verbose in output'
     on :o, :offset=, 'The file offset to start from', as: Integer
+    on :p, :poll=,   'How often to poll in the log serever', as: Integer
   end
   opts.parse
 
@@ -51,7 +53,7 @@ puts "Watching #{logfile_uri}" if opts.verbose?
 begin
   tail_opts = {
     uri:     logfile_uri,
-    wait:    60,
+    wait:    opts[:poll],
     offset:  opts[:offset] || offset.get_latest,
     verbose: opts.verbose?
   }

@@ -8,7 +8,7 @@ class Net::TailHTTP
     head_req = Net::HTTP::Head.new(uri.to_s)
 
     offset    = opts[:offset] || 0
-    for_a_bit = opts[:wait]   || 5
+    for_a_bit = opts[:wait]   || 60
     while true
       begin
         head_response = http.request(head_req)
