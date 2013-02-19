@@ -278,4 +278,13 @@ module DCSS
           'Yredelemnul',
           'Zin',
          ]
+
+  # Based on servers.yml from dcss_henzell
+  MORGUE_PATHS = {
+    'crawl.develz.org'     => lambda {|g| "http://crawl.develz.org/morgues/#{g.version[/^\d.\d\d?/]}/" },
+    'crawl.akrasiac.org'   => lambda {|g| 'http://crawl.akrasiac.org/rawdata/' },
+    'dobrazupa.org'        => lambda {|g| 'http://dobrazupa.org/morgue/' },
+    'crawlus.somatika.net' => lambda {|g| 'http://crawlus.somatika.net/dumps/' },
+    'rl.heh.fi'            => lambda {|g| 'http://rl.heh.fi/trunk/stuff/' }
+  }
 end

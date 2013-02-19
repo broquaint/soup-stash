@@ -3,6 +3,7 @@ require 'open-uri'
 
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :update]
+  include GamesHelper
 
   # GET /games
   # GET /games.json
@@ -31,11 +32,9 @@ class GamesController < ApplicationController
   def update
     @game = Game.find(params[:id])
 
-    file = 'morgue-%s-%s.txt' % [@game.character, @game.end_time_str]
-    path = ['morgue', @game.character, file].join '/'
-    uri  = URI::HTTP.build(host: 'dobrazupa.org', path: "/#{path}")
-
-    morgue  = DCSS::Coroner.new(open(uri.to_s).read, file).parse
+    uri    = morgue_uri(@game)
+    file   = uri.path.split('/')[-1]
+    morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
 
     @player = @game.player
 
