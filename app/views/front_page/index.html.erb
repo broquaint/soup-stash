@@ -1,11 +1,17 @@
 <div class='row'>
   <div class='span8'>
-    <!--
-    <div style='float: right;'>
-      <button class="btn">Add column</button>
-    </div>
-    -->
-    <h1>High scores (past week)</h1>
+    <h1>High scores
+      <div class="dropdown period-header">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">(past <%= @current_period %>)</a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+	  <% for p in %w{day week month year}.select{|p| p != @current_period} %>
+	  <!-- XXX Bleh includes /front_page/index -->
+	  <li><%= link_to "past #{p}", period: p %></li>
+	  <% end %>
+	  <li><%= link_to 'all time', period: 'alltime' %></li>
+	</ul>
+      </div>
+    </h1>
     <table class='table table-striped table-condensed'>
       <thead>
         <tr>

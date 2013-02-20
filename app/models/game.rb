@@ -107,7 +107,10 @@ class Game # Specifically DCSS
   }
 
   # XXX Will the time always reflect startup?
-  scope :last_week, gt(end_time: DateTime.now - 7)
+  scope :last_day,   gt(end_time: DateTime.now - 1)
+  scope :last_week,  gt(end_time: DateTime.now - 7)
+  scope :last_month, gt(end_time: DateTime.now - 30)
+  scope :last_year,  gt(end_time: DateTime.now - 365)
 
   def won
     ending.match /escaped with the orb/i # A bit fragile but it'll do.
