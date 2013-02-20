@@ -13,6 +13,9 @@ SoupStash::Application.routes.draw do
 
   resources :games
 
+  # Static /about page via http://stackoverflow.com/a/4966764
+  match ':action' => 'static#:action'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
