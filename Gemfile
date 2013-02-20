@@ -36,7 +36,7 @@ gem 'kaminari-bootstrap'
 
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
-gem 'rspec-rails', :group => [:development, :test]
+gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
 
 # This hasn't been updated for mongoid 3 yet, not using it in anger so meh.
 # gem 'mongoid-rspec', :group => :test
