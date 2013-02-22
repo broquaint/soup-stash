@@ -23,7 +23,7 @@
       <td><%= game.background %></td>
       <td><%= game.god || '-' %></td>
       <td><%= game.xl %></td>
-      <td><%= game.killer || ( game.won ? 'WON!' : 'quit' ) %></td>
+      <td><%= game.killer || ( game.won ? 'WON!' : game.ending ) %></td>
     </tr>
     <% end %>
   </tbody>
