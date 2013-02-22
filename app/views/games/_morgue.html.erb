@@ -140,6 +140,19 @@
       </div>
     </div>
 
+    <h3>Original morgue</h3>
+    <p>
+      <a href="<%= morgue_uri(@game).to_s %>"><%= morgue_uri(@game).to_s %></a>
+    </p>
+    
+    <button id="update-morgue"
+	    class="btn btn-primary" type="button"
+	    href="<%= game_path(@game) %>" data-method="put"
+	    title="Only necessary during development!">
+      Reload data from morgue
+    </button>
+
+    <hr>
     <p id="pointer-up"><a href="#thetop"><i class="icon-arrow-up"></i> Go to the top of the page</a></p>
     <% end # not has_morgue_file %>
   </div>
