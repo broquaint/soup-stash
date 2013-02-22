@@ -237,6 +237,7 @@ module DCSS
     '-' => 'deselected',
     '*' => 'focused',
     'O' => 'max',
+    ' ' => 'untrainable',
   }
 
   SPELL_TYPES = {

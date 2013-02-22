@@ -195,10 +195,9 @@
       <h3>Skills</h3>
       <table class='stats table table-condensed'>
 	<% # XXX Yes this is a bit round-about.
-	   skill_icons = { 'selected' => 'plus', 'deselected' => 'minus', 'focused' => 'asterisk', 'max' => 'ok' }
+	   skill_icons = { 'selected' => 'plus', 'deselected' => 'minus', 'focused' => 'asterisk', 'max' => 'ok', 'untrainable' => 'remove' }
 	   for sk in @game.skills.keys %>
 	<tr>
-	  <%# FIXME Bleh bug in bootstrap-sass breaks background-image because of a faulty $iconSpritePath %>
 	  <% skill = @game.skills[sk] %>
 	  <td><i class="icon-<%= skill_icons[skill['state']] %>" title="<%= skill['state'] %>"></i></td>
 	  <td><%= sk %></td>

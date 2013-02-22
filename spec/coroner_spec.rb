@@ -1,55 +1,41 @@
 require 'dcss/coroner'
 
 describe DCSS::Coroner, 'matching' do
+  let(:coroner) { DCSS::Coroner.new }
   it 'should make blocks' do
-    c = DCSS::Coroner.new
-    c.make_blocks("foo\n\nbar\n\nbaz").should eq(%w{foo bar baz})
+    coroner.make_blocks("foo\n\nbar\n\nbaz").should eq(%w{foo bar baz})
   end
   it 'matches version in a block' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks "the version 0.1\n\nanother block"
-    c.match_one(blocks, /([\d.]+)/).should eq('0.1')
+    blocks = coroner.make_blocks "the version 0.1\n\nanother block"
+    coroner.match_one(blocks, /([\d.]+)/).should eq('0.1')
   end
   it 'matches nothing in a block' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks "the version twelve\n\nanother block"
-    c.match_one(blocks, /([\d.]+)/).should be_false
-  end
-  it 'matches many things in a block' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks "HP  -1/15   AC   1\n\nMP   6/6   EV 17"
-    c.match_many(blocks, {
-      :hp => /\bHP\s+(\S+)/,
-      :ev => /\bEV\s+(\S+)/
-    }).should eq({:hp => '-1/15', :ev => '17'})
+    blocks = coroner.make_blocks "the version twelve\n\nanother block"
+    coroner.match_one(blocks, /([\d.]+)/).should be_false
   end
   it 'finds a version' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks " Dungeon Crawl Stone Soup version 0.9.1 character file.\n\n178 Snwcln the Vexing (level 3, -1/15 HPs)"
-    c.find_version(blocks).should eq('0.9.1')
+    blocks = coroner.make_blocks " Dungeon Crawl Stone Soup version 0.9.1 character file.\n\n178 Snwcln the Vexing (level 3, -1/15 HPs)"
+    coroner.find_version(blocks).should eq('0.9.1')
   end
-  it 'finds score, char, title + level' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks "178 Snwcln the Vexing (level 3, -1/15 HPs)\n\n33 creatures vanquished"
-    c.find_score_char_title_level(blocks).should eq({
+  it 'finds score, char, title' do
+    blocks = coroner.make_blocks "178 Snwcln the Vexing (level 3, -1/15 HPs)\n\n33 creatures vanquished"
+    coroner.find_score_char_title(blocks).should eq({
                                                         :score     => 178,
                                                         :character => 'Snwcln',
                                                         :title     => 'Vexing',
-                                                        :level     => 3
                                                       })
   end
   it 'find race, background, turns + duration' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
-    c.find_race_class_turns_duration(blocks).should eq({
+    blocks = coroner.make_blocks "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
+    coroner.find_race_class_turns_duration(blocks).should eq({
                                                            :race       => 'Felid',
                                                            :background => 'Wanderer',
                                                            :turns      => 3364,
                                                            :duration   => '00:11:02'
                                                          })
     
-    blocks = c.make_blocks "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
-    c.find_race_class_turns_duration(blocks).should eq({
+    blocks = coroner.make_blocks "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
+    coroner.find_race_class_turns_duration(blocks).should eq({
                                                            :race       => 'Sludge Elf',
                                                            :background => 'Earth Elementalist',
                                                            :turns      => 14495,
@@ -58,14 +44,13 @@ describe DCSS::Coroner, 'matching' do
   end
 
   it 'finds stats' do
-    c = DCSS::Coroner.new
-    blocks = c.make_blocks <<STATS
+    blocks = coroner.make_blocks <<STATS
 HP  -1/15        AC  1     Str 10      XL: 3   Next: 25%
 MP   6/6         EV 17     Int 13      God: Vehumet [*.....]
 Gold 141         SH  0     Dex 14      Spells:  1 memorised,  3 levels left
                                        Lives: 0, deaths: 1
 STATS
-    c.find_stats(blocks).should eq({
+    coroner.find_stats(blocks).should eq({
                                        :hp    => '-1/15',
                                        :maxhp => nil,
                                        :ac    => 1,
@@ -80,12 +65,12 @@ STATS
                                      })
 
     # via dcss-Arrhythmia-HuIE-20120814-024123 e.g winning stats
-    blocks = c.make_blocks <<STATS
+    blocks = coroner.make_blocks <<STATS
 HP 223/231 (241) AC 18     Str 30      XL: 27
 MP  42/47        EV 39     Int 46      God: Cheibriados [******]
 Gold 8008        SH 43     Dex 33      Spells: 15 memorised,  1 level left
 STATS
-    c.find_stats(blocks).should eq({
+    coroner.find_stats(blocks).should eq({
                                        :hp    => '223/231',
                                        :maxhp => 241,
                                        :ac    => 18,
@@ -112,6 +97,34 @@ STATS
     expect {
       DCSS.abbr2combo 'FAKE'
     }.to raise_error(Exception, "Unknown combo 'FAKE'")
+  end
+
+  it 'should find skills' do
+    skills = coroner.make_blocks <<SKILLS
+   Skills:
+ - Level 5.0 Fighting
+ - Level 9.0(13.3) Short Blades
+   Level 1.0 Slings
+ - Level 1.1 Throwing
+ - Level 16.0 Dodging
+ + Level 24.5 Stealth
+ * Level 15.1 Stabbing
+ - Level 5.3(8.3) Shields
+ - Level 14.0 Traps & Doors
+ O Level 27 Spellcasting
+SKILLS
+
+    coroner.find_skills(skills).should eq({:skills=>
+  {"Fighting"=>{:state=>"deselected", :level=>5.0, :boosted_level=>nil},
+   "Short Blades"=>{:state=>"deselected", :level=>9.0, :boosted_level=>13.3},
+   "Slings"=>{:state=>"untrainable", :level=>1.0, :boosted_level=>nil},
+   "Throwing"=>{:state=>"deselected", :level=>1.1, :boosted_level=>nil},
+   "Dodging"=>{:state=>"deselected", :level=>16.0, :boosted_level=>nil},
+   "Stealth"=>{:state=>"selected", :level=>24.5, :boosted_level=>nil},
+   "Stabbing"=>{:state=>"focused", :level=>15.1, :boosted_level=>nil},
+   "Shields"=>{:state=>"deselected", :level=>5.3, :boosted_level=>8.3},
+   "Traps & Doors"=>{:state=>"deselected", :level=>14.0, :boosted_level=>nil},
+   "Spellcasting"=>{:state=>"max", :level=>27.0, :boosted_level=>nil}}})
   end
 
   # TODO Use a single full morgue of my own instead of this hodge podge
@@ -275,7 +288,7 @@ Magical staves
  - Level 16.1 Traps & Doors
  - Level 22.4 Spellcasting
  - Level 20.0 Conjurations
- - Level 7.5 Charms
+ - Level 7.5(9.3) Charms
  - Level 6.5 Summonings
  - Level 15.4 Necromancy
  - Level 10.6 Translocations

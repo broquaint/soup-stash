@@ -15,7 +15,7 @@ class DCSS::Coroner
     autopsy = { :name => 'crawl', :morgue => '' } # XXX Too noisy for now - @morgue }
     autopsy[:version] = find_version blocks
     # TODO order by default appearance in moregues
-    autopsy.merge! find_score_char_title_level(blocks)
+    autopsy.merge! find_score_char_title(blocks)
     autopsy.merge! find_place_god_piety_hunger(sections)
     autopsy.merge! find_race_class_turns_duration(blocks)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
@@ -63,14 +63,14 @@ class DCSS::Coroner
     return match_one blocks, / Dungeon Crawl Stone Soup version (\S+)/
   end
 
-  def find_score_char_title_level(blocks)
+  def find_score_char_title(blocks)
     # 178 Snwcln the Vexing (level 3
     _, match = find_in blocks, score_block_re = /\A
       (?<score>\d+)    \s
       (?<character>.*) \s
       the              \s
       (?<title>.*)     \s
-      \(level \s (?<level>\d+)
+      \(level \s \d+
     /x
     return {} if match.nil?
     return {
@@ -373,13 +373,14 @@ class DCSS::Coroner
 
     return { :skills => {} } if skills_str.nil?
 
-    skill_matches = skills_str.scan /^ (.) Level (\d+(?:.\d+)?) ([\w& ]+)$/m
+    skill_matches = skills_str.scan /^ (.) Level ([\d,.]+)(?:\(([\d,.]+)\))? ([\w& ]+)$/m
     return {
       :skills => skill_matches.reduce({}) do |skills, match|
-        state, level, skill = match
+        state, level, boosted_level, skill = match
         skills[skill] = {
-          :state => DCSS::SKILL_STATE[state],
-          :level => level.sub(/,/, '.').to_f, # Handle localization (I guess)
+          :state         => DCSS::SKILL_STATE[state],
+          :level         => level.sub(/,/, '.').to_f, # Handle localization (I guess)
+          :boosted_level => ( boosted_level and boosted_level.sub(/,/, '.').to_f ),
         }
         skills
       end
