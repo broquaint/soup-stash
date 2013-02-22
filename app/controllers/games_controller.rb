@@ -38,7 +38,7 @@ class GamesController < ApplicationController
 
     @player = @game.player
 
-    @game.update_attributes(morgue.merge from_log_file: false)
+    @game.update_attributes(morgue.merge has_morgue_file: true)
     @game.save!
     @player.update_accumulators(@game) # XXX Updates too many things!
 

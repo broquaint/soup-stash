@@ -10,7 +10,7 @@
       <% if @game.god %><h4><%= @game.standing || 'Worshipper' %> of <%= @game.god %></h4><% end %>
     </div>
 
-    <% if @game.from_log_file %>
+    <% unless @game.has_morgue_file %>
     <button id="update-morgue"
 	    class="btn btn-primary" type="button"
 	    href="<%= game_path(@game) %>" data-method="put">
@@ -141,7 +141,7 @@
     </div>
 
     <p id="pointer-up"><a href="#thetop"><i class="icon-arrow-up"></i> Go to the top of the page</a></p>
-    <% end # not from_log_file %>
+    <% end # not has_morgue_file %>
   </div>
 
   <div class='span4'>
@@ -167,7 +167,7 @@
 	</tr>
       </table>
 
-      <% unless @game.from_log_file %>
+      <% if @game.has_morgue_file %>
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
 	<% rk = DCSS::RESISTANCES_ORDER
@@ -216,7 +216,7 @@
       <% end %>
     </div>
 
-    <% end # not from_log_file %>
+    <% end # not has_morgue_file %>
 
   </div>
 </div>

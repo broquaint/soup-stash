@@ -94,8 +94,10 @@ class Game # Specifically DCSS
   field :turn_damage        , :type => Integer # was tdam
   field :terse_ending       , :type => String
 
-  # A bit gross but simplifies things elsewhere e.g in display.
-  field :from_log_file, :type => Boolean
+  # Should be useful when local games are uploadable.
+  field :from_log_file,   :type => Boolean
+  # Makes display simpler.
+  field :has_morgue_file, :type => Boolean
 
   # key fields
   field :end_time_str, :type => String
