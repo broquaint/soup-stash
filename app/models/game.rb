@@ -114,6 +114,16 @@ class Game # Specifically DCSS
   scope :last_month, gt(end_time: DateTime.now - 30)
   scope :last_year,  gt(end_time: DateTime.now - 365)
 
+  # Used all over the place.
+  index({ score: 1 })
+  # Used on the front page
+  index({ god: 1 })
+  # Used by scopes
+  index({ end_time: 1 })
+  # Used by map/reduces
+  index({ character: 1 })
+  index({ killer: 1 })
+
   def won
     ending.match /escaped with the orb/i # A bit fragile but it'll do.
   end
