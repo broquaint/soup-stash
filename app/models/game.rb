@@ -118,6 +118,14 @@ class Game # Specifically DCSS
     ending.match /escaped with the orb/i # A bit fragile but it'll do.
   end
 
+  def ending_str
+    killer || ( won ? 'WON!' : ending.sub(/\s*\([^)]+\)/, '') )
+  end
+
+  def self.for(character)
+    Game.where(character: character)
+  end
+
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options
     return [] if Game.count == 0
@@ -130,44 +138,5 @@ class Game # Specifically DCSS
         :count => c['value']['count'].to_i,
       }
     end
-  end
-
-  
-  def self.character_favourites(character) # TODO Take time/version/etc as options
-    return {} if Game.count == 0
-
-    # XXX db.eval(File.read('underscore.js'))
-    map = %Q{
-      function() {
-        var e = { race: {}, background: {}, god: {} },
-           me = this;
-        // { race: { val: 'High Elf', count: 1 } }
-        ['race','background','god'].forEach(function(i) { e[i][me[i] || 'none'] = 1; });
-        emit(this.character, e);
-      }
-    }
-
-    red = %Q{
-      function(k, vals) {
-        var t = { race: {}, background: {}, god: {} };
-        // Oh for CoffeeScript!
-        vals.forEach(function(v) {
-          ['race','background','god'].forEach(function(i) {
-            for(var p in v[i])
-              t[i][p] = 1 + (p in t[i] ? t[i][p] : 0);
-          });
-        });
-        return t;
-      }
-    }
-
-    faves = Game.where(:character => character).map_reduce(map, red).out(:inline=>1)
-    return {} if faves.empty?
-    return {
-      :race       => faves.first['value']['race'],
-      :background => faves.first['value']['background'],
-      :god        => faves.first['value']['god'],
-    }
-  end
- 
+  end  
 end

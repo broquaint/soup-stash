@@ -190,8 +190,6 @@ class IngestLogfile
   def commit_game(game)
     for_model = @transformer.logfile_to_model(game, @source)
     for_model.merge!(:player_id => player_id_for(for_model))
-    g = Game.create!(for_model)
-    p = @players[g.character]
-    p.update_accumulators(g)
+    Game.create!(for_model)
   end
 end

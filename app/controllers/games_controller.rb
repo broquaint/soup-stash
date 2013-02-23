@@ -36,11 +36,8 @@ class GamesController < ApplicationController
     file   = uri.path.split('/')[-1]
     morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
 
-    @player = @game.player
-
     @game.update_attributes(morgue.merge has_morgue_file: true)
     @game.save!
-    @player.update_accumulators(@game) # XXX Updates too many things!
 
     # Why doesn't it update the object too?!
     @game = Game.find(params[:id])
@@ -62,8 +59,6 @@ class GamesController < ApplicationController
     morgue[:end_time_str] = morgue[:end_time].strftime('%Y%m%d-%H%M%S')
     morgue[:combo]        = DCSS.combo2abbr(morgue[:race], morgue[:background])
     @game = @player.games.new(morgue)
-
-    @player.update_accumulators(@game)
 
     respond_to do |format|
       # XXX Should handle player errors too I guess.

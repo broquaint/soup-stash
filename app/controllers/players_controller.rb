@@ -1,3 +1,5 @@
+require 'hashie'
+
 class PlayersController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :search]
 
@@ -14,16 +16,17 @@ class PlayersController < ApplicationController
   # GET /players/1
   # GET /players/1.json
   def show
-    @user   = User.find(params[:user_id])
-    @player = Player.find(params[:id])
-    # WTF, this broke after Mongoid 3 upgrade - @player.games
-    @games  = Game.where(character: @player.name).page params[:page]
-    faves  = Game.character_favourites(@player.name)
-    # XXX There's surely a more elegant approach?
-    @race, @background, @god = faves.keys.collect do |type|
-      f, c = faves[type].reduce {|fave, pair| pair[1] > fave[1] ? pair : fave}
-      { fave: f, count: c.to_i }
-    end
+    # Needed for deep link generation.
+    @user    = User.find(params[:user_id])
+
+    @player  = Player.find(params[:id])
+    @games   = Game.for(@player.name).page params[:page]
+    @totals  = Hashie::Mash.new(@player.basic_totals)
+    @faves   = @player.favourites
+    @nemeses = @player.nemeses
+
+    # Because none isn't a particularly interesting choice.
+    @faves[:god].delete 'none'
 
     respond_to do |format|
       format.html # show.html.erb
