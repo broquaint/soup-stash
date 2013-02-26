@@ -388,12 +388,13 @@ class DCSS::Coroner
   end
 
   def find_spells(sections)
-    spells_str, match = find_in sections, /\AYou had (?<left>\d+|one) spell levels? left./
+    no_spells = "You couldn't memorise any spells."
+    spells_str, match = find_in sections, /\A(?:#{no_spells})|(?:You had (?<left>\d+|one) spell levels? left.)/
 
     # i.e "You couldn't memorise any spells."
     return { :spells_left => 0, :spells_known => [] } if spells_str.nil?
 
-    left_i = match[:left] == 'one' ? 1 : match[:left].to_i
+    left_i = match[:left] ? ( match[:left] == 'one' ? 1 : match[:left].to_i ) : 0
 
     spell_re = %r{^
       (.) \s - \s (\w+(?:\s\w+)*) \s+ # b - Throw Frost
