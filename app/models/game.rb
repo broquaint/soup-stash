@@ -138,11 +138,17 @@ class Game # Specifically DCSS
 
   # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options
-    return [] if Game.count == 0
+    return [] if self.count == 0
 
-    map = 'function() { emit(this.race + " " + this.background, { count: 1 }) }'
+    map = <<-MAP
+    function() {
+      var drac_re = /^(?:(?:#{DCSS::DRAC_COLOURS.join('|')}) )?/,
+             race = this.race.replace(drac_re, '');
+      emit(race + " " + this.background, { count: 1 })
+    }
+    MAP
     red = 'function(k,vals) { var tot = 0; vals.forEach(function(v) { tot += v.count }); return { count: tot }; }'
-    Game.map_reduce(map, red).out(:inline=>1).collect do |c|
+    self.map_reduce(map, red).out(:inline=>1).collect do |c|
       {
         :race  => c['_id'],
         :count => c['value']['count'].to_i,

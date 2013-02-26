@@ -64,7 +64,8 @@ module DCSS
   BACKGROUND_ABBR = BACKGROUND.invert
 
   # There's always some unique snowflake of a race isn't there?
-  DRAC_RE = /(?:(?:Red|White|Green|Yellow|Grey|Black|Purple|Mottled|Pale)\s)/
+  DRAC_COLOURS = %w[Red White Green Yellow Grey Black Purple Mottled Pale]
+  DRAC_RE      = /(?:(?:#{DRAC_COLOURS.join('|')})\s)/
 
   def DCSS.combo2abbr(race, background)
     r = RACE_ABBR[race.sub /^#{DRAC_RE}/, '']

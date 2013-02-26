@@ -76,10 +76,19 @@
       </tbody>
     </table>
 
-    <h3>Most popular combo</h3>
+    <h3>Most popular combos</h3>
     <ol>
-      <% for combo in @popular_combos %>
-        <li><strong><%= combo[:race] %></strong> <em><%= combo[:count] %></em>
+      <% for combo in @most_pop_combos %>
+        <% _, r, b = *combo[:race].match(/(\w+) (.*)/) %>
+        <li><a href='<%= games_path race: r, background: b %>'><strong><%= combo[:race] %></strong></a> <em><%= combo[:count] %></em>
+      <% end %>
+    </ol>
+
+    <h3>Least popular combos</h3>
+    <ol>
+      <% for combo in @least_pop_combos %>
+        <% _, r, b = *combo[:race].match(/(\w+) (.*)/) %>
+        <li><a href='<%= games_path race: r, background: b %>'><strong><%= combo[:race] %></strong></a> <em><%= combo[:count] %></em>
       <% end %>
     </ol>
   </div>
