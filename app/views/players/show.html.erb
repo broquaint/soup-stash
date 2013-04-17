@@ -2,7 +2,7 @@
 
 <div class='row'>
   <div class='span8'>
-    <h1><%= @player.name %></td>
+    <h1><%= link_to @player.name, user_player_path(@user, @player) %></td>
     <h4>Recent games</h4>
     <div class='game-listing'>
       <%= render 'shared/selections' %>
