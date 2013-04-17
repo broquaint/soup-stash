@@ -4,32 +4,39 @@
   <div class='span8'>
     <h1><%= @player.name %></td>
     <h4>Recent games</h4>
-    <table class='table table-striped table-condensed'>
-      <thead>
-        <tr>
-          <th>Score</th>
-          <th>Player</th>
-          <th>Race + Background</th>
-          <th>God</th>
-          <th>XL</TH>
-          <th>Killer</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for game in @games.desc(:end_time).limit(10) %>
-        <tr>
-	  <td><%= link_to game.score, game_path(game) %>
-	    <% if game.won %><i class="icon-star" title="Won!"></i><% end %></td>
-          <td><%= game.character %> the <%= game.title %></td>
-          <td><%= game.race %> <%= game.background %></td>
-          <td><%= game.god || '-' %></td>
-          <td><%= game.xl %></td>
-	  <td><%= game.ending_str %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= paginate @games %>
+    <div class='game-listing'>
+      <%= render 'shared/selections' %>
+      <table class='table table-striped table-condensed'>
+        <thead>
+          <tr>
+            <th><%= link_to_with 'Score', sort: 'score' %></th>
+            <th>Character</th>
+            <!-- TODO Only show valid options! -->
+            <th><%= render 'shared/combo_filter' %></th>
+            <th><%= render partial: 'shared/column_filter',
+                    locals: { column: 'God', filterables: DCSS::GODS, param: 'god' }
+                    %>
+            </th>
+            <th><abbr title="Experience Level">XL</abbr></th>
+            <th>Killer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for game in @games.desc(:end_time).limit(10) %>
+          <tr>
+	    <td><%= link_to game.score, game_path(game) %>
+	      <% if game.won %><i class="icon-star" title="Won!"></i><% end %></td>
+            <td><%= game.character %> the <%= game.title %></td>
+            <td><%= game.race %> <%= game.background %></td>
+            <td><%= game.god || '-' %></td>
+            <td><%= game.xl %></td>
+	    <td><%= game.ending_str %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= paginate @games %>
+    </div>
   </div>
   <div class='span4'>
     <h4>Totals</h4>

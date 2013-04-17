@@ -4,12 +4,17 @@ require 'open-uri'
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :update]
   include GamesHelper
+  include ParamsFilter
 
   # GET /games
   # GET /games.json
   def index
-    @games = Game.desc(:end_time).limit(27).page params[:page]
-    @games = @games.where({:user_id => params[:user_id]}) if params[:user_id]
+    games = params_for(Game, params)
+    games.where(user_id: params[:user_id]) if params[:user_id]
+
+    sort_by = sort_by_for(Game, params)
+    
+    @games = games.desc(sort_by || :end_time).limit(27).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb

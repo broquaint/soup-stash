@@ -1,6 +1,8 @@
 require 'hashie'
 
 class PlayersController < ApplicationController
+  include ParamsFilter
+
   before_filter :authenticate_user!, :except => [:index, :show, :search]
 
   # GET /players
@@ -19,11 +21,13 @@ class PlayersController < ApplicationController
     # Needed for deep link generation.
     @user    = User.find(params[:user_id])
 
+    games   = params_for(Game, params)
+    sort_by = sort_by_for(Game, params)
+
     @player  = Player.find(params[:id])
-    @games   = Game.for(@player.name).page params[:page]
+    @games   = games.for(@player.name).desc(sort_by || :end_time).page params[:page]
     @totals  = Hashie::Mash.new(@player.basic_totals)
     @faves   = @player.favourites
-    @nemeses = @player.nemeses
 
     # Because none isn't a particularly interesting choice.
     @faves[:god].delete 'none'

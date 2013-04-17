@@ -1,7 +1,7 @@
 <div id='morgue' class='row'>
   <div class='span8'>
     <div id='announce'>
-      <h1><%= player @game %> the <abbr title="Experience Level">XL</abbr><%= @game.xl %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
+      <h1><%= player_link @game %> the <abbr title="Experience Level">XL</abbr><%= @game.xl %> <abbr title="<%= @game.race + ' ' + @game.background %>"><%= @game.combo %></abbr> <%= @game.title %></h1>
       <h4>
 	<%= @game.ending.sub /!$/, '' %> with <u><%= @game.score %></u>
 	<% unless @game.won %> at <%= @game.place || @game.place_abbr %><% end %>

@@ -1,0 +1,24 @@
+<%
+
+# XXX Should probably push this up into a controller.
+valid_params = params.keys.select {|p| p != 'id' && Game.attribute_method?(p)}
+selections   = valid_params.reduce({}) do |r, p|
+   v = params[p].is_a?(Array) ? params[p] : [params[p]]
+   r.merge(p => v)
+end
+
+%>
+
+<% if selections.length > 0 %>
+  <% for param in selections.keys %>
+  <div class='selections'>
+    <strong><%= param.capitalize %></strong>
+    <% for selection in selections[param] %>
+        <button class='btn btn-small' name='<%= param %>'
+                value="<%= selection %>">
+          <%= selection %>
+          </button>
+    <% end %>
+  </div>
+  <% end %>
+<% end %>

@@ -39,3 +39,19 @@ header nav ul li {
   background-color: #FCC;
   border: solid 1px #C66;
 }
+
+.dropdown-toggle i {
+  opacity: 0.5;
+}
+.dropdown-toggle:hover i {
+  opacity: 1;
+}
+
+.game-listing table {
+  clear: both;
+}
+
+.selections  {
+  display: inline;
+}
+
