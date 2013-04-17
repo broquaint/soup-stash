@@ -1,0 +1,10 @@
+<div class="dropdown period-header">
+  <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">(<%= @current_period == 'alltime' ? 'alltime' : "past #{@current_period}" %>)</a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    <% for p in %w{day week month year}.select{|p| p != @current_period} %>
+    <%# XXX Bleh includes /front_page/index %>
+    <li><%= link_to_with "past #{p}", { 'period' => p }, { no_merge: 1 }%></li>
+    <% end %>
+    <li><%= link_to_with 'all time', { 'period' => 'alltime' }, { no_merge: 1 }%></li>
+  </ul>
+</div>

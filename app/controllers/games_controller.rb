@@ -12,6 +12,12 @@ class GamesController < ApplicationController
     games = params_for(Game, params)
     games.where(user_id: params[:user_id]) if params[:user_id]
 
+    @current_period = params[:period] || 'alltime'
+    unless @current_period == 'alltime'
+      m = "last_#{@current_period}".to_sym
+      games = Game.respond_to?(m) ? games.send(m) : games.last_week
+    end
+
     sort_by = sort_by_for(Game, params)
     
     @games = games.desc(sort_by || :end_time).limit(27).page params[:page]
