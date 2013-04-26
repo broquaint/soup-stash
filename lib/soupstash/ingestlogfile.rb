@@ -1,5 +1,7 @@
 require 'dcss/coroner'
 
+# Consider using JSON as yaml appears to unsuccessfully stat all the
+# gems - https://www.refheap.com/paste/13995
 require 'yaml'
 # require 'pp'
 
@@ -127,7 +129,8 @@ class IngestLogfile
 
         yield game
 
-        $stdout.print "At line #{@parsed_count}\r"
+        # Useful when importing afresh.
+        # $stdout.print "At line #{@parsed_count}\r"
         @parsed_count += 1
       end
     end
@@ -144,19 +147,8 @@ class IngestLogfile
     end
   end
 
-  def parser
-    Parser.new
-  end
-
-  # A utility class to simplify keeping track of state.
-  require 'soupstash/ingestlogfile/offsetstate'
-  def offset_state
-    OffsetState.new(@source)
-  end
-
   attr_reader :players
-  def initialize(source)
-    @source      = source
+  def initialize
     init_user
     @players     = {}
     @transformer = Transformer.new
@@ -187,8 +179,8 @@ class IngestLogfile
     p.id
   end
 
-  def commit_game(game)
-    for_model = @transformer.logfile_to_model(game, @source)
+  def commit_game(game, source)
+    for_model = @transformer.logfile_to_model(game, source)
     for_model.merge!(:player_id => player_id_for(for_model))
     Game.create!(for_model)
   end
