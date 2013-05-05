@@ -2,6 +2,7 @@
 
 # XXX Should probably push this up into a controller.
 valid_params = params.keys.select {|p| p != 'id' && Game.attribute_method?(p)}
+valid_params << 'sort' if params.has_key? 'sort'
 selections   = valid_params.reduce({}) do |r, p|
    v = params[p].is_a?(Array) ? params[p] : [params[p]]
    r.merge(p => v)
@@ -14,11 +15,14 @@ end
   <div class='selections'>
     <strong><%= param.capitalize %></strong>
     <% for selection in selections[param] %>
-        <button class='btn btn-small' name='<%= param %>'
-                value="<%= selection %>">
-          <%= selection %>
+        <button class='btn btn-small'
+                name='<%= param %>'
+                value="<%= selection %>"
+                title='Remove <%= param.capitalize %> <%= param == 'sort' ? 'sorting' : 'filter' %>'>
+          <%= param == 'sort' ? selection.capitalize : selection %>
           </button>
     <% end %>
   </div>
   <% end %>
+  &sect; <button id=clear-selections class='btn btn-small'>Remove all</button>
 <% end %>

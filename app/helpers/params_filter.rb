@@ -15,6 +15,9 @@ module ParamsFilter
   end
 
   def sort_by_for(model, params)
-    params[:sort].to_s if params[:sort] and model.attribute_method?(params[:sort])
+    sort = params[:sort] ? params[:sort].is_a?(Array) ? params[:sort] : [params[:sort]] : nil
+    if sort and sort.all?{|c| model.attribute_method?(c)}
+      params[:sort]
+    end
   end
 end

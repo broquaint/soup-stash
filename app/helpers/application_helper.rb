@@ -18,6 +18,8 @@ module ApplicationHelper
         (oldval.is_a?(Array) ? oldval + [newval] : [oldval, newval]).uniq
       end
     end
+    # Drop paging parameter as it could result in an empty page.
+    new_params.delete 'page'
     link_to text, new_params, options[:html] || {}
   end
 

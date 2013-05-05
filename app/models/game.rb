@@ -31,7 +31,9 @@ class Game # Specifically DCSS
   index({ background: 1 })
   index({ race: 1, background: 1 })
   index({ race: 1, background: 1, god: 1 })
+  # Used on game listing.
   index({ killer: 1 })
+  index({ ending: 1 })
 
   def won
     ending.match /escaped with the orb/i # A bit fragile but it'll do.
