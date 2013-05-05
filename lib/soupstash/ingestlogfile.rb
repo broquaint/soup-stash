@@ -1,9 +1,6 @@
 require 'dcss/coroner'
 
-# Consider using JSON as yaml appears to unsuccessfully stat all the
-# gems - https://www.refheap.com/paste/13995
-require 'yaml'
-# require 'pp'
+require 'json'
 
 # "I'm sorry, Dave. I'm afraid I can't do that."
 require 'devise' # needed by User
@@ -29,16 +26,16 @@ class IngestLogfile
       @from_to = {
         "absdepth"  => :deepest_level,
         "ckaux"     => :killer_weapon,
-        "dam"	  => :damage,
+        "dam"       => :damage,
         "goldfound" => :gold_found,
         "goldspent" => :gold_spent,
         "ikiller"   => :invocant_killer,
         "kaux"      => :killer_weapon_desc,
         "ktyp"      => :killer_type,
         "sdam"      => :source_damage,
-        "sk"	  => :skill,
+        "sk"        => :skill,
         "sklev"     => :skill_level,
-        "src"	  => :server,
+        "src"       => :server,
         "tdam"      => :turn_damage,
         "tmsg"      => :terse_ending,
 
@@ -52,14 +49,14 @@ class IngestLogfile
         "kills"     => :kill_total,
         "lvl"       => :level,
         "map"       => :map_name,
-        "mhp"	  => :maxhp,
+        "mhp"       => :maxhp,
         "mmhp"      => :maxmaxhp,
         "name"      => :character,
         "place"     => :place_abbr,
-        "sc"	  => :score,
+        "sc"        => :score,
         "start"     => :start_time,
         "turn"      => :turns,
-        "v"	  => :version,
+        "v"         => :version,
         "vmsg"      => :ending,
       }
 
@@ -67,7 +64,7 @@ class IngestLogfile
         :splat      => lambda {|v| v && v.length != 0},
         :tiles      => lambda {|v| v == 'y'},
         :branch     => lambda {|v| DCSS::BRANCHES[v]},
-        :character  => lambda {|v| v.to_s}, # YAML/Perl can produce non-strings.
+        :character  => lambda {|v| v.to_s}, # JSON/Perl can produce non-strings.
         :end_time   => lambda {|v| time_str_to_object(v.to_s)},
         :start_time => lambda {|v| time_str_to_object(v.to_s)},
       }
@@ -96,7 +93,7 @@ class IngestLogfile
       @parsed_count = 0
 
       perl_in, @log_out  = IO.pipe
-      @yaml_in, perl_out = IO.pipe
+      @json_in, perl_out = IO.pipe
 
       @pid = fork {
         parser_path = Dir.getwd + '/script/logfile-parser.pl'
@@ -106,7 +103,7 @@ class IngestLogfile
         $stdin.reopen  perl_in
         $stdout.reopen perl_out 
 
-        @yaml_in.close
+        @json_in.close
         @log_out.close
 
         # Use whatever perl happens to be in the path rather than hard coding in she-bang.
@@ -123,16 +120,17 @@ class IngestLogfile
       logfile.each do |line|
         @log_out.puts line
 
-        yaml = ''
-        yaml += line while '__EOF__' != (line = @yaml_in.gets).chomp
-        game = YAML::load yaml
+        json = ''
+        json += line while '__EOF__' != (line = @json_in.gets).chomp
+        game = JSON.parse(json)
 
         yield game
 
         # Useful when importing afresh.
-        # $stdout.print "At line #{@parsed_count}\r"
+        $stdout.print "At line #{@parsed_count}\r"
         @parsed_count += 1
       end
+      $stdout.print "\n"
     end
 
     def finish_parsing
@@ -171,9 +169,10 @@ class IngestLogfile
 
   def player_id_for(game)
     c = game[:character].to_s
-    return @players[c].id if @players.key? c
 
-    p = Player.create(:name => c, :for_game => game[:game_type], user_id: @user_id)
+    return @players[c].id if @players.has_key? c
+
+    p = Player.create(:name => c, :for_game => game[:game_type], :user_id => @user_id)
     @players[c] = p
 
     p.id

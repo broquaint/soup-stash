@@ -36,6 +36,8 @@ gem 'kaminari-bootstrap'
 gem 'slop'
 gem 'net-http-follow_tail'
 
+# Used by soupstash/ingestlogfile
+gem 'json'
 
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
