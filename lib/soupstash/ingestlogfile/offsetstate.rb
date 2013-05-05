@@ -1,3 +1,5 @@
+require 'moped'
+
 class IngestLogfile
   # Keep the state of where we were at in the logfile so we're not
   # forever playing catchup/scrollback when restarting keeping-up-with-the-logs.
@@ -10,11 +12,11 @@ class IngestLogfile
 
     def get_latest
       result = offset_in_db
-      return result['offset'] || 0
+      return result['offset'].to_i || 0
     end
     def update_to(offset)
       # TODO maybe check offset .is_a? Integer.
-      offset_query.upsert(offset_in_db.merge('offset' => offset))
+      offset_query.upsert(offset_in_db.merge('offset' => offset.to_i))
     end
 
     private
