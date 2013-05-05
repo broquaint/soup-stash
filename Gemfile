@@ -32,6 +32,9 @@ gem 'hashie'
 gem 'kaminari', ">= 0.14.0"
 gem 'kaminari-bootstrap'
 
+# Used by soupstash/model/game.rb
+gem 'reindeer'
+
 # Needed by the log parser
 gem 'slop'
 gem 'net-http-follow_tail'

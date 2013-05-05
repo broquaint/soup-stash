@@ -1,168 +1,105 @@
 require 'soupstash/model'
 
-class SoupStash::Model::Game
-  include Mongoid::Document
+require 'reindeer'
 
-  # TODO Use crawl/morgue/whatever instead of "game"
-  store_in collection: 'games'
-  
-  field :name, :type => String
+class SoupStash::Model::Game < Reindeer
+  has :name, is_a: String
   # XXX All of it?
-  field :morgue, :type => String
+  has :morgue, is_a: String
 
-  field :was_local, :type => Boolean # Perhaps should be an enum?
+  has :was_local, is_a: Boolean # Perhaps should be an enum?
   
   # via https://github.com/greensnark/dcss_scoring/blob/master/databasedesign.txt
-  field :start_time , :type => Time    # endtime - duration
-  field :character  , :type => String
-  field :score      , :type => Integer # DONE
-  field :race       , :type => String  # DONE
-  field :background , :type => String  # DONE
-  field :version    , :type => String  # DONE
-  field :character  , :type => String  # DONE
-  field :xl         , :type => Integer # DONE == experience level
-  field :title      , :type => String  # DONE
-  field :place      , :type => String  # DONE level 7 of the dungeon
-  field :level      , :type => Integer # DONE       7
-  field :branch     , :type => String  # DONE                dungeon
-  field :levels_seen , :type => Integer # DONE
-  field :hp         , :type => String  # DONE
-  field :maxhp      , :type => Integer # DONE
-  field :maxmaxhp   , :type => Integer # DONE
-  field :mp         , :type => String  # DONE
-  field :ev         , :type => Integer # DONE
-  field :ac         , :type => Integer # DONE
-  field :str        , :type => Integer # DONE
-  field :int        , :type => Integer # DONE
-  field :dex        , :type => Integer # DONE
-  field :sh         , :type => Integer # DONE
-  field :duration         , :type => String  # DONE
-  field :duration_seconds , :type => Integer # DONE
-  field :turns      , :type => Float   # DONE
-  field :runes      , :type => Integer # DONE
-  field :rune_list  , :type => Array   # DONE
-  field :killer     , :type => String  # DONE
-  field :end_time   , :type => Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
-  #                      16th June 2012 at 22:01:45
+  has :start_time , is_a: Time    # endtime - duration
+  has :score      , is_a: Integer # DONE
+  has :race       , is_a: String  # DONE
+  has :background , is_a: String  # DONE
+  has :version    , is_a: String  # DONE
+  has :character  , is_a: String  # DONE
+  has :xl         , is_a: Integer # DONE == experience level
+  has :title      , is_a: String  # DONE
+  has :place      , is_a: String  # DONE level 7 of the dungeon
+  has :level      , is_a: Integer # DONE       7
+  has :branch     , is_a: String  # DONE                dungeon
+  has :levels_seen , is_a: Integer # DONE
+  has :hp         , is_a: String  # DONE
+  has :maxhp      , is_a: Integer # DONE
+  has :maxmaxhp   , is_a: Integer # DONE
+  has :mp         , is_a: String  # DONE
+  has :ev         , is_a: Integer # DONE
+  has :ac         , is_a: Integer # DONE
+  has :str        , is_a: Integer # DONE
+  has :int        , is_a: Integer # DONE
+  has :dex        , is_a: Integer # DONE
+  has :sh         , is_a: Integer # DONE
+  has :duration         , is_a: String  # DONE
+  has :duration_seconds , is_a: Integer # DONE
+  has :turns      , is_a: Float   # DONE
+  has :runes      , is_a: Integer # DONE
+  has :rune_list  , is_a: Array   # DONE
+  has :killer     , is_a: String  # DONE
+  has :end_time   , is_a: Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
+                                       #                      16th June 2012 at 22:01:45
 
-  field :ending, :type => String
+  has :ending, is_a: String
 
-  field :piety,    :type => String
-  field :god,      :type => String
-  field :standing, :type => String
+  has :piety,    is_a: String
+  has :god,      is_a: String
+  has :standing, is_a: String
 
-  field :character_state,     :type => Array # @: stealthy, fast, etc
-  field :character_features,  :type => Array # A: horns, claws, teleportitis, etc
-  field :character_abilities, :type => Array # a: Bend Time, Evoke Blink, etc
+  has :character_state,     is_a: Array # @: stealthy, fast, etc
+  has :character_features,  is_a: Array # A: horns, claws, teleportitis, etc
+  has :character_abilities, is_a: Array # a: Bend Time, Evoke Blink, etc
 
-  field :resistances, :type => Object # Res.Fire  : + . .
-  field :equipped,    :type => Object # p - +2 leather armour
+  has :resistances, is_a: Object # Res.Fire  : + . .
+  has :equipped,    is_a: Object # p - +2 leather armour
 
-  field :inventory, :type => Object # { slot: { item: String, desc: String, type: String } }
+  has :inventory, is_a: Object # { slot: { item: String, desc: String, type: String } }
 
-  field :skills, :type => Object # { skill: { state: String, level: Float } }
+  has :skills, is_a: Object # { skill: { state: String, level: Float } }
 
-  field :spells_left,  :type => Integer
-  field :spells_known, :type => Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
+  has :spells_left,  is_a: Integer
+  has :spells_known, is_a: Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
 
-  field :map, :type => String
+  has :map, is_a: String
 
-  field :kills,       :type => Object # { vanquisher: [{ amount: Int, creature: String, location: String }] }
-  field :kill_total,  :type => Integer
-  field :ghost_kills, :type => Array # [{:kills[v][idx] + type: String}]
+  has :kills,       is_a: Object # { vanquisher: [{ amount: Int, creature: String, location: String }] }
+  has :kill_total,  is_a: Integer
+  has :ghost_kills, is_a: Array # [{:kills[v][idx] + type: String}]
 
-  field :notes, :type => Array # [{ turn: Int, place: String, note: String }]
+  has :notes, is_a: Array # [{ turn: Int, place: String, note: String }]
 
-  ## Fields from logfile
-  # New fields with exact logfile mappings
-  field :game_type , :type => String
-  field :gold      , :type => Integer
-  field :splat     , :type => Boolean
-  field :tiles     , :type => Boolean
-  field :place_abbr, :type => String
-  field :map_name  , :type => String
+  ## Hass from logfile
+  # New hass with exact logfile mappings
+  has :game_type , is_a: String
+  has :gold      , is_a: Integer
+  has :splat     , is_a: Boolean
+  has :tiles     , is_a: Boolean
+  has :place_abbr, is_a: String
+  has :map_name  , is_a: String
 
-  # New fields needing mapping
-  field :deepest_level      , :type => Integer # was absdepth
-  field :killer_weapon      , :type => String  # was ckaux
-  field :damage             , :type => Integer # was dam
-  field :gold_found         , :type => Integer # was goldfound
-  field :gold_spent         , :type => Integer # was goldspent
-  field :invocant_killer    , :type => String  # was ikiller
-  field :killer_weapon_desc , :type => String  # was kaux
-  field :killer_type        , :type => String  # was ktyp
-  field :source_damage      , :type => Integer # was sdam
-  field :skill              , :type => String  # was sk
-  field :skill_level        , :type => Integer # was sklev
-  field :server             , :type => String  # was src
-  field :turn_damage        , :type => Integer # was tdam
-  field :terse_ending       , :type => String
+  # New hass needing mapping
+  has :deepest_level      , is_a: Integer # was absdepth
+  has :killer_weapon      , is_a: String  # was ckaux
+  has :damage             , is_a: Integer # was dam
+  has :gold_found         , is_a: Integer # was goldfound
+  has :gold_spent         , is_a: Integer # was goldspent
+  has :invocant_killer    , is_a: String  # was ikiller
+  has :killer_weapon_desc , is_a: String  # was kaux
+  has :killer_type        , is_a: String  # was ktyp
+  has :source_damage      , is_a: Integer # was sdam
+  has :skill              , is_a: String  # was sk
+  has :skill_level        , is_a: Integer # was sklev
+  has :server             , is_a: String  # was src
+  has :turn_damage        , is_a: Integer # was tdam
+  has :terse_ending       , is_a: String
 
-  # A bit gross but simplifies things elsewhere e.g in display.
-  field :from_log_file, :type => Boolean
+  # Should be useful when local games are uploadable.
+  has :from_log_file,   is_a: Boolean
+  # Makes display simpler.
+  has :has_morgue_file, is_a: Boolean
 
-  # key fields
-  field :end_time_str, :type => String
-  field :combo,        :type => String
-
-  belongs_to :player
-  field :_id, :type => String, :default => ->{
-    "%s-%s-%s-%s" % [name, character, combo, end_time_str]
-  }
-
-  def won
-    ending == 'Escaped with the Orb!' # A bit fragile but it'll do.
-  end
-
-  # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
-  def self.popular_combos # TODO Take time/version/etc as options
-    return [] if Game.count == 0
-
-    map = 'function() { emit(this.race + " " + this.background, { count: 1 }) }'
-    red = 'function(k,vals) { var tot = 0; vals.forEach(function(v) { tot += v.count }); return { count: tot }; }'
-    Game.map_reduce(map, red).out(:inline=>1).collect do |c|
-      {
-        :race  => c['_id'],
-        :count => c['value']['count'].to_i,
-      }
-    end
-  end
-
-  
-  def self.character_favourites(character) # TODO Take time/version/etc as options
-    return {} if Game.count == 0
-
-    # XXX db.eval(File.read('underscore.js'))
-    map = %Q{
-      function() {
-        var e = { race: {}, background: {}, god: {} },
-           me = this;
-        // { race: { val: 'High Elf', count: 1 } }
-        ['race','background','god'].forEach(function(i) { e[i][me[i] || 'none'] = 1; });
-        emit(this.character, e);
-      }
-    }
-
-    red = %Q{
-      function(k, vals) {
-        var t = { race: {}, background: {}, god: {} };
-        // Oh for CoffeeScript!
-        vals.forEach(function(v) {
-          ['race','background','god'].forEach(function(i) {
-            for(var p in v[i])
-              t[i][p] = 1 + (p in t[i] ? t[i][p] : 0);
-          });
-        });
-        return t;
-      }
-    }
-
-    faves = Game.where(:character => character).map_reduce(map, red).out(:inline=>1)
-    return {} if faves.empty?
-    return {
-      :race       => faves.first['value']['race'],
-      :background => faves.first['value']['background'],
-      :god        => faves.first['value']['god'],
-    }
-  end  
+  # key hass
+  has :end_time_str, is_a: String
+  has :combo,        is_a: String
 end
