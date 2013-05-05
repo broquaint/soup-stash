@@ -10,7 +10,7 @@ class FrontPageController < ApplicationController
       Game
     end
 
-    popular_combos = Rails.cache.fetch("popular_combos_#{@current_period}}", expires_in: 1.day) do
+    popular_combos = Rails.cache.fetch("popular_combos_#{@current_period}", expires_in: 1.day) do
       games.popular_combos.sort {|a,b| b[:count] <=> a[:count]}
     end
     @most_pop_combos  = popular_combos.slice(0, 10)
@@ -23,6 +23,8 @@ class FrontPageController < ApplicationController
   private
 
   def least_popular_combos(combos)
+    return [] if combos.empty?
+    
     smallest_amount      = combos[-1][:count]
     ascending_popularity = combos.reverse
 
