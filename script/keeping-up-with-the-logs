@@ -2,7 +2,6 @@
 
 # Assumes this is executed as ./script/$0
 $LOAD_PATH.unshift './lib'
-$LOAD_PATH.unshift '/home/dbrook/dev/net-http-follow/lib'
 
 require 'slop'
 require 'soupstash/ingestlogfile'
@@ -28,12 +27,15 @@ def parse_logs(parser, uris, opts)
       uri:     u,
       offset:  offsets[u].get_latest,
       wait:    opts[:poll],
-      verbose: opts.verbose?
     }
   end
   ingester = IngestLogfile.new
 
+  puts %Q{Going to follow:\n\t#{uris.join("\n\t")}\n\n}
+  
   Net::HTTP::FollowTail.follow(to_follow) do |result, tailer|
+    puts "[#{Time.now}] Now at #{tailer.offset.to_i} for #{tailer.uri}" if opts.verbose?
+
     logfile_lines = result.content.split("\n")
     parser.import_from(logfile_lines) do |game|
       if game.class == Hash
@@ -48,8 +50,10 @@ def parse_logs(parser, uris, opts)
 end
 
 logfile_uris = %w[
-  http://dobrazupa.org/meta/0.11/logfile
+  http://crawl.develz.org/allgames-0.12.txt
   http://crawl.develz.org/allgames-0.11.txt
+  http://dobrazupa.org/meta/0.12/logfile
+  http://dobrazupa.org/meta/0.11/logfile
 ]
 
 parser = IngestLogfile::Parser.new

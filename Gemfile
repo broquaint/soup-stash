@@ -32,6 +32,11 @@ gem 'hashie'
 gem 'kaminari', ">= 0.14.0"
 gem 'kaminari-bootstrap'
 
+# Needed by the log parser
+gem 'slop'
+gem 'net-http-follow_tail'
+
+
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
 gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
@@ -48,6 +53,3 @@ group :test do
   gem 'capybara'
   gem 'database_cleaner'
 end
-
-# Needed by the log parser
-gem 'slop'
