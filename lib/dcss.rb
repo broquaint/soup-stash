@@ -3,8 +3,8 @@ module DCSS
 
   RACE = {
     'Ce' => 'Centaur',
-    'DE' => 'Deep Dwarf',
-    'DD' => 'Deep Elf',
+    'DD' => 'Deep Dwarf',
+    'DE' => 'Deep Elf',
     'Dg' => 'Demigod',
     'Ds' => 'Demonspawn',
     'Dr' => 'Draconian',
