@@ -54,6 +54,8 @@ logfile_uris = %w[
   http://crawl.develz.org/allgames-0.11.txt
   http://dobrazupa.org/meta/0.12/logfile
   http://dobrazupa.org/meta/0.11/logfile
+  http://crawl.akrasiac.org/logfile11
+  http://crawl.akrasiac.org/logfile12
 ]
 
 parser = IngestLogfile::Parser.new
