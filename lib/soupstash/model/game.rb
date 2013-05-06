@@ -69,8 +69,8 @@ class SoupStash::Model::Game < Reindeer
 
   has :notes, is_a: Array # [{ turn: Int, place: String, note: String }]
 
-  ## Hass from logfile
-  # New hass with exact logfile mappings
+  ## Fields from logfile
+  # New fields with exact logfile mappings
   has :game_type , is_a: String
   has :gold      , is_a: Integer
   has :splat     , is_a: Boolean
@@ -78,7 +78,7 @@ class SoupStash::Model::Game < Reindeer
   has :place_abbr, is_a: String
   has :map_name  , is_a: String
 
-  # New hass needing mapping
+  # New fields needing mapping
   has :deepest_level      , is_a: Integer # was absdepth
   has :killer_weapon      , is_a: String  # was ckaux
   has :damage             , is_a: Integer # was dam
@@ -99,7 +99,7 @@ class SoupStash::Model::Game < Reindeer
   # Makes display simpler.
   has :has_morgue_file, is_a: Boolean
 
-  # key hass
+  # key fields
   has :end_time_str, is_a: String
   has :combo,        is_a: String
 end
