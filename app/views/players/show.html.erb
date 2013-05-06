@@ -27,8 +27,9 @@
 	    <td><%= link_to number_with_delimiter(game.score), game_path(game) %>
 	      <% if game.won %><i class="icon-star" title="Won!"></i><% end %></td>
             <td><%= game.character %> the <%= game.title %></td>
-            <td><%= game.race %> <%= game.background %></td>
-            <td><%= game.god || '-' %></td>
+            <td><%= link_to_with(game.race, 'race' => game.race) %>
+                <%= link_to_with(game.background, 'background' => game.background) %></td>
+            <td><%= link_to_with(game.god || 'None', 'god' => game.god) %></td>
             <td><%= game.xl %></td>
 	    <td><%= game.ending_str %></td>
           </tr>
