@@ -24,7 +24,7 @@
         <tbody>
           <% for game in @games.desc(:end_time).limit(10) %>
           <tr>
-	    <td><%= link_to game.score, game_path(game) %>
+	    <td><%= link_to number_with_delimiter(game.score), game_path(game) %>
 	      <% if game.won %><i class="icon-star" title="Won!"></i><% end %></td>
             <td><%= game.character %> the <%= game.title %></td>
             <td><%= game.race %> <%= game.background %></td>

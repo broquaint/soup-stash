@@ -19,7 +19,7 @@
         <tbody>
           <% for game in @games_by_score %>
           <tr>
-            <td><%= link_to game.score, game_path(game) %></td>
+            <td><%= link_to number_with_delimiter(game.score), game_path(game) %></td>
             <td><%= player_link(game) %> the <%= game.title %></td>
             <td><%= combo_link(game) %></td>
             <td><%= link_to game.god || 'None', games_path(god: game.god) %></td>
