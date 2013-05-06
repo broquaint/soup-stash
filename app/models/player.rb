@@ -20,6 +20,7 @@ class Player
         result.turns = this.turns;
         result.gold  = this.gold_found;
         result.xls   = this.xl > 1 ? this.xl : 0;
+        result.score = this.score;
         emit(this.character, result);
       }
     MAP
@@ -30,7 +31,8 @@ class Player
             kills:  0,
             turns:  0,
             xls:    0,
-            gold:   0
+            gold:   0,
+            score:  0
         };
         vals.forEach(function(v) {
           for(var p in v)

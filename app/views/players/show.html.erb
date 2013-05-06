@@ -41,11 +41,12 @@
   <div class='span4'>
     <h4>Totals</h4>
     <dl class="dl-horizontal">
-      <dt>Games played</dt><dd><%= @totals.played || '-' %></dd>
-      <dt>Total kills</dt> <dd><%= @totals.kills  || '-' %></dd>
-      <dt>Turns used</dt>  <dd><%= @totals.turns || '-' %></dd>
-      <dt>Gold found</dt>  <dd><%= @totals.gold || '-' %></dd>
-      <dt>XP levelled</dt> <dd><%= @totals.xls || '-' %></dd>
+      <dt>Games played</dt><dd><%= number_with_delimiter(@totals.played || 0) %></dd>
+      <dt>Score total</dt> <dd><%= number_with_delimiter(@totals.score || 0) %></dd>
+      <dt>Total kills</dt> <dd><%= number_with_delimiter(@totals.kills || 0) %></dd>
+      <dt>Turns used</dt>  <dd><%= number_with_delimiter(@totals.turns || 0) %></dd>
+      <dt>Gold found</dt>  <dd><%= number_with_delimiter(@totals.gold || 0) %></dd>
+      <dt>XP levelled</dt> <dd><%= number_with_delimiter(@totals.xls || 0) %></dd>
     </dl>
     <% unless @games.empty? %>
     <h4>Favourites</h4>
@@ -63,23 +64,5 @@
       </dd>
       <% end %>
     <% end %>
-    <% unless @nemeses.empty? %>
-    <h4>Nemeses</h4>
-    <dl class="dl-horizontal">
-    <% for nemesis, kills in @nemeses.sort_by{|_,k| -k}[0 .. 5] %>
-      <dt><%= nemesis %></dt><dd><%= kills.to_i %></dd>
-    <% end %>
-    </dl>
-    <% end %>
-
-    <!--
-    <% if @user == current_user %>
-      <p><i class="icon-plus-sign"></i><%= link_to 'Add game', new_game_path(:player => @player.id) %></p>
-      <p><%= link_to 'Edit', edit_user_player_path(@user, @player) %></p>
-    <% end %>
-    <% if @user.players.length > 1 %>
-      <p><%= link_to "The user page of #{@user.name}", user_players_path %></p>
-    <% end %>
-    -->
   </div>
 </div>
