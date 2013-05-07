@@ -3,8 +3,8 @@ use warnings;
 
 use JSON 'to_json';
 
-# We should be chdir'ed to /home/dbrook/dev/dcss_henzell at this point
-do 'sqllog.pl';
+# We should be chdir'ed to vendor/dcss_henzell at this point
+require 'sqllog.pl';
 
 # Needed so parent can read straightway otherwise it blocks on output.
 $|=1;

@@ -50,12 +50,15 @@ def parse_logs(parser, uris, opts)
 end
 
 logfile_uris = %w[
+  http://crawl.develz.org/allgames-svn.txt
   http://crawl.develz.org/allgames-0.12.txt
   http://crawl.develz.org/allgames-0.11.txt
+  http://dobrazupa.org/meta/git/logfile
   http://dobrazupa.org/meta/0.12/logfile
   http://dobrazupa.org/meta/0.11/logfile
-  http://crawl.akrasiac.org/logfile11
+  http://crawl.akrasiac.org/logfile-git
   http://crawl.akrasiac.org/logfile12
+  http://crawl.akrasiac.org/logfile11
 ]
 
 parser = IngestLogfile::Parser.new

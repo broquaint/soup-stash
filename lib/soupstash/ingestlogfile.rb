@@ -118,6 +118,8 @@ class IngestLogfile
     def import_from(logfile)
       $stdout.sync
       logfile.each do |line|
+        next if line =~ /\bv=0.(?:[2-9]|10)/ # XXX Temp hack to skip older games.
+
         @log_out.puts line
 
         json = ''
