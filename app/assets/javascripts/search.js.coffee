@@ -3,12 +3,13 @@ getPlayerList = (request, response) ->
     response(
       _.map _.pluck(players, 'player'), (p) ->
         label: p.name
-        value: p.url
+        value: p.name # This is also what gets displayed!
+        url:   p.url  # Hence this additional property.
     )
 
 goToPlayer = (event, ui) ->
   this.value = ui.item.label
-  window.location.href = ui.item.value
+  window.location.href = ui.item.url
   return false
 
 playerSelectionMenu = (event, ui) ->
@@ -21,3 +22,7 @@ $ () ->
     select: goToPlayer
     create: playerSelectionMenu
     minLength: 2
+  $('.navbar-form').submit ->
+    player = $('#player-search').val()
+    window.location.href = "/users/unclaimed/players/#{player}-crawl"
+    return false
