@@ -47,6 +47,7 @@ module DCSS
     'He' => 'Healer',
     'Hu' => 'Hunter',
     'IE' => 'Ice Elementalist',
+    'Jr' => 'Jester',
     'Mo' => 'Monk',
     'Ne' => 'Necromancer',
     'Pr' => 'Priest',
