@@ -25,7 +25,7 @@ class PlayersController < ApplicationController
     sort_by = sort_by_for(Game, params)
 
     @player  = Player.find(params[:id])
-    @games   = games.for(@player.name).desc(sort_by || :end_time).page params[:page]
+    @games   = games.for(@player.name).desc(sort_by || :end_time).page(params[:page]).per(10)
     @totals  = Hashie::Mash.new(@player.basic_totals)
     @faves   = @player.favourites
 
