@@ -43,6 +43,11 @@ class Game # Specifically DCSS
     killer || ( won ? 'WON!' : ending.sub(/\s*\([^)]+\)/, '') )
   end
 
+  def god
+    g = super()
+    g ? g.titleize : ''
+  end
+
   def self.for(character)
     Game.where(character: character)
   end

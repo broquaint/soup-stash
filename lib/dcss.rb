@@ -265,7 +265,7 @@ module DCSS
           'Beogh',
           'Cheibriados',
           'Elyvilon',
-          'Fedhas Madash',
+          'Fedhas', # TODO normalize
           'Jiyva',
           'Kikubaaqudgha',
           'Lugonu',
@@ -273,7 +273,7 @@ module DCSS
           'Nemelex Xobeh',
           'Okawaru',
           'Sif Muna',
-          'The Shining One',
+          'the Shining One', # TODO normalize
           'Trog',
           'Vehumet',
           'Xom',
