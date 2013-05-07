@@ -36,7 +36,7 @@
         <td><%= if game.killer
                   link_to_with game.killer, 'killer' => game.killer
                 else
-                  link_to_with game.won ? 'WON!' : game.ending, 'ending' => game.ending
+                  link_to_with game.ending_str, 'ending' => game.ending
                 end %></td>
       </tr>
       <% end %>
