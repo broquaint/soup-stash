@@ -9,6 +9,7 @@ class DCSS::Coroner
   end
   
   def parse
+    # XXX Might be simpler just to use blocks given how custom morgues can be.
     blocks   = make_blocks @morgue
     sections = make_sections @morgue
 
@@ -28,7 +29,7 @@ class DCSS::Coroner
     autopsy.merge! find_state_abilities_runes(blocks)
     autopsy.merge! find_map(sections)
     autopsy.merge! understand_inventory(sections)
-    autopsy.merge! find_skills(sections)
+    autopsy.merge! find_skills(blocks)
     autopsy.merge! find_spells(sections)
     autopsy.merge! find_notes(blocks)
 
@@ -374,8 +375,8 @@ class DCSS::Coroner
     }
   end
 
-  def find_skills(sections)
-    skills_str, _ = find_in sections, /\A\s+Skills:/
+  def find_skills(blocks)
+    skills_str, _ = find_in blocks, /\A\s+Skills:/
 
     return { :skills => {} } if skills_str.nil?
 
