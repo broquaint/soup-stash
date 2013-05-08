@@ -6,8 +6,8 @@
 	<%= @game.ending.sub /!$/, '' %> with <u><%= number_with_delimiter(@game.score) %></u>
 	<% unless @game.won %> at <%= @game.place || @game.place_abbr %><% end %>
       </h4>
-      <h4>It took <%= @game.turns %> turns in <%= @game.duration %></h4>
-      <% if @game.god %><h4><%= @game.standing || 'Worshipper' %> of <%= @game.god %></h4><% end %>
+      <h4>It took <%= @game.turns %> turns in <%= nice_duration @game %></h4>
+      <% if @game.god.length %><h4><%= @game.standing || 'Worshipper' %> of <%= @game.god %></h4><% end %>
     </div>
 
     <% unless @game.has_morgue_file %>
