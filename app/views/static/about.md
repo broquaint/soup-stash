@@ -9,16 +9,16 @@ It serves to allow players to see any game of
 the future provide more aggregate data e.g statistics, graphs,
 accomplishments, etc.
 
-Currently it contains all the games for versions 0.11 & 0.12 played on
-all of those servers based on the logfiles. It also watches the
-logfiles so keeps apace with the latest games.
+Currently it contains all the games for versions 0.11, 0.12 & trunk
+played on all of those servers based on the logfiles. It also watches
+the logfiles so keeps apace with the latest games.
 
 This site is still in *alpha* mode so please excuse the rough edges
 and the general lack of completeness.
 
 The owner and operator is [broquaint](mailto:broquaint@broquaint.com)
 (aka [Snowclone][myplayer]) and the source code can be found at
-[the github repo][repo].
+the [soup-stash github repo][repo].
 
 [cao]: http://crawl.akrasiac.org/ "crawl.akrasiac.org"
 [cdo]: https://crawl.develz.org/ "crawl.develz.org"
