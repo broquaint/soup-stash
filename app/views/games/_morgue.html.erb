@@ -168,19 +168,19 @@
       <table class='stats table table-condensed'>
 	<!-- TODO - More <abbr>, probably make a helper -->
 	<tr>
-	  <td>HP</td><td><%= @game.hp %><%= @game.maxhp ? " (#{@game.maxhp})" : '' %></td>
-	  <td>AC</td><td><%= @game.ac %></td>
-	  <td>Str</td><td><%= @game.str %></td>
+	  <td><abbr title='Health'>HP</abbr></td><td><%= @game.hp %><%= @game.maxhp ? " (#{@game.maxhp})" : '' %></td>
+	  <td><abbr title='Armour Class'>AC</abbr></td><td><%= @game.ac %></td>
+	  <td><abbr title='Strength'>Str</abbr></td><td><%= @game.str %></td>
 	</tr>
 	<tr>
-	  <td>MP</td><td><%= @game.mp.nil? ? '-' : @game.mp %></td>
-	  <td>EV</td><td><%= @game.ev.nil? ? '-' : @game.ev %></td>
-	  <td>Int</td><td><%= @game.int %></td>
+	  <td><abbr title='Magic'>MP</abbr></td><td><%= @game.mp.nil? ? '-' : @game.mp %></td>
+	  <td><abbr title='Evasion'>EV</abbr></td><td><%= @game.ev.nil? ? '-' : @game.ev %></td>
+	  <td><abbr title='Intelligence'>Int</abbr></td><td><%= @game.int %></td>
 	</tr>
 	<tr>
-	  <td>Gold</td><td><%= @game.gold %></td>
-	  <td>SH</td><td><%= @game.sh.nil? ? '-' : @game.sh %></td>
-	  <td>Dex</td><td><%= @game.dex %></td>
+	  <td><abbr title='Gold'>Gold</abbr></td><td><%= @game.gold %></td>
+	  <td><abbr title='Shield'>SH</abbr></td><td><%= @game.sh.nil? ? '-' : @game.sh %></td>
+	  <td><abbr title='Dexterity'>Dex</abbr></td><td><%= @game.dex %></td>
 	</tr>
       </table>
 
