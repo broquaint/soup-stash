@@ -10,4 +10,9 @@ module GamesHelper
     # TODO - Abbreviate host.
     link_to uri.host, uri.to_s, title: uri.to_s
   end
+
+  def server_link(game)
+    uri = URI.parse(game.server)
+    link_to DCSS::HOST_TO_ABBR[uri.host], uri.to_s, title: uri.host
+  end
 end

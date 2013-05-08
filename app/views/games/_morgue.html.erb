@@ -151,7 +151,8 @@
     <button id="update-morgue"
 	    class="btn btn-primary" type="button"
 	    href="<%= game_path(@game) %>" data-method="put"
-	    title="Only necessary during development!">
+	    title="Only necessary during development!"
+            style='display: none;'>
       Reload data from morgue
     </button>
 
@@ -230,9 +231,18 @@
         <% end %>
       </ol>
       <% end %>
+
+      <h3>Meta</h3>
+      <dl>
+        <dt>Server</dt><dd><%= server_link @game %></dd>
+        <dt>Version</dt><dd><%= @game.version %></dd>
+        <dt>Interface</dt><dd><%= @game.tiles ? 'tiles' : 'console' %></dd>
+        <%# Remove TZ as it doesn't represent reality presently. %>
+        <dt>Started</dt><dd><%= @game.start_time.rfc822.sub(/ .\d+$/, '') %></dd>
+        <dt>Finished</dt><dd><%= @game.end_time.rfc822.sub(/ .\d+$/, '') %></dd>
+      </dl>
     </div>
 
     <% end # not has_morgue_file %>
-
   </div>
 </div>

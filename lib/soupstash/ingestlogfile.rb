@@ -78,7 +78,7 @@ class IngestLogfile
     def logfile_to_model(log_game, source)
       game = @existing.reduce({}) {|g, k| g.merge k => log_game[k.to_s]}
       @from_to.each    {|from, to| game[to] = log_game[from]}
-      @transforms.each {|k, trans| game[k]  = trans.call(game[k])}
+      @transforms.each {|k, trans| game[k]  = trans.call(game.has_key?(k) ? game[k] : log_game[k.to_s])}
 
       game.merge({
                    :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),

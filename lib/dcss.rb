@@ -296,6 +296,12 @@ module DCSS
     'rl.heh.fi'            => lambda {|g| 'http://rl.heh.fi/trunk/stuff/' }
   }
 
+  HOST_TO_ABBR = {
+    'dobrazupa.org'      => 'CSZO',
+    'crawl.develz.org'   => 'CDO',
+    'crawl.akrasiac.org' => 'CAO',
+  }
+
   # Pilfered from dcss_henzell/crawl-data.yml, would be good to pull in dynamically.
   UNIQUES = [
              "Ijyb",
