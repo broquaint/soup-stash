@@ -282,9 +282,14 @@ module DCSS
           'Zin',
          ]
 
+  TRUNK_VERSION = '0.13';
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
-    'crawl.develz.org'     => lambda {|g| "http://crawl.develz.org/morgues/#{g.version[/^\d.\d\d?/]}/" },
+    'crawl.develz.org'     => lambda {|g|
+      number = g.version[/^\d.\d\d?/]
+      path   = number == TRUNK_VERSION ? 'trunk' : number
+      "http://crawl.develz.org/morgues/#{path}/"
+    },
     'crawl.akrasiac.org'   => lambda {|g| 'http://crawl.akrasiac.org/rawdata/' },
     'dobrazupa.org'        => lambda {|g| 'http://dobrazupa.org/morgue/' },
     'crawlus.somatika.net' => lambda {|g| 'http://crawlus.somatika.net/dumps/' },
