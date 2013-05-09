@@ -81,10 +81,11 @@ class IngestLogfile
       @transforms.each {|k, trans| game[k]  = trans.call(game.has_key?(k) ? game[k] : log_game[k.to_s])}
 
       game.merge({
-                   :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
-                   :from_log_file => true,
-                   :server        => source, # Assume we have a useful URI string.
-                 })
+          :won           => 0 == ( game[:ending] =~ /^escaped with the Orb/i ),
+          :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
+          :from_log_file => true,
+          :server        => source, # Assume we have a useful URI string.
+        })
     end
   end
 

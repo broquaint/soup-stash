@@ -42,6 +42,7 @@ class SoupStash::Model::Game < Reindeer
                                        #                      16th June 2012 at 22:01:45
 
   has :ending, is_a: String
+  has :won,    is_a: Boolean
 
   has :piety,    is_a: String
   has :god,      is_a: String

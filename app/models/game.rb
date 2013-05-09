@@ -20,6 +20,8 @@ class Game # Specifically DCSS
   scope :last_month, gt(end_time: DateTime.now - 30)
   scope :last_year,  gt(end_time: DateTime.now - 365)
 
+  scope :unwon, where(won: false)
+
   # Used all over the place.
   index({ score: 1 })
   # Used by scopes
@@ -35,12 +37,10 @@ class Game # Specifically DCSS
   index({ killer: 1 })
   index({ ending: 1 })
 
-  def won
-    ending.match /escaped with the orb/i # A bit fragile but it'll do.
-  end
+  index({ won: 1 })
 
   def ending_str
-    killer || ( won ? 'WON!' : ending.sub(/\s*\([^)]+\)/, '') )
+    killer || terse_ending
   end
 
   def god
