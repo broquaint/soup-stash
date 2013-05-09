@@ -36,3 +36,6 @@ jQuery ->
   $('.selections button').click removeFilter
   $('#clear-selections').click ->
     window.location.href = window.location.href.replace /[?].*/, ''
+
+  $('.toggle-btn').click ->
+    $('.more-less > li').toggleClass('toggle-display')

@@ -39,6 +39,7 @@
       <%= paginate @games %>
     </div>
   </div>
+
   <div class='span4'>
     <h4>Totals</h4>
     <dl class="dl-horizontal">
@@ -65,5 +66,22 @@
       </dd>
       <% end %>
     <% end %>
+
+    <h4>Premature endings</h4>
+    <dl>
+      <% if @gkills > 0 %>
+      <dt>Ghost kills</dt><dd><%= link_to @gkills.to_s, games_path(killer: "#{@player.name}'s ghost") %></dd>
+      <% end %>
+      <dt>Worst enemy</dt><dd><%= link_to @worst.killer || @worst.terse_ending, game_path(@worst) %></dd>
+      <dt>No. of deaths by</dt><dd>
+        <ul id=nemeses class='unstyled more-less'>
+          <% for nemesis in @nemeses.sort_by{|kv| kv[1]}.reverse %>
+          <li class='toggle-display'><%= nemesis[0] %> x <em><%= nemesis[1].to_i %></em>
+          <% end %>
+        </ul>
+        <% if @nemeses.length > 5 %>
+        <button class='btn btn-small toggle-btn'>More/Less</button>
+        <% end %>
+    </dl>
   </div>
 </div>

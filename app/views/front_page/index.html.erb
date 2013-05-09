@@ -64,7 +64,7 @@
     </ol>
 
     <h3>Least popular combos</h3>
-    <ol id='least-popular-combos'>
+    <ol id='least-popular-combos' class='more-less'>
       <% for combo in @least_pop_combos %>
         <% _, r, b = *combo[:race].match(/(#{DCSS::RACE.values.join('|')}) (#{DCSS::BACKGROUND.values.join('|')})/) %>
         <li class='toggle-display'><a href='<%= games_path race: r, background: b %>'><strong><%= combo[:race] %></strong></a> <em><%= combo[:count] %></em>
@@ -72,6 +72,6 @@
     </ol>
     <% if @least_pop_combos.length > 10 %>
       <button class='btn btn-small toggle-btn'>More/Less</button>
-     <% end %>
+    <% end %>
   </div>
 </div>

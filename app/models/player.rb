@@ -105,7 +105,7 @@ class Player
       }
     RED
 
-    result = Game.for(name).in(killer: DCSS::UNIQUES).map_reduce(map, red).out(inline: 1)
+    result = Game.for(name).unwon.map_reduce(map, red).out(inline: 1)
     return {} if result.empty?
     return result.first['value']
   end

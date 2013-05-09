@@ -24,13 +24,23 @@ class PlayersController < ApplicationController
     games   = params_for(Game, params)
     sort_by = sort_by_for(Game, params)
 
-    @player  = Player.find(params[:id])
-    @games   = games.for(@player.name).desc(sort_by || :end_time).page(params[:page]).per(10)
-    @totals  = Hashie::Mash.new(@player.basic_totals)
-    @faves   = @player.favourites
+    @player = Player.find(params[:id])
+    name    = @player.name
+
+    @games  = games.for(name).desc(sort_by || :end_time).page(params[:page]).per(10)
+    @totals = Hashie::Mash.new(@player.basic_totals)
+    @faves  = @player.favourites
 
     # Because none isn't a particularly interesting choice.
     @faves[:god].delete 'none'
+
+    @gkills  = Game.where(killer: "#{name}'s ghost").count
+    @worst   = games.for(name).unwon.desc(:score).first
+    @nemeses = Rails.cache.fetch("nemeses_#{name}", expires_in: 1.day) do
+      nem = @player.nemeses
+      nem.delete 'null'
+      nem
+    end
 
     respond_to do |format|
       format.html # show.html.erb

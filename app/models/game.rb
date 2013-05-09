@@ -37,6 +37,9 @@ class Game # Specifically DCSS
   index({ killer: 1 })
   index({ ending: 1 })
 
+  # Used for the nemeses map/reduce in Player.
+  index({ character: 1, ending: 1 })
+
   index({ won: 1 })
 
   def ending_str
