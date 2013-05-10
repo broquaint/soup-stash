@@ -49,6 +49,9 @@ def parse_logs(parser, uris, opts)
   end
 end
 
+# I want to see output straight away e.g when piping to tee
+$stdout.sync = true
+
 logfile_uris = %w[
   http://crawl.develz.org/allgames-svn.txt
   http://crawl.develz.org/allgames-0.12.txt

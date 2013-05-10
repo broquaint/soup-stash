@@ -117,15 +117,20 @@ class IngestLogfile
     end
 
     def import_from(logfile)
-      $stdout.sync
+      $stdout.sync = true
       logfile.each do |line|
         next if line =~ /\bv=0.(?:[2-9]|10)/ # XXX Temp hack to skip older games.
 
         @log_out.puts line
 
-        json = ''
-        json += line while '__EOF__' != (line = @json_in.gets).chomp
-        game = JSON.parse(json)
+        json = @json_in.gets
+        game = JSON.parse(json) rescue nil
+
+        # logfile-parser.pl failed and has complained on stderr
+        if game.nil?
+          $stdout.print "$0: Failed to parse: #{line}\n"
+          next
+        end
 
         yield game
 

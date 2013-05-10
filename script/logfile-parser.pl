@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use JSON 'to_json';
+use Data::Dumper 'Dumper';
 
 # We should be chdir'ed to vendor/dcss_henzell at this point
 require 'sqllog.pl';
@@ -14,11 +15,16 @@ while(<>) {
     # Parent process indicates we're done here.
     last if $line eq '__EXIT__';
 
-    print to_json(
-        # server is lies to keep the code happy (think it's ok to lie?)
-	build_fields_from_logline({server => 'cao'}, tell(*STDIN), $line)
-    );
-    print "\n__EOF__\n"; # Indicate we've finished output.
+    # server is lies to keep the code happy (think it's ok to lie?)
+    my $game = build_fields_from_logline({server => 'cao'}, tell(*STDIN), $line);
+    if(ref $game) {
+      print to_json($game);
+    } else {
+      warn sprintf "$0: Couldn't parse:\n\n%s\n\nGot back - %s\n\n",
+           $line, Dumper($game);
+    }
+
+    print "\n"; # Indicate we've finished output.
 }
 
 exit 0;
