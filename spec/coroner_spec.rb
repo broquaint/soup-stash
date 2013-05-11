@@ -25,22 +25,27 @@ describe DCSS::Coroner, 'matching' do
                                                         :title     => 'Vexing',
                                                       })
   end
-  it 'find race, background, turns + duration' do
+  it 'finds race + background' do
+    blocks = coroner.make_blocks <<-BLOCK
+    10194088 sydd the Petrodigitator (level 27, 245/273 HPs)
+             Began as a Purple Draconian Transmuter on Apr 30, 2013.
+             Was the Champion of Vehumet.
+    BLOCK
+    coroner.find_race_background(blocks).should eq({
+        :race => 'Purple Draconian',
+        :background => 'Transmuter'
+      })
+    expect {
+      coroner.find_race_background([])
+    }.to raise_error(DCSS::Coroner::ParseFailure)
+  end
+  it 'find turns + duration' do
     blocks = coroner.make_blocks "Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02"
-    coroner.find_race_class_turns_duration(blocks).should eq({
-                                                           :race       => 'Felid',
-                                                           :background => 'Wanderer',
-                                                           :turns      => 3364,
-                                                           :duration   => '00:11:02'
-                                                         })
+    coroner.find_turns_duration(blocks).should eq({
+        :turns      => 3364,
+        :duration   => '00:11:02'
+      })
     
-    blocks = coroner.make_blocks "fleugma the Thaumaturge (SEEE)   Turns: 14495, Time: 01:06:50"
-    coroner.find_race_class_turns_duration(blocks).should eq({
-                                                           :race       => 'Sludge Elf',
-                                                           :background => 'Earth Elementalist',
-                                                           :turns      => 14495,
-                                                           :duration   => '01:06:50'
-                                                         })
   end
 
   it 'finds stats' do

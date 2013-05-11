@@ -76,7 +76,7 @@ module DCSS
   end
   
   def DCSS.race_as_re
-    Regexp.new("#{DRAC_RE}?(?:" + RACE.values.join('|') + ')')
+    Regexp.new("#{DRAC_RE}?(?:#{RACE.values.join('|')})")
   end
   def DCSS.background_as_re
     Regexp.new('(?:' + BACKGROUND.values.join('|') + ')')
@@ -90,11 +90,9 @@ module DCSS
   def DCSS.abbr_combo_re
     Regexp.new( abbr_race_as_re.to_s + abbr_background_as_re.to_s )
   end
-  def DCSS.race_background_combo_re
+  def DCSS.race_background_re
     /# Race Background e.g High Elf Earth Elementalist
-       (?: (?<race>#{race_as_re}) [ ] (?<background>#{background_as_re}) )
-       # Abbreviated combo e.g HEEE
-       | (?<combo>#{abbr_combo_re})
+       (?<race>#{race_as_re}) [ ] (?<background>#{background_as_re})
       /x
   end
   def DCSS.abbr2combo(abbr)

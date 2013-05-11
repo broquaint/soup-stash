@@ -1,8 +1,7 @@
+require_dependency 'collate/game'
 require 'hashie'
 
 class PlayersController < ApplicationController
-  include ParamsFilter
-
   before_filter :authenticate_user!, :except => [:index, :show, :search]
 
   # GET /players
@@ -19,15 +18,18 @@ class PlayersController < ApplicationController
   # GET /players/1.json
   def show
     # Needed for deep link generation.
-    @user    = User.find(params[:user_id])
-
-    games   = params_for(Game, params)
-    sort_by = sort_by_for(Game, params)
+    @user   = User.find(params[:user_id])
 
     @player = Player.find(params[:id])
     name    = @player.name
 
-    @games  = games.for(name).desc(sort_by || :end_time).page(params[:page]).per(10)
+    games = Collate::Game.new(result_set: Game.for(name)).filter_and_sort({
+        params:       params,
+        order:        'desc',
+        sort_default: :end_time
+      })
+
+    @games  = games.page(params[:page]).per(10)
     @totals = Hashie::Mash.new(@player.basic_totals)
     @faves  = @player.favourites
 
@@ -35,7 +37,7 @@ class PlayersController < ApplicationController
     @faves[:god].delete 'none'
 
     @gkills  = Game.where(killer: "#{name}'s ghost").count
-    @worst   = games.for(name).unwon.desc(:score).first
+    @worst   = Game.for(name).unwon.desc(:score).first
     @nemeses = Rails.cache.fetch("nemeses_#{name}", expires_in: 1.day) do
       nem = @player.nemeses
       nem.delete 'null'

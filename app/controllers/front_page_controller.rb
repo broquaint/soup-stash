@@ -1,6 +1,6 @@
+require_dependency 'collate/game'
+
 class FrontPageController < ApplicationController
-  include ParamsFilter
-  
   def index
     @current_period = params[:period] || 'week'
     games = if @current_period != 'alltime'
@@ -16,7 +16,8 @@ class FrontPageController < ApplicationController
     @most_pop_combos  = popular_combos.slice(0, 10)
     @least_pop_combos = least_popular_combos(popular_combos)
 
-    @games_by_score = params_for(games, params).desc(:score).page params[:page]
+    some_games = Collate::Game.new(result_set: games)
+    @games_by_score = some_games.query_with(params).desc(:score).page params[:page]
     @games_by_date  = Game.desc(:end_time).limit(5)
   end
 

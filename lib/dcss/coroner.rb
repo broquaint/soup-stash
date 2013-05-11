@@ -19,7 +19,8 @@ class DCSS::Coroner
     # TODO order by default appearance in moregues
     autopsy.merge! find_score_char_title(blocks)
     autopsy.merge! find_place_god_piety_hunger(sections)
-    autopsy.merge! find_race_class_turns_duration(blocks)
+    autopsy.merge! find_race_background(blocks)
+    autopsy.merge! find_turns_duration(blocks)
     autopsy.merge! discern_times(autopsy[:duration], @filename)
     autopsy.merge! find_resistances_slots(blocks, autopsy[:race])
     autopsy.merge! find_killer_ending(blocks)
@@ -87,27 +88,28 @@ class DCSS::Coroner
     }
   end
 
-  def find_race_class_turns_duration(blocks)
-    # Oh for lazy build attributes ...
-    @rbc_re = DCSS.race_background_combo_re unless @rbc_re
+  def find_race_background(blocks)
+    _, rb = find_in blocks, /Began as a #{DCSS.race_background_re}/
 
+    raise ParseFailure, "Couldn't find a race & background!" unless rb
+    
+    return {
+      :race       => rb[:race],
+      :background => rb[:background],
+    }
+  end
+
+  def find_turns_duration(blocks)
     # Snwcln the Vexing (Felid Wanderer)  Turns: 3364, Time: 00:11:02
     # fleugma the Thaumaturge (SEEE)  Turns: 14495, Time: 01:06:50
     _, match = find_in blocks, /
-       \( #{@rbc_re} \) \s+
        Turns: \s (?<turns>[\d.]+), \s
        Time:  \s (?<duration>[\d\s:,]+) $
     /x
 
     return {} if match.nil?
 
-    race, background = match[:combo] ? DCSS.abbr2combo(match[:combo]) : [match[:race], match[:background]]
-    
-    return {} unless race && background
-
     return {
-      :race       => race,
-      :background => background,
       :turns      => match[:turns].to_f,
       :duration   => match[:duration],
     }
@@ -341,9 +343,9 @@ class DCSS::Coroner
   end
 
   def find_map(sections)
-    # Oddly 'Message History' isn't always preced by two newlines
+    # Oddly 'Message History' isn't always preceded by two newlines
     _, map_n_message = find_in sections, /^Message History\n(.*)\z/m
-    return { :map => map_n_message[1] }
+    return map_n_message ? { :map => map_n_message[1] } : {}
   end
 
   def _clean_desc(desc)
@@ -443,6 +445,8 @@ class DCSS::Coroner
       end
     }
   end
+
+  class ParseFailure < StandardError; end
 
   # TODO Use Hashie::Mash
   class Morgue < Hash

@@ -1,16 +1,21 @@
 require_dependency 'dcss/coroner'
+require_dependency 'collate/game'
 require 'open-uri'
 
 class GamesController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show, :update]
   include GamesHelper
-  include ParamsFilter
 
   # GET /games
   # GET /games.json
   def index
-    games = params_for(Game, params)
-    games.where(user_id: params[:user_id]) if params[:user_id]
+    games = Collate::Game.new(result_set: Game).filter_and_sort({
+        params:       params,
+        order:        'desc',
+        sort_default: :end_time
+      })
+
+    games = games.where(user_id: params[:user_id]) if params[:user_id]
 
     @current_period = params[:period] || 'alltime'
     unless @current_period == 'alltime'
@@ -18,9 +23,7 @@ class GamesController < ApplicationController
       games = Game.respond_to?(m) ? games.send(m) : games.last_week
     end
 
-    sort_by = sort_by_for(Game, params)
-    
-    @games = games.desc(sort_by || :end_time).limit(27).page params[:page]
+    @games = games.limit(27).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
