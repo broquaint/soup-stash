@@ -21,8 +21,6 @@ class Game # Specifically DCSS
 
   scope :unwon, where(won: false)
 
-  # Used all over the place.
-  index({ score: 1 })
   # Used by scopes
   index({ end_time: 1 })
   # Used by map/reduces + filters
@@ -35,6 +33,14 @@ class Game # Specifically DCSS
   # Used on game listing.
   index({ killer: 1 })
   index({ ending: 1 })
+  # Used on all game listing
+  index({ god: 1, end_time: 1 })
+  index({ race: 1, end_time: 1 })
+  index({ background: 1, end_time: 1 })
+  index({ race: 1, background: 1, end_time: 1 })
+  index({ race: 1, background: 1, god: 1, end_time: 1 })
+  index({ race: 1, god: 1, end_time: 1 })
+  index({ background: 1, god: 1, end_time: 1 })
 
   # Used for the nemeses map/reduce in Player.
   index({ character: 1, ending: 1 })
