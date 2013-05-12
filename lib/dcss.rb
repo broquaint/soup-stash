@@ -284,8 +284,9 @@ module DCSS
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
     'crawl.develz.org'     => lambda {|g|
-      number = g.version[/^\d.\d\d?/]
-      path   = number == TRUNK_VERSION ? 'trunk' : number
+      number   = g.version[/^\d.\d\d?/]
+      is_trunk = g.version =~ /^0[.]\d+(?:[.]\d+)?-[a-z]+\d+/
+      path     = number == TRUNK_VERSION || is_trunk ? 'trunk' : number
       "http://crawl.develz.org/morgues/#{path}/"
     },
     'crawl.akrasiac.org'   => lambda {|g| 'http://crawl.akrasiac.org/rawdata/' },
