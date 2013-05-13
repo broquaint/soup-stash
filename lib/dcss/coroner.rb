@@ -218,13 +218,18 @@ class DCSS::Coroner
 
   # TODO Grab "death notice" from score summary block.
   def find_killer_ending(blocks)
-    notes, _ = find_in blocks, /\ANotes$/m
-    return {} if notes.nil?
+    notes_str, _ = find_in blocks, /\ANotes$/m
+    return {} if notes_str.nil?
 
-    ret = { :ending => notes.split(/\s*[|]\s*/)[-1].strip } # Last note == ending
+    notes = notes_str.split(/\n/) # (/\s*[|]\s*/)
+
+    # It seems notes can contain an additional (singular?) line.
+    notes.slice!(notes.length - 2, 2) if notes[-2] =~ /^\s*$/
+    
+    ret = { :ending => notes[-1].split(/\s*[|]\s*/)[-1].strip } # Last note == ending
 
     # Only looking for the monster that killed the player, not quits/escapes/etc
-    killer = notes.match(/(by|to)\s(\san?)?(?<culprit>\w+[()\w '-]*)( poison)?\s*\z/x)
+    killer = notes_str.match(/(by|to)\s(\san?)?(?<culprit>\w+[()\w '-]*)( poison)?\s*\z/x)
     return ret if killer.nil?
     return ret.merge({
       :killer => killer[:culprit].sub(/^an? /, ''), # Meh, too lazy to make re above DTRT
