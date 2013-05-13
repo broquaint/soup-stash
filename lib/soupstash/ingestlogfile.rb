@@ -128,7 +128,7 @@ class IngestLogfile
 
         # logfile-parser.pl failed and has complained on stderr
         if game.nil?
-          $stdout.print "$0: Failed to parse: #{line}\n"
+          $stdout.print "#{$0}: Failed to parse: #{line}\n"
           next
         end
 
