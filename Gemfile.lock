@@ -108,7 +108,7 @@ GEM
       tzinfo (~> 0.3.22)
     moped (1.4.5)
     multi_json (1.7.2)
-    net-http-follow_tail (0.0.1)
+    net-http-follow_tail (0.0.2)
       exponential-backoff (~> 0.0.2)
     nokogiri (1.5.9)
     origin (1.1.0)
@@ -203,7 +203,7 @@ DEPENDENCIES
   kaminari-bootstrap
   markdown-rails
   mongoid (~> 3.0.0)
-  net-http-follow_tail
+  net-http-follow_tail (>= 0.0.2)
   rabl
   rails (= 3.2.3)
   reindeer

@@ -37,7 +37,7 @@ gem 'reindeer'
 
 # Needed by the log parser
 gem 'slop'
-gem 'net-http-follow_tail'
+gem 'net-http-follow_tail', '>= 0.0.2'
 
 # Used by soupstash/ingestlogfile
 gem 'json'

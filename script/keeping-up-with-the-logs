@@ -24,9 +24,10 @@ def parse_logs(parser, uris, opts)
   offsets   = uris.reduce({}) {|r, u| r.merge u => IngestLogfile::OffsetState.new(u)}
   to_follow = uris.collect do |u|
     {
-      uri:     u,
-      offset:  offsets[u].get_latest,
-      wait:    opts[:poll],
+      uri:              u,
+      offset:           offsets[u].get_latest,
+      wait_in_seconds:  opts[:poll] || 60,
+      always_call_back: true
     }
   end
   ingester = IngestLogfile.new
@@ -34,18 +35,23 @@ def parse_logs(parser, uris, opts)
   puts %Q{Going to follow:\n\t#{uris.join("\n\t")}\n\n}
   
   Net::HTTP::FollowTail.follow(to_follow) do |result, tailer|
-    puts "[#{Time.now}] Now at #{tailer.offset.to_i} for #{tailer.uri}" if opts.verbose?
+    if result.is_success?
+      puts "[#{Time.now}] Now at #{tailer.offset.to_i} for #{tailer.uri}" if opts.verbose?
 
-    logfile_lines = result.content.split("\n")
-    parser.import_from(logfile_lines) do |game|
-      if game.class == Hash
-        ingester.commit_game(game, tailer.uri)
-      else
-        # XXX There seems to be an off-by-one error, not quite sure how though.
-        puts "!!! Couldn't make sense of: #{game}\n#{logfile_lines}" if tailer.verbose
+      logfile_lines = result.content.split("\n")
+      parser.import_from(logfile_lines) do |game|
+        if game.class == Hash
+          ingester.commit_game(game, tailer.uri)
+        else
+          # XXX There seems to be an off-by-one error, not quite sure how though.
+          puts "!!! Couldn't make sense of: #{game}\n#{logfile_lines}" if tailer.verbose
+        end
       end
+      offsets[tailer.uri.to_s].update_to tailer.offset
+    elsif result.is_error?
+      puts '!!!'
+      puts "Failed to tail #{tailer.uri.to_s} because #{result.error.class} - #{result.error.message}"
     end
-    offsets[tailer.uri.to_s].update_to tailer.offset
   end
 end
 
