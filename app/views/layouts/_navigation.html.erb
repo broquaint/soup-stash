@@ -3,6 +3,9 @@
   <li><%= link_to 'Games', games_path %></li>
   <li><%= link_to 'About', '/about' %></li>
 </ul>
-<form class="navbar-form">
-  <input id="player-search" class="search-query" placeholder="Find player">
+<form class="navbar-form" action="/players/search" method="GET">
+  <input id="player-search"
+         class="search-query"
+         name="q"
+         placeholder="Find player">
 </form>

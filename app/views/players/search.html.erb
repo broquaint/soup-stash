@@ -1,0 +1,11 @@
+<% if @players.length > 0 %>
+<h1>Found <%= @players.length %> <%= 'player'.pluralize(@players.length) %> matching &quot;<%= params[:q] %>&quot;</h1>
+<ul class=unstyled>
+<% for p in @players %>
+  <li><%= link_to p.name, user_player_path(p.user, p) %></li>
+<% end %>
+</ul>
+<% else %>
+
+Didn't find any players matching &quot;<%= params[:q] %>&quot;
+<% end %>
