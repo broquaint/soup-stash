@@ -22,7 +22,3 @@ $ () ->
     select: goToPlayer
     create: playerSelectionMenu
     minLength: 2
-  $('.navbar-form').submit ->
-    player = $('#player-search').val()
-    window.location.href = "/users/unclaimed/players/#{player}-crawl"
-    return false
