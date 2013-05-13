@@ -50,7 +50,13 @@ class GamesController < ApplicationController
     file   = uri.path.split('/')[-1]
     morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
 
-    @game.update_attributes(morgue.merge has_morgue_file: true)
+    # Don't overwrite existing values, this is needed because
+    # DCSS::Coroner isn't always 100% accurate and I'm too lazy to fix it.
+    to_update = morgue.reduce({ has_morgue_file: true }) do |res, kv|
+      @game[kv[0]].nil? ? res.merge(kv[0] => kv[1]) : res
+    end
+    
+    @game.update_attributes(to_update)
     @game.save!
 
     # Why doesn't it update the object too?!
