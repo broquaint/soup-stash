@@ -47,32 +47,49 @@ class Player
     end
   end
 
+  def array_to_totals(a)
+    a.reduce({}) {|totals, v| totals.merge v => 0}
+  end
   def favourites # TODO Take time/version/etc as options
     return {} if Game.count == 0
 
+    totals = {
+      race:       array_to_totals(DCSS::RACE.values),
+      background: array_to_totals(DCSS::BACKGROUND.values),
+      god:        array_to_totals(DCSS::GODS),
+    }
+    
     # XXX db.eval(File.read('underscore.js'))
     map = <<-MAP
-      function() {
-        var e = { race: {}, background: {}, god: {} },
-           me = this;
-        // { race: { val: 'High Elf', count: 1 } }
-        ['race','background','god'].forEach(function(i) { e[i][me[i] || 'none'] = 1; });
-        emit(this.character, e);
-      }
+    function() {
+        var out = #{totals.to_json},
+        drac_re = /^(?:(?:#{DCSS::DRAC_COLOURS.join('|')}) )?/,
+           race = this.race.replace(drac_re, '');
+
+        out.race[race] = 1;
+        out.background[this.background] = 1;
+        out.god[this.god || 'none'] = 1;
+
+        emit(this.character, out);
+    }
     MAP
 
     red = <<-RED
-      function(k, vals) {
-        var t = { race: {}, background: {}, god: {} };
-        // Oh for CoffeeScript!
-        vals.forEach(function(v) {
-          ['race','background','god'].forEach(function(i) {
-            for(var p in v[i])
-              t[i][p] = 1 + (p in t[i] ? t[i][p] : 0);
-          });
+    function(character, vals) {
+        var totals = #{totals.to_json},
+            addUpTotalFor = function(key, rbg) {
+                for(var prop in rbg)
+                    totals[key][prop] += rbg[prop];
+            };
+
+        vals.forEach(function(val) {
+            ['race', 'background', 'god'].forEach(function(key) {
+                addUpTotalFor(key, val[key]);
+            });
         });
-        return t;
-      }
+    
+        return totals;
+    }
     RED
 
     faves = Game.for(name).map_reduce(map, red).out(inline: 1)
