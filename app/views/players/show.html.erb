@@ -75,8 +75,8 @@
       <dt>Worst enemy</dt><dd><%= link_to @worst.killer || @worst.terse_ending, game_path(@worst) %></dd>
       <dt>No. of deaths by</dt><dd>
         <ul id=nemeses class='unstyled more-less'>
-          <% for nemesis in @nemeses.sort_by{|kv| kv[1]}.reverse %>
-          <li class='toggle-display'><%= nemesis[0] %> x <em><%= nemesis[1].to_i %></em>
+          <% for mob in @nemeses %>
+          <li class='toggle-display'><%= mob['killer'] %> x <em><%= mob['count'] %></em>
           <% end %>
         </ul>
         <% if @nemeses.length > 5 %>
