@@ -33,16 +33,9 @@ class PlayersController < ApplicationController
     @totals = Hashie::Mash.new(@player.basic_totals)
     @faves  = @player.favourites
 
-    # Because none isn't a particularly interesting choice.
-    @faves[:god].delete 'none'
-
     @gkills  = Game.where(killer: "#{name}'s ghost").count
-    @worst   = Game.for(name).unwon.desc(:score).first
-    @nemeses = Rails.cache.fetch("nemeses_#{name}", expires_in: 1.day) do
-      nem = @player.nemeses
-      nem.delete 'null'
-      nem
-    end
+    @worst   = @player.worst
+    @nemeses = @player.nemeses
 
     respond_to do |format|
       format.html # show.html.erb
