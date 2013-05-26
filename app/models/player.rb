@@ -50,10 +50,11 @@ class Player
 
   def worst
     game = Game.collection.aggregate(
-      { '$match' => { 'character' => name, 'won' => false,} },
-      { '$sort'  => { 'score' => -1 } },
+      { '$match'  => { 'character' => name, 'won' => false } },
+      { '$project'=> { 'score' => 1, 'killer' => 1 } },
+      { '$sort'   => { 'score' => -1 } },
       # Hope to find something in the first 20.
-      { '$limit' => 20 }
+      { '$limit'  => 20 }
     )
 
     # Hack to avoid doing "killer != nil" in mongo which involves a
