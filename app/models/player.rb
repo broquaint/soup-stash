@@ -13,100 +13,72 @@ class Player
   field :_id, :type => String, :default => -> { "%s-%s" % [name, for_game] }
 
   def basic_totals
-    map = <<-MAP
-      function() {
-        var result = { played: 1 };
-        result.kills = this.kill_total;
-        result.turns = this.turns;
-        result.gold  = this.gold_found;
-        result.xls   = this.xl > 1 ? this.xl : 0;
-        result.score = this.score;
-        emit(this.character, result);
-      }
-    MAP
-    red = <<-RED
-      function(k ,vals) {
-        var result = {
-            played: 0,
-            kills:  0,
-            turns:  0,
-            xls:    0,
-            gold:   0,
-            score:  0
-        };
-        vals.forEach(function(v) {
-          for(var p in v)
-            result[p] += v[p];
-        });
-        return result;
-      }
-    RED
-    result = Game.for(name).map_reduce(map, red).out(inline: 1) 
-    return result.first['value'].reduce({}) do |r, kv|
-      r.merge(kv[0]=>kv[1].to_i)
-    end
+    totals = Game.collection.aggregate(
+      { '$match' => { 'character' => 'Snowclone' } },
+      { '$group' => {'_id' => '$character', 'played' => { '$sum' => 1 }, 'turns' => { '$sum' => '$turns' }, 'kills' => { '$sum' => '$kill_total' }, 'gold' => { '$sum' => '$gold_found' }, 'xls' => { '$sum' => '$xl' }, 'score' => { '$sum' => '$score' } } }
+    ).first
+    # Don't count the XL1 every game starts with
+    totals['xls'] -= totals['played']
+    return totals
   end
 
   def favourites # TODO Take time/version/etc as options
     return {} if Game.count == 0
 
-    # XXX db.eval(File.read('underscore.js'))
-    map = <<-MAP
-      function() {
-        var e = { race: {}, background: {}, god: {} },
-           me = this;
-        // { race: { val: 'High Elf', count: 1 } }
-        ['race','background','god'].forEach(function(i) { e[i][me[i] || 'none'] = 1; });
-        emit(this.character, e);
-      }
-    MAP
+    rbg_list = Game.collection.aggregate(
+      { '$match' => { 'character' => name } },
+      { '$group' => {'_id' => { 'race'=> '$race', 'background' => '$background', 'god' => '$god' }, 'count' => { '$sum' => 1 } } }
+    )
+    return {} if rbg_list.empty?
 
-    red = <<-RED
-      function(k, vals) {
-        var t = { race: {}, background: {}, god: {} };
-        // Oh for CoffeeScript!
-        vals.forEach(function(v) {
-          ['race','background','god'].forEach(function(i) {
-            for(var p in v[i])
-              t[i][p] = 1 + (p in t[i] ? t[i][p] : 0);
-          });
-        });
-        return t;
-      }
-    RED
+    faves = { race: {}, background: {}, god: {} }
 
-    faves = Game.for(name).map_reduce(map, red).out(inline: 1)
-    return {} if faves.empty?
-    return {
-      race:       faves.first['value']['race'],
-      background: faves.first['value']['background'],
-      god:        faves.first['value']['god'],
-    }
+    # It feels like this could be done by MongoDB:
+    # http://stackoverflow.com/q/16633669/2398559
+    rbg_list.each do |rbg|
+      count = rbg['count']
+      %w{race background god}.each do |col|
+        val = rbg['_id'][col]
+        next unless val && val.length > 0
+        sym = col.to_sym
+        faves[sym].key?(val) ? (faves[sym][val] += count) : (faves[sym][val] = count)
+      end
+    end
+
+    return faves
+  end
+
+  def worst
+    game = Game.collection.aggregate(
+      { '$match' => { 'character' => name, 'won' => false,} },
+      { '$sort'  => { 'score' => -1 } },
+      # Hope to find something in the first 20.
+      { '$limit' => 20 }
+    )
+
+    # Hack to avoid doing "killer != nil" in mongo which involves a
+    # sequential scan and therefore is SLOW for anyone with a large
+    # number of games.
+    the_worst = game.find{|g| g['killer'] && g['killer'].length > 0}
+
+    return the_worst ? Game.find(the_worst['_id']) : Game.first
   end
 
   def nemeses
     return {} if Game.count == 0
 
-    map = <<-MAP
-      function() {
-        var result = {};
-        result[this.killer] = 1;
-        emit(this.character, result);
-      }
-    MAP
-    red = <<-RED
-      function(k ,vals) {
-        var result = {};
-        vals.forEach(function(v) {
-          for(var killer in v)
-            result[killer] = 1 + (killer in result ? result[killer] : 0);
-        });
-        return result;
-      }
-    RED
+    result = Game.collection.aggregate(
+      { '$match' => { 'character' => name } },
+      { '$group' => {'_id' => '$killer', 'count' => { '$sum' => 1 } } },
+      # Cheaper to do after the grouping.
+      { '$match' => { '_id' => { '$ne' => nil } } },
+      { '$sort'  => { 'count' => -1 } }
+    )
 
-    result = Game.for(name).unwon.map_reduce(map, red).out(inline: 1)
     return {} if result.empty?
-    return result.first['value']
+
+    result.each{|n| n['killer'] = n.delete('_id')}
+
+    return result
   end
 end
