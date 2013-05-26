@@ -50,12 +50,14 @@ class GamesController < ApplicationController
     file   = uri.path.split('/')[-1]
     morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
 
-    # Don't overwrite existing values, this is needed because
+    # Don't overwrite existing logfile values, this is needed because
     # DCSS::Coroner isn't always 100% accurate and I'm too lazy to fix it.
     to_update = morgue.reduce({ has_morgue_file: true }) do |res, kv|
-      @game[kv[0]].nil? ? res.merge(kv[0] => kv[1]) : res
+      key, value    = *kv
+      should_update = @game[key].nil? || !DCSS::LOGFILE_FIELDS.include?(key)
+      should_update ? res.merge(key => value) : res
     end
-    
+
     @game.update_attributes(to_update)
     @game.save!
 

@@ -387,4 +387,32 @@ module DCSS
              "Arachne",
              "Cigotuvi's Monster"
             ]
+
+  # As mapped in IngestLogfile::Transformer
+  LOGFILE_FIELDS = [
+    'background',
+    'branch',
+    'character',
+    'combo',
+    'deepest_level',
+    'dex',
+    'game_type',
+    'god',
+    'gold',
+    'hp',
+    'int',
+    'killer',
+    'level',
+    'maxhp',
+    'maxmaxhp',
+    'place_abbr',
+    'race',
+    'skill',
+    'skill_level',
+    'start_time',
+    'str',
+    'title',
+    'version',
+    'xl',
+  ]
 end
