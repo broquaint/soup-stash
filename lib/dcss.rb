@@ -256,7 +256,8 @@ module DCSS
   }
 
   def DCSS.spell_type_re
-    Regexp.new('(?:(?:' + SPELL_TYPES.keys.join('|') + ')/?)+')
+    spells = SPELL_TYPES.keys.join('|')
+    Regexp.new("(?:(?:#{spells})(?:/(?:#{spells}))?)")
   end
 
   GODS = [

@@ -411,19 +411,20 @@ class DCSS::Coroner
     left_i = match[:left] ? ( match[:left] == 'one' ? 1 : match[:left].to_i ) : 0
 
     spell_re = %r{^
-      (.) \s - \s (\w+(?:\s\w+)*) \s+ # b - Throw Frost
+      (.) \s - \s (['\w]+(?:\s['\w]+)*) \s+ # b - Throw Frost
       (#{DCSS.spell_type_re})     \s+ # Ice/Conj
       ( (?:N/A|[#.]+) )           \s+ # #####..
       (\d+%)                      \s+ # 5%
       (\d)                        \s+ # 2
-      ([\w/]+)                        # Choko
+      ([\w/#.]+)                      # Choko | ##.....
     $}mx
       
     return {
       :spells_left  => left_i,
       :spells_known => spells_str.scan(spell_re).collect do |match|
-        slot, name, type, p, fail_rate, level, hunger = match
-        power = p == 'N/A' ? p : "%d/%d" % [p.count('#'), p.length]
+        slot, name, type, p, fail_rate, level, h = match
+        power  = p == 'N/A'        ? p : "%d/%d" % [p.count('#'), p.length]
+        hunger = h.match(/^[^#.]/) ? h : "%d/%d" % [h.count('#'), h.length]
         {
           :slot      => slot,
           :name      => name,
