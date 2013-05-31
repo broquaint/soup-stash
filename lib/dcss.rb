@@ -74,8 +74,16 @@ module DCSS
   def DCSS.combo2abbr(race, background)
     r = RACE_ABBR[race.sub /^#{DRAC_RE}/, '']
     b = BACKGROUND_ABBR[background]
-    raise Exception, "Unknown combo '#{race} #{background}'" unless r and b
-    return r + b
+    if r and b
+      return r + b
+    else
+      warn "Unknown combo '#{race} #{background}'"
+      # Guesstimate. Works for the awkward case of Grotesk which has
+      # been "supplanted" by Gargoyle.
+      r = race[0..1] if r.nil?
+      b = background[0..1] if b.nil?
+      return r + b
+    end
   end
   
   def DCSS.race_as_re
