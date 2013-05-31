@@ -223,8 +223,11 @@ class DCSS::Coroner
 
     notes = notes_str.split(/\n/) # (/\s*[|]\s*/)
 
-    # It seems notes can contain an additional (singular?) line.
+    # It seems notes can contain an additional (singular?) line which
+    # is delimited by an empty line.
     notes.slice!(notes.length - 2, 2) if notes[-2] =~ /^\s*$/
+    # Or maybe there's always an empty line now ;_;
+    notes.slice!(notes.length - 1, 1) if notes[-1] =~ /^\s*$/
     
     ret = { :ending => notes[-1].split(/\s*[|]\s*/)[-1].strip } # Last note == ending
 
