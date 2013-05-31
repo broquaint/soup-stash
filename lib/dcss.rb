@@ -11,7 +11,7 @@ module DCSS
     'Dr' => 'Draconian',
     'Fe' => 'Felid',
     'Gh' => 'Ghoul',
-    'Gr' => 'Grotesk',
+    'Gr' => 'Gargoyle',
     'Ha' => 'Halfling',
     'HE' => 'High Elf',
     'HO' => 'Hill Orc',
