@@ -2,66 +2,67 @@ module DCSS
   # TODO - Move all this out of code and into some kind of data.
 
   RACE = {
-    'Ce' => 'Centaur',
-    'DD' => 'Deep Dwarf',
-    'DE' => 'Deep Elf',
-    'Dg' => 'Demigod',
-    'Ds' => 'Demonspawn',
-    'Dj' => 'Djinni',
-    'Dr' => 'Draconian',
-    'Fe' => 'Felid',
-    'Gh' => 'Ghoul',
-    'Gr' => 'Gargoyle',
-    'Ha' => 'Halfling',
-    'HE' => 'High Elf',
-    'HO' => 'Hill Orc',
-    'Hu' => 'Human',
-    'Ke' => 'Kenku',
-    'Ko' => 'Kobold',
-    'LO' => 'Lava Orc',
-    'Mf' => 'Merfolk',
-    'Mi' => 'Minotaur',
-    'MD' => 'Mountain Dwarf',
-    'Mu' => 'Mummy',
-    'Na' => 'Naga',
-    'Op' => 'Octopode',
-    'Og' => 'Ogre',
-    'SE' => 'Sludge Elf',
-    'Sp' => 'Spriggan',
-    'Te' => 'Tengu',
-    'Tr' => 'Troll',
-    'Vp' => 'Vampire',
+    'Centaur'        => 'Ce',
+    'Deep Dwarf'     => 'DD',
+    'Deep Elf'       => 'DE',
+    'Demigod'        => 'Dg',
+    'Demonspawn'     => 'Ds',
+    'Djinni'         => 'Dj',
+    'Draconian'      => 'Dr',
+    'Felid'          => 'Fe',
+    'Ghoul'          => 'Gh',
+    'Gargoyle'       => 'Gr',
+    'Grotesk'        => 'Gr',
+    'Halfling'       => 'Ha',
+    'High Elf'       => 'HE',
+    'Hill Orc'       => 'HO',
+    'Human'          => 'Hu',
+    'Kenku'          => 'Ke',
+    'Kobold'         => 'Ko',
+    'Lava Orc'       => 'LO',
+    'Merfolk'        => 'Mf',
+    'Minotaur'       => 'Mi',
+    'Mountain Dwarf' => 'MD',
+    'Mummy'          => 'Mu',
+    'Naga'           => 'Na',
+    'Octopode'       => 'Op',
+    'Ogre'           => 'Og',
+    'Sludge Elf'     => 'SE',
+    'Spriggan'       => 'Sp',
+    'Tengu'          => 'Te',
+    'Troll'          => 'Tr',
+    'Vampire'        => 'Vp',
   }
   BACKGROUND = {
-    'AK' => 'Abyssal Knight',
-    'AE' => 'Air Elementalist',
-    'Ar' => 'Artificer',
-    'As' => 'Assassin',
-    'AM' => 'Arcane Marksman',
-    'Be' => 'Berserker',
-    'CK' => 'Chaos Knight',
-    'Cj' => 'Conjurer',
-    'DK' => 'Death Knight',
-    'EE' => 'Earth Elementalist',
-    'En' => 'Enchanter',
-    'Fi' => 'Fighter',
-    'FE' => 'Fire Elementalist',
-    'Gl' => 'Gladiator',
-    'He' => 'Healer',
-    'Hu' => 'Hunter',
-    'IE' => 'Ice Elementalist',
-    'Jr' => 'Jester',
-    'Mo' => 'Monk',
-    'Ne' => 'Necromancer',
-    'Pr' => 'Priest',
-    'Sk' => 'Skald',
-    'St' => 'Stalker',
-    'Su' => 'Summoner',
-    'Tm' => 'Transmuter',
-    'VM' => 'Venom Mage',
-    'Wn' => 'Wanderer',
-    'Wa' => 'Warper',
-    'Wz' => 'Wizard',
+    'Abyssal Knight'     => 'AK',
+    'Air Elementalist'   => 'AE',
+    'Artificer'          => 'Ar',
+    'Assassin'           => 'As',
+    'Arcane Marksman'    => 'AM',
+    'Berserker'          => 'Be',
+    'Chaos Knight'       => 'CK',
+    'Conjurer'           => 'Cj',
+    'Death Knight'       => 'DK',
+    'Earth Elementalist' => 'EE',
+    'Enchanter'          => 'En',
+    'Fighter'            => 'Fi',
+    'Fire Elementalist'  => 'FE',
+    'Gladiator'          => 'Gl',
+    'Healer'             => 'He',
+    'Hunter'             => 'Hu',
+    'Ice Elementalist'   => 'IE',
+    'Jester'             => 'Jr',
+    'Monk'               => 'Mo',
+    'Necromancer'        => 'Ne',
+    'Priest'             => 'Pr',
+    'Skald'              => 'Sk',
+    'Stalker'            => 'St',
+    'Summoner'           => 'Su',
+    'Transmuter'         => 'Tm',
+    'Venom Mage'         => 'VM',
+    'Wanderer'           => 'Wn',
+    'Warper'             => 'Wa',
+    'Wizard'             => 'Wz',
   }
 
   RACE_ABBR       = RACE.invert
@@ -72,14 +73,12 @@ module DCSS
   DRAC_RE      = /(?:(?:#{DRAC_COLOURS.join('|')})\s)/
 
   def DCSS.combo2abbr(race, background)
-    r = RACE_ABBR[race.sub /^#{DRAC_RE}/, '']
-    b = BACKGROUND_ABBR[background]
+    r = RACE[race.sub /^#{DRAC_RE}/, '']
+    b = BACKGROUND[background]
     if r and b
       return r + b
     else
       warn "Unknown combo '#{race} #{background}'"
-      # Guesstimate. Works for the awkward case of Grotesk which has
-      # been "supplanted" by Gargoyle.
       r = race[0..1] if r.nil?
       b = background[0..1] if b.nil?
       return r + b
@@ -87,16 +86,16 @@ module DCSS
   end
   
   def DCSS.race_as_re
-    Regexp.new("#{DRAC_RE}?(?:#{RACE.values.join('|')})")
+    Regexp.new("#{DRAC_RE}?(?:#{RACE.keys.join('|')})")
   end
   def DCSS.background_as_re
-    Regexp.new('(?:' + BACKGROUND.values.join('|') + ')')
+    Regexp.new('(?:' + BACKGROUND.keys.join('|') + ')')
   end
   def DCSS.abbr_race_as_re
-    Regexp.new('(?:' + RACE.keys.join('|') + ')')      
+    Regexp.new('(?:' + RACE.values.join('|') + ')')      
   end
   def DCSS.abbr_background_as_re
-    Regexp.new('(?:' + BACKGROUND.keys.join('|') + ')')
+    Regexp.new('(?:' + BACKGROUND.values.join('|') + ')')
   end
   def DCSS.abbr_combo_re
     Regexp.new( abbr_race_as_re.to_s + abbr_background_as_re.to_s )
@@ -107,10 +106,28 @@ module DCSS
       /x
   end
   def DCSS.abbr2combo(abbr)
-    race = RACE[abbr.slice 0,2]
-    bkgd = BACKGROUND[abbr.slice 2,4]
+    race = RACE_ABBR[abbr.slice 0,2]
+    bkgd = BACKGROUND_ABBR[abbr.slice 2,4]
     raise Exception, "Unknown combo '#{abbr}'" unless race and bkgd
     return race, bkgd
+  end
+
+  def DCSS.race_and_background_from(combo)
+    m = combo.match(/(#{races.join('|')}) (#{backgrounds.join('|')})/)
+    return m ? m[1,2] : ['','']
+  end
+
+  def DCSS.races
+    RACE.keys
+  end
+  def DCSS.backgrounds
+    BACKGROUND.keys
+  end
+  def DCSS.gods
+    GODS
+  end
+  def DCSS.drac_colours
+    DRAC_COLOURS
   end
 
   BRANCHES = {
@@ -197,7 +214,7 @@ module DCSS
     "Saprovore"   => 'Sappovore',
     "Levitation"  => 'Levitation',
     "Ctrl.Flight" => 'Control Flight',
-  }
+  }  
 
   EQUIPMENT_SLOTS = [
                      'weapon',
@@ -271,6 +288,16 @@ module DCSS
     Regexp.new("(?:(?:#{spells})(?:/(?:#{spells}))?)")
   end
 
+  def DCSS.inventory_types
+    INVENTORY_TYPES
+  end
+  def DCSS.spell_types
+    SPELL_TYPES
+  end
+  def DCSS.order_of_resistances
+    RESISTANCES_ORDER
+  end
+
   GODS = [
           'Ashenzari',
           'Beogh',
@@ -292,6 +319,9 @@ module DCSS
           'Zin',
          ]
 
+  # 19:28 < Henzell> rcfile[1/5]: Accessible via www: CAO: http://crawl.akrasiac.org/rcfiles/crawl-{0.7|0.8|0.9|0.10|git|lorcs}/$name.rc CDO:
+  # http://crawl.develz.org/configs/{ancient|0.6|0.7|0.8|0.9|0.10|trunk}/$name.rc CSZO: http://dobrazupa.org/rcfiles/crawl-{0.10|0.11|git}/$name.rc
+  
   TRUNK_VERSION = '0.13';
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
@@ -307,11 +337,18 @@ module DCSS
     'rl.heh.fi'            => lambda {|g| 'http://rl.heh.fi/trunk/stuff/' }
   }
 
+  def DCSS.morgue_uri_for(host, game, filename)
+    URI.parse( MORGUE_PATHS[host].call(game) + filename )
+  end
+
   HOST_TO_ABBR = {
     'dobrazupa.org'      => 'CSZO',
     'crawl.develz.org'   => 'CDO',
     'crawl.akrasiac.org' => 'CAO',
   }
+  def DCSS.abbr_for_host(uri)
+    HOST_TO_ABBR[uri.host]
+  end
 
   # Pilfered from dcss_henzell/crawl-data.yml, would be good to pull in dynamically.
   UNIQUES = [
@@ -446,4 +483,8 @@ module DCSS
     "version",
     "xl",
   ]
+
+  def DCSS.is_logfile_field(f)
+    LOGFILE_FIELDS.include?(f.to_s)
+  end
 end

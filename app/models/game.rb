@@ -60,13 +60,12 @@ class Game # Specifically DCSS
     Game.where(character: character)
   end
 
-  # http://kylebanker.com/blog/2009/12/mongodb-map-reduce-basics/
   def self.popular_combos # TODO Take time/version/etc as options
     return [] if self.count == 0
 
     map = <<-MAP
     function() {
-      var drac_re = /^(?:(?:#{DCSS::DRAC_COLOURS.join('|')}) )?/,
+      var drac_re = /^(?:(?:#{DCSS.drac_colours.join('|')}) )?/,
              race = this.race.replace(drac_re, '');
       emit(race + " " + this.background, { count: 1 })
     }

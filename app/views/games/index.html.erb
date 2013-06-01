@@ -8,15 +8,15 @@
         <th><%= link_to_with 'Score', 'sort' => 'score' %></th>
         <th>Player</th>
         <th><%= render partial: 'shared/column_filter',
-                locals: { column: 'Race', filterables: DCSS::RACE.values, param: 'race' }
+                locals: { column: 'Race', filterables: DCSS.races, param: 'race' }
                 %>
         </th>
         <th><%= render partial: 'shared/column_filter',
-                locals: { column: 'Background', filterables: DCSS::BACKGROUND.values, param: 'background' }
+                locals: { column: 'Background', filterables: DCSS.backgrounds, param: 'background' }
                 %>
         </th>
         <th><%= render partial: 'shared/column_filter',
-                locals: { column: 'God', filterables: DCSS::GODS, param: 'god' }
+                locals: { column: 'God', filterables: DCSS.gods, param: 'god' }
                 %>
         </th>
         <th><abbr title="Experience Level">XL</abbr></th>

@@ -54,7 +54,7 @@ class GamesController < ApplicationController
     # DCSS::Coroner isn't always 100% accurate and I'm too lazy to fix it.
     to_update = morgue.reduce({ has_morgue_file: true }) do |res, kv|
       key, value    = *kv
-      should_update = @game[key].nil? || !DCSS::LOGFILE_FIELDS.include?(key.to_s)
+      should_update = @game[key].nil? || !DCSS.is_logfile_field(key)
       should_update ? res.merge(key => value) : res
     end
 

@@ -10,7 +10,7 @@
             <th>Player</th>
             <th><%= render 'shared/combo_filter' %></th>
             <th><%= render partial: 'shared/column_filter',
-                    locals: { column: 'God', filterables: DCSS::GODS, param: 'god' }
+                    locals: { column: 'God', filterables: DCSS.gods, param: 'god' }
                     %>
             </th>
             <th><abbr title="Experience Level">XL</abbr></th>
@@ -59,7 +59,7 @@
     <h3>Most popular combos</h3>
     <ol>
       <% for combo in @most_pop_combos %>
-        <% _, r, b = *combo[:race].match(/(#{DCSS::RACE.values.join('|')}) (#{DCSS::BACKGROUND.values.join('|')})/) %>
+        <% r, b = DCSS.race_and_background_from(combo[:race]) %>
         <li><a href='<%= games_path race: r, background: b %>'><strong><%= combo[:race] %></strong></a> <em><%= combo[:count] %></em>
       <% end %>
     </ol>
@@ -67,7 +67,7 @@
     <h3>Least popular combos</h3>
     <ol id='least-popular-combos' class='more-less'>
       <% for combo in @least_pop_combos %>
-        <% _, r, b = *combo[:race].match(/(#{DCSS::RACE.values.join('|')}) (#{DCSS::BACKGROUND.values.join('|')})/) %>
+        <% r, b = DCSS.race_and_background_from(combo[:race]) %>
         <li class='toggle-display'><a href='<%= games_path race: r, background: b %>'><strong><%= combo[:race] %></strong></a> <em><%= combo[:count] %></em>
       <% end %>
     </ol>

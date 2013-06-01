@@ -47,7 +47,7 @@
       <% unless @game.inventory.keys.empty? %>
         <h3>Inventory</h3>
 
-        <% for inty in DCSS::INVENTORY_TYPES
+        <% for inty in DCSS.inventory_types
 	   items = @game.inventory.values.select{|i| i['type'] == inty}
 	   next if items.empty? %>
         <h4><%= inty %></h4>
@@ -73,7 +73,7 @@
 	<% for spell in @game.spells_known %>
 	<tr>
 	  <td><%= spell['name'] %></td>
-	  <td><%= spell['type'].map{|t|DCSS::SPELL_TYPES[t]}.join(', ') %></td>
+	  <td><%= spell['type'].map{|t|DCSS.spell_types[t]}.join(', ') %></td>
 	  <td><%= spell['power'] %></td>
 	  <td><%= spell['fail_rate'] %></td>
 	  <td><%= spell['level'] %></td>
@@ -190,7 +190,7 @@
       <% if @game.has_morgue_file %>
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
-	<% rk = DCSS::RESISTANCES_ORDER
+	<% rk = DCSS.order_of_resistances
 	   # TODO - Bootstrap icon helper
 	   rIcons = { 'on' => 'plus', 'off' => 'minus', 'disabled' => 'remove' }
 	   for idx in 0 .. 9 %>
