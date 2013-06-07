@@ -9,29 +9,34 @@ module DCSS
     'Demonspawn'     => 'Ds',
     'Djinni'         => 'Dj',
     'Draconian'      => 'Dr',
+    'Elf'            => 'El', # Removed in 0.3
     'Felid'          => 'Fe',
-    'Ghoul'          => 'Gh',
     'Gargoyle'       => 'Gr',
+    'Ghoul'          => 'Gh',
+    'Gnome'          => 'Gn', # Removed in 0.6
+    'Grey Elf'       => 'GE', # Removed in 0.5
     'Grotesk'        => 'Gr',
     'Halfling'       => 'Ha',
     'High Elf'       => 'HE',
+    'Hill Dwarf'     => 'HD', # Removed in 0.3
     'Hill Orc'       => 'HO',
     'Human'          => 'Hu',
-    'Kenku'          => 'Ke',
+    'Kenku'          => 'Ke', # Renamed to Tengu in 0.10
     'Kobold'         => 'Ko',
     'Lava Orc'       => 'LO',
     'Merfolk'        => 'Mf',
     'Minotaur'       => 'Mi',
-    'Mountain Dwarf' => 'MD',
+    'Mountain Dwarf' => 'MD', # Removed in 0.10
     'Mummy'          => 'Mu',
     'Naga'           => 'Na',
     'Octopode'       => 'Op',
     'Ogre'           => 'Og',
+    'Ogre-mage'      => 'OM', # Removed in 0.5
     'Sludge Elf'     => 'SE',
     'Spriggan'       => 'Sp',
     'Tengu'          => 'Te',
     'Troll'          => 'Tr',
-    'Vampire'        => 'Vp',
+    'Vampire'        => 'Vp',    
   }
   BACKGROUND = {
     'Abyssal Knight'     => 'AK',
@@ -42,6 +47,7 @@ module DCSS
     'Berserker'          => 'Be',
     'Chaos Knight'       => 'CK',
     'Conjurer'           => 'Cj',
+    'Crusader'           => 'Cr', # Renamed to Skald in 0.9
     'Death Knight'       => 'DK',
     'Earth Elementalist' => 'EE',
     'Enchanter'          => 'En',
@@ -51,14 +57,17 @@ module DCSS
     'Healer'             => 'He',
     'Hunter'             => 'Hu',
     'Ice Elementalist'   => 'IE',
-    'Jester'             => 'Jr',
+    'Jester'             => 'Jr', # April Fool's background.
     'Monk'               => 'Mo',
     'Necromancer'        => 'Ne',
+    'Paladin'            => 'Pa', # Removed in 0.8
     'Priest'             => 'Pr',
+    'Reaver'             => 'Re', # Removed in 0.8
     'Skald'              => 'Sk',
-    'Stalker'            => 'St',
+    'Stalker'            => 'St', # Removed in 0.12
     'Summoner'           => 'Su',
     'Transmuter'         => 'Tm',
+    'Thief'              => 'Th', # Removed in 0.7
     'Venom Mage'         => 'VM',
     'Wanderer'           => 'Wn',
     'Warper'             => 'Wa',
@@ -133,6 +142,7 @@ module DCSS
   BRANCHES = {
     'Abyss'   => 'Abyss',
     'Bailey'  => 'Bailey',
+    'Bzr'     => 'Bazaar',
     'Bazaar'  => 'Bazaar',
     'Blade'   => 'Hall of Blades',
     'Coc'     => 'Cocytus',
@@ -141,14 +151,18 @@ module DCSS
     'Dis'     => 'Iron City of Dis',
     'Elf'     => 'Elven Halls',
     'Geh'     => 'Gehenna',
+    'Forest'  => 'Forest',
     'Hell'    => 'Hell',
+    'Hive'    => 'Hive', # Removed in 0.10
     'IceCv'   => 'Ice Cave',
     'Lab'     => 'Labyrinth',
     'Lair'    => 'Lair of Beasts',
+    'Minitom' => 'Ossuary',
     'Orc'     => 'Orcish Mines',
     'Ossuary' => 'Ossuary',
     'Pan'     => 'Pandemonium',
     'Sewer'   => 'Sewers',
+    'Shoal'   => 'Shoals',
     'Shoals'  => 'Shoals',
     'Slime'   => 'Slime Pits',
     'Snake'   => 'Snake Pit',
@@ -299,25 +313,26 @@ module DCSS
   end
 
   GODS = [
-          'Ashenzari',
-          'Beogh',
-          'Cheibriados',
-          'Elyvilon',
-          'Fedhas', # TODO normalize
-          'Jiyva',
-          'Kikubaaqudgha',
-          'Lugonu',
-          'Makhleb',
-          'Nemelex Xobeh',
-          'Okawaru',
-          'Sif Muna',
-          'the Shining One', # TODO normalize
-          'Trog',
-          'Vehumet',
-          'Xom',
-          'Yredelemnul',
-          'Zin',
-         ]
+    'Ashenzari',
+    'Beogh',
+    'Cheibriados',
+    'Elyvilon',
+    'Fedhas', # TODO normalize
+    'Feawn', # aka Fedhas
+    'Jiyva',
+    'Kikubaaqudgha',
+    'Lugonu',
+    'Makhleb',
+    'Nemelex Xobeh',
+    'Okawaru',
+    'Sif Muna',
+    'the Shining One', # TODO normalize
+    'Trog',
+    'Vehumet',
+    'Xom',
+    'Yredelemnul',
+    'Zin',
+  ]
 
   # 19:28 < Henzell> rcfile[1/5]: Accessible via www: CAO: http://crawl.akrasiac.org/rcfiles/crawl-{0.7|0.8|0.9|0.10|git|lorcs}/$name.rc CDO:
   # http://crawl.develz.org/configs/{ancient|0.6|0.7|0.8|0.9|0.10|trunk}/$name.rc CSZO: http://dobrazupa.org/rcfiles/crawl-{0.10|0.11|git}/$name.rc
