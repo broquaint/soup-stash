@@ -63,12 +63,13 @@ class IngestLogfile
       @transforms = {
         :splat      => lambda {|v| v && v.length != 0},
         :tiles      => lambda {|v| v == 'y'},
-        :branch     => lambda {|v| DCSS::BRANCHES[v]},
+        :branch     => lambda {|v| DCSS.branch_for_abbr(v)},
         :character  => lambda {|v| v.to_s}, # JSON/Perl can produce non-strings.
         :end_time   => lambda {|v| time_str_to_object(v.to_s)},
         :start_time => lambda {|v| time_str_to_object(v.to_s)},
       }
     end
+
     def time_str_to_object(str)
       m  = str.match /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/
       dt = DateTime.new *m.captures.collect(&:to_i)

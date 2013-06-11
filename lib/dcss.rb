@@ -179,8 +179,14 @@ module DCSS
     'Zot'     => 'Realm of Zot',
   };
 
+  def DCSS.branches
+    BRANCHES.values
+  end
+  def DCSS.branch_for_abbr(abbr)
+    BRANCHES[abbr]
+  end
   def DCSS.branch_re
-    Regexp.new('(?:' + BRANCHES.values.join('|') + ')')
+    Regexp.new('(?:' + branches.join('|') + ')')
   end
 
   RESISTANCES_ORDER = [
