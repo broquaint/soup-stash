@@ -336,14 +336,14 @@ module DCSS
 
   # 19:28 < Henzell> rcfile[1/5]: Accessible via www: CAO: http://crawl.akrasiac.org/rcfiles/crawl-{0.7|0.8|0.9|0.10|git|lorcs}/$name.rc CDO:
   # http://crawl.develz.org/configs/{ancient|0.6|0.7|0.8|0.9|0.10|trunk}/$name.rc CSZO: http://dobrazupa.org/rcfiles/crawl-{0.10|0.11|git}/$name.rc
-  
+
+  # XXX Requires manual updates!
   TRUNK_VERSION = '0.13';
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
     'crawl.develz.org'     => lambda {|g|
-      number   = g.version[/^\d.\d\d?/]
-      is_trunk = g.version =~ /^0[.]\d+(?:[.]\d+)?-[a-z]+\d+/
-      path     = number == TRUNK_VERSION || is_trunk ? 'trunk' : number
+      is_trunk = g.full_version =~ /^0[.]\d+(?:[.]\d+)?-[a-z]+\d+/
+      path     = g.version == TRUNK_VERSION || is_trunk ? 'trunk' : g.version
       "http://crawl.develz.org/morgues/#{path}/"
     },
     'crawl.akrasiac.org'   => lambda {|g| 'http://crawl.akrasiac.org/rawdata/' },
@@ -354,6 +354,11 @@ module DCSS
 
   def DCSS.morgue_uri_for(host, game, filename)
     URI.parse( MORGUE_PATHS[host].call(game) + filename )
+  end
+
+  def DCSS.full_version_to_major_version(v)
+    # e.g "0.12.1-43-gbc5e171" => "0.12"
+    v.sub /^(\d+[.]\d+).*/, '\1'
   end
 
   HOST_TO_ABBR = {

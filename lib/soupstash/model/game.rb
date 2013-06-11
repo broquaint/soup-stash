@@ -38,8 +38,7 @@ class SoupStash::Model::Game < Reindeer
   has :runes      , is_a: Integer # DONE
   has :rune_list  , is_a: Array   # DONE
   has :killer     , is_a: String  # DONE
-  has :end_time   , is_a: Time    # Parse from morgue e.g morgue-snwcln-20120516-220145.txt
-                                       #                      16th June 2012 at 22:01:45
+  has :end_time   , is_a: Time
 
   has :ending, is_a: String
   has :won,    is_a: Boolean
@@ -94,6 +93,12 @@ class SoupStash::Model::Game < Reindeer
   has :server             , is_a: String  # was src
   has :turn_damage        , is_a: Integer # was tdam
   has :terse_ending       , is_a: String
+
+  # Default: version.minor version-commits since tag-sha1 e.g
+  # 0.12.1-43-gbc5e171
+  # Trunk is similar but has a non number minor version e.g
+  # 0.13-a0-1420-g28137fc
+  has :full_version, is_a: String
 
   # Should be useful when local games are uploadable.
   has :from_log_file,   is_a: Boolean

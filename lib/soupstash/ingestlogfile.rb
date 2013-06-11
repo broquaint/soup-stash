@@ -56,7 +56,7 @@ class IngestLogfile
         "sc"        => :score,
         "start"     => :start_time,
         "turn"      => :turns,
-        "v"         => :version,
+        "v"         => :full_version,
         "vmsg"      => :ending,
       }
 
@@ -84,6 +84,7 @@ class IngestLogfile
           :won           => 0 == ( game[:ending] =~ /^escaped with the Orb/i ),
           :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
           :from_log_file => true,
+          :version       => DCSS.full_version_to_major_version(game[:full_version]),
           :server        => source, # Assume we have a useful URI string.
         })
     end

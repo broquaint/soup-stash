@@ -14,8 +14,8 @@ class DCSS::Coroner
     sections = make_sections @morgue
 
     autopsy = { :name => 'crawl', :morgue => '' } # XXX Too noisy for now - @morgue }
-    autopsy[:version] = find_version blocks
     autopsy[:tiles]   = check_if_tiles blocks
+    autopsy.merge! find_version blocks
     # TODO order by default appearance in moregues
     autopsy.merge! find_score_char_title(blocks)
     autopsy.merge! find_place_god_piety_hunger(sections)
@@ -63,7 +63,11 @@ class DCSS::Coroner
 
   # TODO Fails on Zot Defense + Sprint
   def find_version(blocks)
-    return match_one blocks, / Dungeon Crawl Stone Soup version (\S+)/
+    ver = match_one blocks, / Dungeon Crawl Stone Soup version (\S+)/
+    return {
+      full_version: ver,
+      version: DCSS.full_version_to_major_version(ver)
+    }
   end
 
   def check_if_tiles(blocks)
