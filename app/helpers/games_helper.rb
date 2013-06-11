@@ -14,7 +14,7 @@ module GamesHelper
 
   def server_link(game)
     uri = URI.parse(game.server)
-    link_to DCSS.abbr_for_host(uri), uri.to_s, title: uri.host
+    link_to DCSS.abbr_for_host(uri), uri.host
   end
 
   def nice_duration(game)

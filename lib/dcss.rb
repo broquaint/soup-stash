@@ -362,6 +362,7 @@ module DCSS
     'crawl.akrasiac.org' => 'CAO',
   }
   def DCSS.abbr_for_host(uri)
+    uri = URI.parse(uri) if uri.is_a? String
     HOST_TO_ABBR[uri.host]
   end
 

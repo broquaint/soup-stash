@@ -142,11 +142,6 @@
 	</script>
       </div>
     </div>
-
-    <h3>Original morgue</h3>
-    <p>
-      <a href="<%= morgue_uri(@game).to_s %>"><%= morgue_uri(@game).to_s %></a>
-    </p>
     
     <button id="update-morgue"
 	    class="btn btn-primary" type="button"
@@ -237,8 +232,8 @@
 
       <h3>Meta</h3>
       <dl>
-        <dt>Server</dt><dd><%= server_link @game %></dd>
-        <dt>Version</dt><dd><%= @game.version %></dd>
+        <dt>Source</dt><dd><%= link_to DCSS.abbr_for_host(@game.server), morgue_uri(@game).to_s %></dd>
+        <dt>Version</dt><dd><%= @game.full_version %></dd>
         <dt>Interface</dt><dd><%= @game.tiles ? 'tiles' : 'console' %></dd>
         <%# Remove TZ as it doesn't represent reality presently. %>
         <dt>Started</dt><dd><%= @game.start_time.rfc822.sub(/ .\d+$/, '') %></dd>
