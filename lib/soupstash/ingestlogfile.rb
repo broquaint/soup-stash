@@ -1,5 +1,3 @@
-require 'dcss/coroner'
-
 require 'json'
 
 # "I'm sorry, Dave. I'm afraid I can't do that."
@@ -18,179 +16,50 @@ require 'models/game'
 
 # require 'soupstash'
 # TODO - Stick this in a namespace or something.
-class IngestLogfile
-  class Transformer
+class SoupStash
+  class IngestLogfile
+
+    require 'dcss/coroner'
+    require 'soupstash/ingestlogfile/transformer'
+    require 'soupstash/ingestlogfile/parser'
+
+    attr_reader :players
     def initialize
-      @existing = [:dex, :hp, :game_type, :god, :gold, :int, :killer, :race, :str, :title, :xl]
-
-      @from_to = {
-        "absdepth"  => :deepest_level,
-        "ckaux"     => :killer_weapon,
-        "dam"       => :damage,
-        "goldfound" => :gold_found,
-        "goldspent" => :gold_spent,
-        "ikiller"   => :invocant_killer,
-        "kaux"      => :killer_weapon_desc,
-        "ktyp"      => :killer_type,
-        "sdam"      => :source_damage,
-        "sk"        => :skill,
-        "sklev"     => :skill_level,
-        "src"       => :server,
-        "tdam"      => :turn_damage,
-        "tmsg"      => :terse_ending,
-
-        "br"        => :branch,
-        "char"      => :combo,
-        "cls"       => :background,
-        "cv"        => :version,
-        "dur"       => :duration,
-        "end"       => :end_time,
-        "game_type" => :name,
-        "kills"     => :kill_total,
-        "lvl"       => :level,
-        "map"       => :map_name,
-        "mhp"       => :maxhp,
-        "mmhp"      => :maxmaxhp,
-        "name"      => :character,
-        "place"     => :place_abbr,
-        "sc"        => :score,
-        "start"     => :start_time,
-        "turn"      => :turns,
-        "v"         => :full_version,
-        "vmsg"      => :ending,
-      }
-
-      @transforms = {
-        :splat      => lambda {|v| v && v.length != 0},
-        :tiles      => lambda {|v| v == 'y'},
-        :branch     => lambda {|v| DCSS.branch_for_abbr(v)},
-        :character  => lambda {|v| v.to_s}, # JSON/Perl can produce non-strings.
-        :end_time   => lambda {|v| time_str_to_object(v.to_s)},
-        :start_time => lambda {|v| time_str_to_object(v.to_s)},
-      }
+      init_user
+      @players     = {}
+      @transformer = Transformer.new
     end
 
-    def time_str_to_object(str)
-      m  = str.match /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/
-      dt = DateTime.new *m.captures.collect(&:to_i)
-      return dt.to_time
-    end
-
-    def logfile_to_model(log_game, source)
-      game = @existing.reduce({}) {|g, k| g.merge k => log_game[k.to_s]}
-      @from_to.each    {|from, to| game[to] = log_game[from]}
-      @transforms.each {|k, trans| game[k]  = trans.call(game.has_key?(k) ? game[k] : log_game[k.to_s])}
-
-      game.merge({
-          :won           => 0 == ( game[:ending] =~ /^escaped with the Orb/i ),
-          :end_time_str  => game[:end_time].strftime('%Y%m%d-%H%M%S'),
-          :from_log_file => true,
-          :version       => DCSS.full_version_to_major_version(game[:full_version]),
-          :server        => source, # Assume we have a useful URI string.
-        })
-    end
-  end
-
-  class Parser
-    def initialize
-      @parsed_count = 0
-
-      perl_in, @log_out  = IO.pipe
-      @json_in, perl_out = IO.pipe
-
-      @pid = fork {
-        parser_path = Dir.getwd + '/script/logfile-parser.pl'
-
-        Dir::chdir './vendor/dcss_henzell'
-
-        $stdin.reopen  perl_in
-        $stdout.reopen perl_out 
-
-        @json_in.close
-        @log_out.close
-
-        # Use whatever perl happens to be in the path rather than hard coding in she-bang.
-        # TODO Pass in $server and any other relevant log fields data.
-        exec 'perl', parser_path
-      }
-
-      perl_in.close
-      perl_out.close
-    end
-
-    def import_from(logfile)
-      $stdout.sync = true
-      logfile.each do |line|
-        next if line =~ /\bv=0.(?:[2-9]|10)/ # XXX Temp hack to skip older games.
-
-        @log_out.puts line
-
-        json = @json_in.gets
-        game = JSON.parse(json) rescue nil
-
-        # logfile-parser.pl failed and has complained on stderr
-        if game.nil?
-          $stdout.print "#{$0}: Failed to parse: #{line}\n"
-          next
-        end
-
-        yield game
-
-        # Useful when importing afresh.
-        $stdout.print "At line #{@parsed_count}\r"
-        @parsed_count += 1
-      end
-      $stdout.print "\n"
-    end
-
-    def finish_parsing
+    def init_user
+      @user_id = 'unclaimed'
       begin
-        @log_out.puts '__EXIT__'
-      rescue Errno::EPIPE
+        # XXX Learn more devise and/or rails to desuck this.
+        User.create!(
+          :email => "empty@example.com",
+          :password => 'password',
+          :password_confirmation => 'password',
+          :name => @user_id
+        )
+      rescue Mongoid::Errors::Validations => e
+        "User already exists, moving on with life."
       end
-
-      Process.waitpid(@pid)
-
-      puts "Imported #{@parsed_count} games!"
     end
-  end
 
-  attr_reader :players
-  def initialize
-    init_user
-    @players     = {}
-    @transformer = Transformer.new
-  end
+    def player_id_for(game)
+      c = game[:character].to_s
 
-  def init_user
-    @user_id = 'unclaimed'
-    begin
-      # XXX Learn more devise and/or rails to desuck this.
-      User.create!(
-                   :email => "empty@example.com",
-                   :password => 'password',
-                   :password_confirmation => 'password',
-                   :name => @user_id
-                   )
-    rescue Mongoid::Errors::Validations => e
-      "User already exists, moving on with life."
+      return @players[c].id if @players.has_key? c
+
+      p = Player.create(:name => c, :for_game => game[:game_type], :user_id => @user_id)
+      @players[c] = p
+
+      p.id
     end
-  end
 
-  def player_id_for(game)
-    c = game[:character].to_s
-
-    return @players[c].id if @players.has_key? c
-
-    p = Player.create(:name => c, :for_game => game[:game_type], :user_id => @user_id)
-    @players[c] = p
-
-    p.id
-  end
-
-  def commit_game(game, source)
-    for_model = @transformer.logfile_to_model(game, source)
-    for_model.merge!(:player_id => player_id_for(for_model))
-    Game.create!(for_model)
+    def commit_game(game, source)
+      for_model = @transformer.logfile_to_model(game, source)
+      for_model.merge!(:player_id => player_id_for(for_model))
+      Game.create!(for_model)
+    end
   end
 end
