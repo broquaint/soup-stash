@@ -16,7 +16,7 @@ require 'models/game'
 
 # require 'soupstash'
 # TODO - Stick this in a namespace or something.
-class SoupStash
+module SoupStash
   class IngestLogfile
 
     require 'dcss/coroner'
