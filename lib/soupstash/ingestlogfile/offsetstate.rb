@@ -1,6 +1,6 @@
 require 'moped'
 
-class SoupStash
+module SoupStash
   class IngestLogfile
     # Keep the state of where we were at in the logfile so we're not
     # forever playing catchup/scrollback when restarting keeping-up-with-the-logs.

@@ -1,5 +1,5 @@
-class SoupStash
-  class Ingestlogfile
+module SoupStash
+  class IngestLogfile
     class Parser
       def initialize
         @parsed_count = 0
