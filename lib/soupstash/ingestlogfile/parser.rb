@@ -8,9 +8,9 @@ module SoupStash
         @json_in, perl_out = IO.pipe
 
         @pid = fork {
-          parser_path = Dir.getwd + '/script/logfile-parser.pl'
+          parser_path = "#{Dir.getwd}/script/logfile-parser.pl"
 
-          Dir::chdir './vendor/dcss_henzell'
+          Dir::chdir "#{Dir.getwd}/vendor/dcss_henzell"
 
           $stdin.reopen  perl_in
           $stdout.reopen perl_out 
