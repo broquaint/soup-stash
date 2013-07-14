@@ -42,6 +42,9 @@ gem 'net-http-follow_tail', '>= 0.0.2'
 # Used by soupstash/ingestlogfile
 gem 'json'
 
+# Used by Henzell but I don't want all its deps e.g pg
+gem 'sqlite3'
+
 # http://railsapps.github.com/tutorial-rails-mongoid-devise.html
 # "Adding RSpec for Unit Testing"
 gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]

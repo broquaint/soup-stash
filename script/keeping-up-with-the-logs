@@ -21,7 +21,7 @@ def get_opts
 end
 
 def parse_logs(parser, uris, opts)
-  offsets   = uris.reduce({}) {|r, u| r.merge u => IngestLogfile::OffsetState.new(u)}
+  offsets   = uris.reduce({}) {|r, u| r.merge u => SoupStash::IngestLogfile::OffsetState.new(u)}
   to_follow = uris.collect do |u|
     {
       uri:              u,
@@ -30,7 +30,7 @@ def parse_logs(parser, uris, opts)
       always_call_back: true
     }
   end
-  ingester = IngestLogfile.new
+  ingester = SoupStash::IngestLogfile.new
 
   puts %Q{Going to follow:\n\t#{uris.join("\n\t")}\n\n}
   
@@ -70,7 +70,7 @@ logfile_uris = %w[
   http://crawl.akrasiac.org/logfile11
 ]
 
-parser = IngestLogfile::Parser.new
+parser = SoupStash::IngestLogfile::Parser.new
 
 begin
   parse_logs parser, logfile_uris, get_opts
