@@ -15,6 +15,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'underscore-rails'
 gem 'bootstrap-sass'
 
@@ -37,7 +38,7 @@ gem 'reindeer'
 
 # Needed by the log parser
 gem 'slop'
-gem 'net-http-follow_tail', '>= 0.0.2'
+gem 'net-http-follow_tail', '>= 0.0.4'
 
 # Used by soupstash/ingestlogfile
 gem 'json'
