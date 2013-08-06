@@ -56,6 +56,13 @@ class Game # Specifically DCSS
     g ? g.titleize : ''
   end
 
+  # Temp hack to work around a bug in how the end_time_str is generated.
+  def end_time_str
+    str = super
+    # 20130731161437 => 20130731-161437
+    str.sub /^(\d{8})(\d{6})$/, '\1-\2'
+  end
+
   def self.for(character)
     Game.where(character: character)
   end

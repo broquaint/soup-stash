@@ -69,7 +69,7 @@ module SoupStash
       end
 
       def self.object_to_time_str(object)
-        return object.strftime('%Y%m%d%H%M%S')
+        return object.strftime('%Y%m%d-%H%M%S')
       end
 
       def self.time_str_to_object(str)
