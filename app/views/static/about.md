@@ -1,7 +1,7 @@
 # About
 
-This site exists due the largesse of the operators of the [cao][cao],
-[cdo][cdo] and [cszo][cszo] servers so a big thanks to them first of
+This site exists due the largesse of the operators of the [cao][],
+[cdo][], [cszo][] and [clan][] servers so a big thanks to them first of
 all!
 
 It serves to allow players to see any game of
@@ -23,5 +23,6 @@ the [soup-stash github repo][repo].
 [cao]: http://crawl.akrasiac.org/ "crawl.akrasiac.org"
 [cdo]: https://crawl.develz.org/ "crawl.develz.org"
 [cszo]: https://crawl.s-z.org/ "crawl.s-z.org"
+[clan]: http://crawl.lantea.net/ "crawl.lantea.net"
 [myplayer]: http://soupstash.broquaint.com/users/unclaimed/players/Snowclone-crawl
 [repo]: https://github.com/broquaint/soup-stash

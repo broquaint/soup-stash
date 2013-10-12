@@ -353,6 +353,7 @@ module DCSS
       "http://crawl.develz.org/morgues/#{path}/"
     },
     'crawl.akrasiac.org'   => lambda {|g| 'http://crawl.akrasiac.org/rawdata/' },
+    'crawl.lantea.net'     => lambda {|g| 'http://crawl.lantea.net/crawl/morgue/' },
     'dobrazupa.org'        => lambda {|g| 'http://dobrazupa.org/morgue/' },
     'crawlus.somatika.net' => lambda {|g| 'http://crawlus.somatika.net/dumps/' },
     'rl.heh.fi'            => lambda {|g| 'http://rl.heh.fi/trunk/stuff/' }
