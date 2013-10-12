@@ -19,6 +19,14 @@ class Game # Specifically DCSS
   scope :last_month, -> { gt(end_time: DateTime.now - 30) }
   scope :last_year,  -> { gt(end_time: DateTime.now - 365) }
 
+  scope :tourney_0_13, -> {
+    where(
+      :end_time.gt => DateTime.iso8601('2013-10-11T20:00:00+00:00'),
+      :end_time.lt => DateTime.iso8601('2013-10-27T20:00:00+00:00'),
+      version: '0.13'
+    )
+  }
+
   scope :unwon, where(won: false)
 
   # Used by scopes

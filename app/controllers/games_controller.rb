@@ -3,7 +3,7 @@ require_dependency 'collate/game'
 require 'open-uri'
 
 class GamesController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show, :update]
+  before_filter :authenticate_user!, :except => [:index, :show, :update, :tourney_0_13]
   include GamesHelper
 
   # GET /games
@@ -103,6 +103,24 @@ class GamesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to games_url }
       format.json { head :no_content }
+    end
+  end
+
+  def tourney_0_13
+    # Could do with more refactoring.
+    games = Collate::Game.new(result_set: Game.tourney_0_13).filter_and_sort({
+        params:       params,
+        order:        'desc',
+        sort_default: :end_time
+      })
+
+    games = games.where(user_id: params[:user_id]) if params[:user_id]
+
+    @games = games.limit(27).page params[:page]
+
+    respond_to do |format|
+      format.html { render 'index' }
+      format.json { render json: @games }
     end
   end
 end
