@@ -1,4 +1,8 @@
+<% if request.fullpath =~ %r{/tournament} %>
+<h1>Tournament 0.13 <small>(<em><a href="http://dobrazupa.org/tournament/0.13/">info</a></em>)</small></h1>
+<% else %>
 <h1>Recent games <%= render 'shared/period_filter' %></h1>
+<% end %>
 
 <div class='games-listing'>
   <%= render 'shared/selections' %>
