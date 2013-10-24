@@ -93,7 +93,7 @@ class DCSS::Coroner
   end
 
   def find_race_background(blocks)
-    _, rb = find_in blocks, /Began as a #{DCSS.race_background_re}/
+    _, rb = find_in blocks, /Began as an? #{DCSS.race_background_re}/
 
     raise ParseFailure, "Couldn't find a race & background!" unless rb
     
