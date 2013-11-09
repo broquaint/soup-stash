@@ -11,6 +11,7 @@ module DCSS
     'Draconian'      => 'Dr',
     'Elf'            => 'El', # Removed in 0.3
     'Felid'          => 'Fe',
+    'Formicid'       => 'Fo', # In trunk 0.14
     'Gargoyle'       => 'Gr',
     'Ghoul'          => 'Gh',
     'Gnome'          => 'Gn', # Removed in 0.6
