@@ -51,7 +51,7 @@
 	   items = @game.inventory.values.select{|i| i['type'] == inty}
 	   next if items.empty? %>
         <h4><%= inty %></h4>
-	<ul>
+	<ul class=unstyled>
           <% for item in items %>
 	    <li><%= item['item'] %>
 	    <% if item['desc'] %>
@@ -87,6 +87,28 @@
 
       <% end %>
     </div>
+
+    <% if @game.branches %>
+    <div id='branches'>
+      <h3>Dungeon Overview</h3>
+      <dl>
+        <% for branch_abbr, branch in @game.branches %>
+        <dt><%= DCSS.branch_for_abbr(branch_abbr) %>
+          <% if branch.key?('found_at') %>
+          (found at <%= branch['found_at'] %> on turn <%= branch['found_on'] %>)
+          <% end %>
+        </dt>
+        <dd>
+          <ul class=unstyled>
+            <% for level, turn in branch['levels_seen'] %>
+            <li><strong><%= level %></strong> on turn <em><%= turn %></em></li>
+            <% end %>
+          </ul>
+        </dd>
+        <% end %>
+      </dl>
+    </div>
+    <% end %>
 
     <div id='map'><h3>Message History</h3><pre><%= @game.map %></pre></div>
 

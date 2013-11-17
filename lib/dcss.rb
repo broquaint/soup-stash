@@ -149,6 +149,7 @@ module DCSS
     'Coc'     => 'Cocytus',
     'Crypt'   => 'Crypt',
     'D'       => 'Dungeon',
+    'Depths'  => 'Depths',
     'Dis'     => 'Iron City of Dis',
     'Elf'     => 'Elven Halls',
     'Geh'     => 'Gehenna',
@@ -170,7 +171,7 @@ module DCSS
     'Spider'  => "Spider's Nest",
     'Swamp'   => 'Swamp',
     'Tar'     => 'Tartarus',
-    'Temple'  => 'Templte',
+    'Temple'  => 'Ecumenical Temple',
     'Tomb'    => 'Tomb',
     'Trove'   => 'Trove',
     'Vaults'  => 'Vaults',
@@ -178,13 +179,19 @@ module DCSS
     'Wizlab'  => 'WizLab',
     'Zig'     => 'Ziggurat',
     'Zot'     => 'Realm of Zot',
-  };
+  }
+
+  BRANCH_TO_ABBR = BRANCHES.invert
 
   def DCSS.branches
     BRANCHES.values
   end
   def DCSS.branch_for_abbr(abbr)
     BRANCHES[abbr]
+  end
+  def DCSS.abbr_for_branch(abbr)
+    matched = BRANCH_TO_ABBR.keys.select{|k| k =~ /^#{abbr}/i}
+    matched.length ? BRANCH_TO_ABBR[ matched[0] ] : nil
   end
   def DCSS.branch_re
     Regexp.new('(?:' + branches.join('|') + ')')

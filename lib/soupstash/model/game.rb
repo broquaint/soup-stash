@@ -61,6 +61,8 @@ class SoupStash::Model::Game < Reindeer
   has :spells_left,  is_a: Integer
   has :spells_known, is_a: Array # [ { slot, spell, type, power, fail_rate, level, hunger } ]
 
+  has :branches, is_a: Object # { {"D"=>{:levels_seen=>{"D:1"=>0, "D:10"=>7091}}, ... }
+
   has :map, is_a: String
 
   has :kills,       is_a: Object # { vanquisher: [{ amount: Int, creature: String, location: String }] }

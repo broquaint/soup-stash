@@ -34,6 +34,8 @@ class DCSS::Coroner
     autopsy.merge! find_spells(sections)
     autopsy.merge! find_notes(blocks)
 
+    autopsy.merge! find_branches(autopsy[:notes])
+
     return Morgue.new(autopsy)
   end
   
@@ -181,6 +183,38 @@ class DCSS::Coroner
     end
     
     return place_religion
+  end
+
+  # The notes is the only reliable source of branches as some morgues
+  # don't contain "Dungeon Overview and Level Annotations"
+  def find_branches(notes)
+    branches = {}
+    # Do some normalization as the note data doesn't quite line up
+    # with the standard branch data.
+    place_re = %r{(?:#{DCSS::branches.map{|p|p.downcase.match(/(\w+)/)[1]}.join('|')})}i
+
+    notes.each do |entry|
+      # Mongo doesn't like the $ and it's not actually a place.
+      next if entry[:place] == 'D:$'
+
+      turn, place, note = entry.values_at(:turn, :place, :note)
+      place_abbr = place.sub /:\d+$/, '' # Orc:1 => Orc
+      state = branches[place_abbr] || { levels_seen: {} }
+
+      # Note when branches were found
+      # XXX Doesn't handle non-staircase entry points e.g Found a glowing drain.
+      match = note.match /^Found a(?: staircase to(?: the)?)? (?<branch>#{place_re})/i
+      if match && match[:branch]
+        branch = DCSS.abbr_for_branch(match[:branch]) || raise("Unknown branch: '#{match[:branch]}'")
+        branches[branch] = { levels_seen: {} } unless branches[branch]
+        branches[branch].merge!({ found_at: place, found_on: turn })
+      end
+
+      state[:levels_seen][place] = turn unless state[:levels_seen].key? place
+      branches[place_abbr] = state
+    end
+
+    return { branches: branches }
   end
 
   def find_resistances_slots(blocks, race)
@@ -452,10 +486,10 @@ class DCSS::Coroner
     lines = notes_str.sub(/(?:^.*?$\s*){3}/m, '').split /\n/
     # Pretty sure notes are always present
     return {
-      :notes => lines.collect do |line|
+      :notes => lines.collect{|line|
         turn, place, note = line.split('|').collect(&:strip)
         { :turn => turn.to_i, :place => place, :note => note }
-      end
+      }.select{|entry| !entry[:place].nil?}
     }
   end
 
