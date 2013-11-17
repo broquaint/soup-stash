@@ -369,7 +369,7 @@ class DCSS::Coroner
   def find_state_abilities_runes(blocks)
     state_etc, _ = find_in blocks, /\A@: /
 
-    state, features, abilities, runes =
+    state, features, abilities =
       state_etc.gsub(/\n(.[^:])/, ' \1').split(/\n/).collect{|s| s.sub /^.: /m, '' }
 
     ret = {
@@ -378,7 +378,7 @@ class DCSS::Coroner
       :character_abilities => abilities.split(/, /),
     }
 
-    runes_match = runes && runes.match(%r<(?<found>\d+)/\d+ runes: (?<rune_list>.*)>s)
+    runes_match = state_etc.match %r{(?<found>\d+)/\d+ runes: (?<rune_list>.*)}m
 
     ret.merge!({
       :runes     => runes_match[:found].to_i,
