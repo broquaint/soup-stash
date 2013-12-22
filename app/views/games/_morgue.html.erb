@@ -207,12 +207,13 @@
       <% if @game.has_morgue_file %>
       <h3>Resist, protect, control</h3>
       <table class='stats table table-condensed'>
-	<% rk = DCSS.order_of_resistances
+	<% rk = DCSS.order_of_resistances(@game.version)
 	   # TODO - Bootstrap icon helper
 	   rIcons = { 'on' => 'plus', 'off' => 'minus', 'disabled' => 'remove' }
-	   for idx in 0 .. 9 %>
+           rOffset = rk.length / 2
+           rOffset.times do |idx| %>
 	<tr>
-	  <% for jdx in [idx, idx + 10] %>
+	  <% for jdx in [idx, idx + rOffset] %>
 	    <% rField = @game.resistances[rk[jdx]] %>
 	    <td><%= rk[jdx] %></td>
 	    <td>

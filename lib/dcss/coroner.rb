@@ -218,19 +218,29 @@ class DCSS::Coroner
   end
 
   def find_resistances_slots(blocks, race)
-    rEquip, _ = find_in blocks, /\ARes[.]Fire\s+:/;
+    rEquip, _ = find_in blocks, /\A(?:rFire|Res[.]Fire)\s+:?/;
 
     return {} if rEquip.nil?
 
     resistances = {}
-    rTot_re   = %r{(?:[+x.]\s)+}
+    # These regexps get a bit hairy because of the differences of
+    # morgue data across versions, starting at 0.14.
+    rTot_re   = %r{(?:[+x.])(?:\s[+x.]){2}?}
     rMatch_re = %r{
-      ([A-Z][A-Za-z. ]+\S) \s*: \s (#{rTot_re})
+      (?:
+         ([A-Z][A-Za-z. ]+\S) \s*: \s (#{rTot_re})
+        |
+         (\w+) \s+ (#{rTot_re})
+      )
     }x
 
-    rEquip.scan(rMatch_re) do |r, t|
+    rEquip.scan(rMatch_re) do |r1, t1, r2, t2|
+      # Handle multiple captures in an ugly fashion :/
+      r = r1 || r2
+      t = t1 || t2
+
       t.gsub! /\s+/, ''
-      r = DCSS::RESISTANCES_MAP[r]
+      r = DCSS.abbr_to_resistance(r)
       resistances[r] = if t.length == 1
                          t == '+' ? 'on' : t == '.' ? 'off' : 'disabled'
                        else # Use fractionals?
@@ -238,13 +248,19 @@ class DCSS::Coroner
                        end
     end
 
-    equipped_re = %r{([A-Za-z]) - }                 # Mmm, fixed width records.
-    items       = rEquip.split(/\n/).collect{|line| line[37, line.length-1]}
+    items = rEquip.split(/\n/).collect do |line|
+      # Pre-0.14 equipped items state at the 37th char, 0.14 onwards
+      # it#s the 32nd. Yay fixed width records.
+      offset = line[32] == ' ' ? 37 : 32
+      line[offset, line.length-1]
+    end
 
-    slot_list = race != 'Octopode' ? DCSS::EQUIPMENT_SLOTS : DCSS::EQUIPMENT_SLOTS_OP
+    equipped_re = %r{([A-Za-z]) - }
+    slot_list   = DCSS.equipment_slots(race)
+
     equipped  = slot_list.length.times.reduce({}) do |slots, idx|
       has_slot, slot = *items[idx].match(equipped_re)
-      slots[ DCSS::EQUIPMENT_SLOTS[idx] ] = has_slot ? slot : nil
+      slots[ slot_list[idx] ] = has_slot ? slot : nil
       slots
     end
 
@@ -404,6 +420,7 @@ class DCSS::Coroner
         .sub(/\(You (\w)/) {|c| '('+$1.upcase} # "(You found it", "(You took it"
   end
 
+  # Needs to be sections, not blocks, owing to how things can be laid out.
   def understand_inventory(sections)
     invt, _ = find_in sections, /^Inventory:$/m
 

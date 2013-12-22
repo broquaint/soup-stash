@@ -221,6 +221,30 @@ module DCSS
                        'Control Flight',
                       ]
 
+  RESISTANCES_ORDER_MODERN = [
+                       'Resist Fire',
+                       'Resist Cold',
+                       'Life Protection',
+                       'Resist Poison',
+                       'Resist Electric',
+                       'Sustain Abilities',
+                       'Resist Mutation',
+                       'Sappovore',
+
+                       'See Invisible',
+                       'Clarity',
+                       'Conservation',
+                       'Resist Corrosion',
+                       'Resist Rotting',
+                       'Spirit Shield',
+                       'Warding',
+                       'Teleportitis',
+                      ]
+
+  def DCSS.order_of_resistances(v=0)
+    v.to_f >= 0.14 ? RESISTANCES_ORDER_MODERN : RESISTANCES_ORDER
+  end
+
   RESISTANCES_MAP = {
     "Res.Fire"    => 'Resist Fire',
     "See Invis."  => 'See Invisible',
@@ -242,7 +266,30 @@ module DCSS
     "Saprovore"   => 'Sappovore',
     "Levitation"  => 'Levitation',
     "Ctrl.Flight" => 'Control Flight',
-  }  
+  }
+
+  RESISTANCES_MAP_MODERN = {
+    "rFire"    => 'Resist Fire',
+    "SeeInvis" => 'See Invisible',
+    "rCold"    => 'Resist Cold',
+    "Clarity"  => 'Clarity',
+    "rNeg"     => 'Life Protection',
+    "Conserve" => 'Conservation',
+    "rPoison"  => 'Resist Poison',
+    "rCorr."   => 'Resist Corrosion',
+    "rElec."   => 'Resist Electric',
+    "rRot"     => 'Resist Rotting',
+    "SustAb"   => 'Sustain Abilities',
+    "Spirit"   => 'Spirit Shield',
+    "rMut"     => 'Resist Mutation',
+    "Warding"  => 'Warding',
+    "Saprov"   => 'Sappovore',
+    "RndTele"  => 'Teleporitis',
+  }
+
+  def DCSS.abbr_to_resistance(s)
+    RESISTANCES_MAP[s] || RESISTANCES_MAP_MODERN[s]
+  end
 
   EQUIPMENT_SLOTS = [
                      'weapon',
@@ -270,6 +317,14 @@ module DCSS
                      'ring',
                      'ring',
                     ]
+
+  def DCSS.equipment_slots(race)
+    race != 'Octopode' ? EQUIPMENT_SLOTS : EQUIPMENT_SLOTS_OP
+  end
+
+  def DCSS.equipment_slot(race, idx)
+    equipment_slots(race)[idx]
+  end
 
   INVENTORY_TYPES = [
                      'Hand weapons',
@@ -321,9 +376,6 @@ module DCSS
   end
   def DCSS.spell_types
     SPELL_TYPES
-  end
-  def DCSS.order_of_resistances
-    RESISTANCES_ORDER
   end
 
   GODS = [
