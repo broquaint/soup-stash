@@ -71,6 +71,22 @@ class Game # Specifically DCSS
     str.sub /^(\d{8})(\d{6})$/, '\1-\2'
   end
 
+  def update_from_morgue!(uri)
+    file   = uri.path.split('/')[-1]
+    morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
+
+    # Don't overwrite existing logfile values, this is needed because
+    # DCSS::Coroner isn't always 100% accurate and I'm too lazy to fix it.
+    to_update = morgue.reduce({ has_morgue_file: true }) do |res, kv|
+      key, value    = *kv
+      should_update = self[key].nil? || !DCSS.is_logfile_field(key)
+      should_update ? res.merge(key => value) : res
+    end
+
+    update_attributes!(to_update)
+    save!
+  end
+
   def self.for(character)
     Game.where(character: character)
   end

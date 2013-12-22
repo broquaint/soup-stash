@@ -46,22 +46,11 @@ class GamesController < ApplicationController
   def update
     @game = Game.find(params[:id])
 
-    uri    = morgue_uri(@game)
-    file   = uri.path.split('/')[-1]
-    morgue = DCSS::Coroner.new(open(uri.to_s).read, file).parse
+    uri = morgue_uri(@game)
+    @game.update_from_morgue! uri
 
-    # Don't overwrite existing logfile values, this is needed because
-    # DCSS::Coroner isn't always 100% accurate and I'm too lazy to fix it.
-    to_update = morgue.reduce({ has_morgue_file: true }) do |res, kv|
-      key, value    = *kv
-      should_update = @game[key].nil? || !DCSS.is_logfile_field(key)
-      should_update ? res.merge(key => value) : res
-    end
-
-    @game.update_attributes(to_update)
-    @game.save!
-
-    # Why doesn't it update the object too?!
+    # For some reason the @game object doesn't get completely filled
+    # out, it appears to fall over display the inventory.
     @game = Game.find(params[:id])
 
     flash[:notice] = "Updated game details from #{uri}"
