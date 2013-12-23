@@ -14,7 +14,7 @@ class Player
 
   def basic_totals
     totals = Game.collection.aggregate(
-      { '$match' => { 'character' => 'Snowclone' } },
+      { '$match' => { 'character' => name } },
       { '$group' => {'_id' => '$character', 'played' => { '$sum' => 1 }, 'turns' => { '$sum' => '$turns' }, 'kills' => { '$sum' => '$kill_total' }, 'gold' => { '$sum' => '$gold_found' }, 'xls' => { '$sum' => '$xl' }, 'score' => { '$sum' => '$score' } } }
     ).first
     # Don't count the XL1 every game starts with
