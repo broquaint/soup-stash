@@ -2,6 +2,6 @@ object @game
 if params[:field]
   attributes params[:field]
 else
-  object @game
+  attributes *@game.attributes.keys
 end
 
