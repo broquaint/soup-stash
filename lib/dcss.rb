@@ -382,6 +382,7 @@ module DCSS
     'Ashenzari',
     'Beogh',
     'Cheibriados',
+    'Dithmengos', # On trunk at the time of writing.
     'Elyvilon',
     'Fedhas', # TODO normalize
     'Feawn', # aka Fedhas
