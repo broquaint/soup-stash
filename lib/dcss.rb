@@ -405,7 +405,7 @@ module DCSS
   # http://crawl.develz.org/configs/{ancient|0.6|0.7|0.8|0.9|0.10|trunk}/$name.rc CSZO: http://dobrazupa.org/rcfiles/crawl-{0.10|0.11|git}/$name.rc
 
   # XXX Requires manual updates!
-  TRUNK_VERSION = '0.13';
+  TRUNK_VERSION = '0.14';
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
     'crawl.develz.org'     => lambda {|g|
@@ -430,9 +430,12 @@ module DCSS
   end
 
   HOST_TO_ABBR = {
-    'dobrazupa.org'      => 'CSZO',
-    'crawl.develz.org'   => 'CDO',
-    'crawl.akrasiac.org' => 'CAO',
+    'dobrazupa.org'        => 'CSZO',
+    'crawl.develz.org'     => 'CDO',
+    'crawl.akrasiac.org'   => 'CAO',
+    'crawl.lantea.net'     => 'CLAN',
+    'crawlus.somatika.net' => 'CSN',
+    'rl.heh.fi'            => 'RHF',
   }
   def DCSS.abbr_for_host(uri)
     uri = URI.parse(uri) if uri.is_a? String
