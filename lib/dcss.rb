@@ -37,7 +37,8 @@ module DCSS
     'Spriggan'       => 'Sp',
     'Tengu'          => 'Te',
     'Troll'          => 'Tr',
-    'Vampire'        => 'Vp',    
+    'Vampire'        => 'Vp',
+    'Vine Stalker'   => 'VS', # In trunk 0.14
   }
   BACKGROUND = {
     'Abyssal Knight'     => 'AK',
