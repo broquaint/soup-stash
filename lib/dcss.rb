@@ -406,7 +406,7 @@ module DCSS
   # http://crawl.develz.org/configs/{ancient|0.6|0.7|0.8|0.9|0.10|trunk}/$name.rc CSZO: http://dobrazupa.org/rcfiles/crawl-{0.10|0.11|git}/$name.rc
 
   # XXX Requires manual updates!
-  TRUNK_VERSION = '0.14';
+  TRUNK_VERSION = '0.15';
   # Based on servers.yml from dcss_henzell
   MORGUE_PATHS = {
     'crawl.develz.org'     => lambda {|g|

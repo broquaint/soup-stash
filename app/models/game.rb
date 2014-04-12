@@ -27,6 +27,14 @@ class Game # Specifically DCSS
     )
   }
 
+  scope :tourney_0_14, -> {
+    where(
+      :end_time.gt => DateTime.iso8601('2014-04-11T20:00:00+00:00'),
+      :end_time.lt => DateTime.iso8601('2014-04-27T20:00:00+00:00'),
+      version: '0.14'
+    )
+  }
+
   scope :unwon, where(won: false)
 
   # Used by scopes

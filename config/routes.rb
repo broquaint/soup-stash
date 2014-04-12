@@ -14,6 +14,7 @@ SoupStash::Application.routes.draw do
   resources :games
 
   match 'tournament-0.13' => 'games#tourney_0_13', :via => :get
+  match 'tournament-0.14' => 'games#tourney_0_14', :via => :get
 
   # Static /about page via http://stackoverflow.com/a/4966764
   match ':action' => 'static#:action'
