@@ -383,7 +383,8 @@ module DCSS
     'Ashenzari',
     'Beogh',
     'Cheibriados',
-    'Dithmengos', # On trunk at the time of writing.
+    'Dithmengos', # Original name as it landed in trunk.
+    'Dithmenos',  # Final name in 0.14
     'Elyvilon',
     'Fedhas', # TODO normalize
     'Feawn', # aka Fedhas
@@ -392,6 +393,7 @@ module DCSS
     'Lugonu',
     'Makhleb',
     'Nemelex Xobeh',
+    'Qazlal',
     'Okawaru',
     'Sif Muna',
     'the Shining One', # TODO normalize
